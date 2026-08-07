@@ -1,0 +1,4 @@
+# Source template docs — not part of the deployed app
+AI Specialist Learning/
+*.log
+.env.local

@@ -1,0 +1,285 @@
+import type { RefCard, RefTable, StackItem } from "@/app/lib/types";
+
+// ───────────────────────── 01 · AI CODE EDITORS ─────────────────────────
+// Most-used editors, June 2026.
+export const AI_EDITORS: RefCard[] = [
+  {
+    name: "Cursor",
+    pill: "Best overall",
+    badge: { label: "Paid", kind: "paid" },
+    accent: "pink",
+    tagline: "The best overall AI code editor — 1M+ daily active users.",
+    desc: "VS Code fork with Supermaven-powered autocomplete, multi-model support, and Composer for multi-file edits. Cursor 2.0 can orchestrate up to ~8 agents. The default for daily AI coding.",
+    tags: ["Composer", "Multi-model", "1M+ DAU"],
+    bestFor: "general coding — the all-round winner",
+  },
+  {
+    name: "Windsurf",
+    pill: "Best for beginners",
+    badge: { label: "Free tier", kind: "free" },
+    accent: "yellow",
+    tagline: "Cursor's closest rival — lowest friction to start.",
+    desc: "Originally built by Codeium, now owned by OpenAI. The agentic 'Cascade' flow plus a gentle learning curve make it the top pick for beginners.",
+    tags: ["Cascade", "Beginner-friendly", "by OpenAI"],
+    bestFor: "beginners / easiest on-ramp",
+  },
+  {
+    name: "Claude Code",
+    pill: "Best code quality",
+    badge: { label: "Paid", kind: "paid" },
+    accent: "orange",
+    tagline: "#1 on SWE-bench — correctness & terminal workflows.",
+    desc: "Anthropic's CLI agent. Strongest SWE-bench scores for complex reasoning; it reads files, runs commands, and verifies its own work. Ideal for terminal-first devs. (This hub was built with it.)",
+    tags: ["Terminal / CLI", "Code quality #1", "Agentic"],
+    bestFor: "code quality & complex tasks",
+  },
+  {
+    name: "GitHub Copilot",
+    pill: "Enterprise / teams",
+    badge: { label: "Paid", kind: "paid" },
+    accent: "blue",
+    tagline: "Widest IDE support, SSO & audit trails.",
+    desc: "The enterprise standard — works across the most IDEs with SSO and audit trails. Strong autocomplete plus chat and agent modes. No editor switch needed.",
+    tags: ["All major IDEs", "SSO", "Enterprise"],
+    bestFor: "enterprise & teams",
+  },
+  {
+    name: "Antigravity",
+    pill: "Multi-agent",
+    badge: { label: "Free preview", kind: "free" },
+    accent: "purple",
+    tagline: "Google's agent-first IDE — up to 8 agents.",
+    desc: "Google's agentic IDE (Gemini-powered) built for multi-agent coding — orchestrate several agents at once. Built on the VS Code base.",
+    tags: ["Multi-agent", "Gemini", "Agent-first"],
+    bestFor: "multi-agent coding",
+  },
+  {
+    name: "Zed",
+    pill: "Fastest",
+    badge: { label: "Free", kind: "os" },
+    accent: "teal",
+    tagline: "The fastest AI IDE — startup under 1 second.",
+    desc: "A blazing-fast, Rust-built editor with AI features and sub-second startup. Best when raw speed and responsiveness matter most.",
+    tags: ["Fastest", "Rust", "Lightweight"],
+    bestFor: "speed",
+  },
+  {
+    name: "VS Code + Cline / Continue.dev",
+    pill: "Free & quality",
+    badge: { label: "Free", kind: "os" },
+    accent: "blue",
+    tagline: "Open-source AI inside the universal editor.",
+    desc: "Stay in plain VS Code and add open-source AI: Cline (5M+ installs) or Continue.dev. The best free, high-quality route with full control over your stack.",
+    tags: ["Open source", "Cline", "Continue.dev"],
+    bestFor: "free + quality, full control",
+  },
+];
+
+export const EDITOR_COMPARISON: RefTable = {
+  columns: ["Tool", "AI built-in", "Multi-file / agents", "Free tier", "Best for"],
+  rows: [
+    ["Cursor", "✓", "✓ Composer (8 agents)", "~ Limited", "General coding"],
+    ["Windsurf", "✓", "✓ Cascade", "✓", "Beginners"],
+    ["Claude Code", "✓ CLI", "✓", "✗", "Code quality / terminal"],
+    ["GitHub Copilot", "✓ ext", "~ Limited", "✗", "Enterprise / teams"],
+    ["Antigravity", "✓", "✓ up to 8 agents", "✓ preview", "Multi-agent"],
+    ["Zed", "✓", "~", "✓", "Speed"],
+    ["VS Code + Cline", "✓ ext", "✓ (Cline)", "✓", "Free & quality"],
+  ],
+};
+
+// 2026 verdict shown under the editors section.
+export const EDITOR_WINNERS = [
+  { label: "General coding", pick: "Cursor", note: "best overall" },
+  { label: "Code quality", pick: "Claude Code", note: "#1 on SWE-bench" },
+  { label: "Beginners", pick: "Windsurf", note: "easiest learning curve" },
+];
+
+// ───────────────────────── 02 · LLMs ─────────────────────────
+// Most-used models, June 2026 — closed vs open source.
+export const LLMS: RefCard[] = [
+  {
+    name: "Claude Opus 4.8",
+    pill: "Closed Source",
+    badge: { label: "API", kind: "paid" },
+    accent: "orange",
+    tagline: "Coding king — 80.8% SWE-Bench, ~1M-token context.",
+    desc: "Anthropic's flagship and the #1 pick for coding and agentic work in 2026. Best-in-class SWE-Bench with a very long context window. Powers Claude Code.",
+    tags: ["Anthropic", "Coding #1", "1M context"],
+  },
+  {
+    name: "GPT-5.5",
+    pill: "Closed Source",
+    badge: { label: "API", kind: "paid" },
+    accent: "pink",
+    tagline: "Best all-round general intelligence & writing.",
+    desc: "OpenAI's flagship — the go-to for general intelligence, writing, and broad tasks, with the largest tooling ecosystem.",
+    tags: ["OpenAI", "General intelligence", "Writing"],
+  },
+  {
+    name: "Gemini 3.1 Pro",
+    pill: "Closed Source",
+    badge: { label: "API", kind: "paid" },
+    accent: "blue",
+    tagline: "Scientific research, reasoning & multimodal.",
+    desc: "Google DeepMind's flagship — excels at scientific research, deep reasoning, and multimodal tasks, with huge context and strong price-performance.",
+    tags: ["Google", "Reasoning", "Multimodal"],
+  },
+  {
+    name: "Llama 4 (Scout / Maverick)",
+    pill: "Open Source",
+    badge: { label: "Free", kind: "os" },
+    accent: "teal",
+    tagline: "Largest open community — up to 10M-token context.",
+    desc: "Meta's open weights with the biggest community and ecosystem. Scout/Maverick variants push context up to ~10M tokens. Self-host or run via Ollama.",
+    tags: ["Meta", "10M context", "Self-host"],
+  },
+  {
+    name: "GLM-5.1",
+    pill: "Open Source",
+    badge: { label: "Free", kind: "os" },
+    accent: "purple",
+    tagline: "Top open model for coding agents.",
+    desc: "A leading open-weights choice for coding agents in 2026 — strong tool use and function calling at open-source cost.",
+    tags: ["Open weights", "Coding agents", "Tool use"],
+  },
+  {
+    name: "DeepSeek V4",
+    pill: "Open Source",
+    badge: { label: "Free", kind: "os" },
+    accent: "yellow",
+    tagline: "Cheapest path to frontier-level quality.",
+    desc: "Open weights delivering near-frontier quality at the lowest cost. Self-hostable; popular for budget-conscious, high-volume use.",
+    tags: ["Cheapest frontier", "Reasoning", "Self-host"],
+  },
+];
+
+// ───────────────────────── 03 · DOMAIN REGISTRARS ─────────────────────────
+export const REGISTRARS: RefCard[] = [
+  {
+    name: "Namecheap",
+    accent: "teal",
+    tagline: "Dev favorite. Cheap, honest pricing, good UI.",
+    desc: "Popular among developers. Transparent pricing, no dark patterns on renewal. Free WhoisGuard privacy. Solid DNS management. Great for personal projects and startups.",
+    tags: ["Privacy included", "Dev-friendly", "~$10/yr .com"],
+  },
+  {
+    name: "GoDaddy",
+    accent: "pink",
+    tagline: "Most recognized name. But notorious for upselling.",
+    desc: "Massive company, owns millions of domains. Good for non-techies. But known for aggressive upsells, confusing UI, and charging extra for privacy. Avoid if you know what you're doing.",
+    tags: ["Biggest registrar", "Upsells", "Non-dev"],
+  },
+  {
+    name: "Cloudflare Registrar",
+    accent: "yellow",
+    tagline: "At-cost pricing. Best if you already use Cloudflare.",
+    desc: "Cloudflare sells domains at wholesale cost — no markup. Free privacy. Best DNS in the world. But you can mainly transfer existing domains rather than register every new TLD. Ideal for serious devs.",
+    tags: ["At-cost", "Best DNS", "Transfer-first"],
+  },
+  {
+    name: "Squarespace Domains",
+    accent: "blue",
+    tagline: "Formerly Google Domains. Now run by Squarespace.",
+    desc: "Google Domains was beloved for simplicity, then sold to Squarespace in 2023. Clean UI, fair pricing. If you were on Google Domains, you're now on Squarespace Domains.",
+    tags: ["Acquired", "Simple UI", "Squarespace"],
+  },
+  {
+    name: "Porkbun",
+    accent: "purple",
+    tagline: "Quirky, cheap, great for .io and .ai domains.",
+    desc: "A developer darling. Fun branding, genuinely cheap prices (especially for .io, .ai, .dev). Free WHOIS privacy. Good DNS management. Great for indie hackers and side projects.",
+    tags: ["Cheap .ai/.io", "Dev favorite", "Fun brand"],
+  },
+  {
+    name: "Hover",
+    accent: "orange",
+    tagline: "Clean, no-upsell experience. Simple and honest.",
+    desc: "A clean, no-nonsense registrar. No upsells, no confusion. Slightly pricier but great customer support. Good for people who hate the GoDaddy checkout maze.",
+    tags: ["No upsells", "Clean UX", "Premium price"],
+  },
+];
+
+// ───────────────────────── 04 · FULL STACK ─────────────────────────
+export const STACK: StackItem[] = [
+  {
+    name: "Supabase",
+    icon: "🟢",
+    accent: "teal",
+    badge: { label: "Open Source", kind: "os" },
+    desc: "Open-source Firebase alternative. Gives you a Postgres database, auth, storage, real-time subscriptions, and auto-generated REST + GraphQL APIs — all in one dashboard. Hugely popular for Next.js apps. Generous free tier.",
+    role: "Database + Auth + Backend + Storage",
+  },
+  {
+    name: "Next.js",
+    icon: "⚡",
+    accent: "yellow",
+    badge: { label: "Open Source", kind: "os" },
+    desc: "The most popular React framework. Handles routing, server-side rendering, API routes, and static generation. By Vercel. Most production React apps use Next.js. Works perfectly with Supabase, Prisma, and Tailwind.",
+    role: "Frontend Framework (React-based)",
+  },
+  {
+    name: "Node.js",
+    icon: "🔷",
+    accent: "blue",
+    badge: { label: "Open Source", kind: "os" },
+    desc: "JavaScript runtime that runs on the server. Powers the backend of most JS apps. Express, Fastify, and NestJS are popular frameworks built on Node. Essential to understand — Next.js itself runs on Node.",
+    role: "Backend runtime (server-side JavaScript)",
+  },
+  {
+    name: "Vercel",
+    icon: "▲",
+    accent: "pink",
+    badge: { label: "Freemium", kind: "paid" },
+    desc: "Best place to deploy Next.js apps — made by the same team. Push to GitHub → auto-deploys in ~30 seconds. Handles edge functions, CDN, previews, custom domains. Free tier is excellent for side projects. Competes with Netlify.",
+    role: "Frontend Hosting / Deployment",
+  },
+  {
+    name: "Prisma",
+    icon: "🔷",
+    accent: "purple",
+    badge: { label: "Open Source", kind: "os" },
+    desc: "TypeScript ORM — talks to your database beautifully. Define your schema in a .prisma file, run migrations, and query your DB with type-safe code. Works with Postgres, MySQL, SQLite, MongoDB. Often paired with Supabase or PlanetScale.",
+    role: "Database ORM / Query Layer",
+  },
+  {
+    name: "Docker",
+    icon: "🐳",
+    accent: "teal",
+    badge: { label: "Open Source", kind: "os" },
+    desc: "Packages your app and all its dependencies into a container that runs identically everywhere — your laptop, AWS, or a server in Germany. Standard in professional dev. Compose lets you run Postgres + Redis + your app with one command.",
+    role: "Containerization / Dev Environment",
+  },
+  {
+    name: "Railway / Render",
+    icon: "🟠",
+    accent: "orange",
+    badge: { label: "Free tier", kind: "free" },
+    desc: "Heroku alternatives. Deploy a backend (Node, Python, Go) or a Postgres DB with zero config. Railway is slicker; Render has a generous free tier. Both auto-deploy from GitHub. Perfect for fullstack apps that need a real backend server.",
+    role: "Backend Hosting (servers, databases)",
+  },
+  {
+    name: "Tailwind CSS",
+    icon: "🟡",
+    accent: "yellow",
+    badge: { label: "Open Source", kind: "os" },
+    desc: "Utility-first CSS framework. Instead of writing CSS files, you compose classes in your JSX. Extremely fast to prototype. Used by the vast majority of modern Next.js projects.",
+    role: "Styling / CSS Framework",
+  },
+  {
+    name: "AWS / GCP / Azure",
+    icon: "☁️",
+    accent: "blue",
+    badge: { label: "Pay-as-you-go", kind: "cloud" },
+    desc: "Big cloud providers. AWS dominates with 200+ services. GCP is excellent for ML workloads. Azure dominates enterprise. Complex but infinitely scalable. Most startups start on Vercel+Supabase, then move to AWS at scale.",
+    role: "Cloud Infrastructure (production at scale)",
+  },
+  {
+    name: "tRPC",
+    icon: "🟢",
+    accent: "teal",
+    badge: { label: "Open Source", kind: "os" },
+    desc: "End-to-end typesafe API layer for TypeScript. Call your backend from the frontend as if it's a local function — no REST endpoints, no JSON serialization headaches. Pairs perfectly with Next.js + Prisma. The T3 Stack = Next + tRPC + Tailwind + Prisma.",
+    role: "Type-safe API layer (TypeScript)",
+  },
+];
