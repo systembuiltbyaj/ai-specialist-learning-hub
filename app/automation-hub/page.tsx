@@ -31,17 +31,17 @@ const AUTOMATION_NEWS: WhatsNewItem[] = [
     date: "2026",
     title: "Make 'Maia' builds scenarios from plain English",
     blurb:
-      "Make's Maia assistant generates a scenario from a natural-language description across 3,000+ apps. Its agent builder is still flagged beta — describe the outcome, let AI draft the flow, then refine and harden it.",
+      "Make's Maia assistant generates a scenario from a natural-language description, and its agent builder is still flagged beta. Describe the outcome, let AI draft the flow, then refine and harden it.",
     source: "https://www.make.com/",
-    sourceLabel: "Make",
+    sourceLabel: "Make (product page)",
   },
   {
     date: "2026",
-    title: "Zapier Agents run autonomously across 8,000+ apps",
+    title: "Zapier Agents run tasks autonomously",
     blurb:
-      "Zapier Agents execute multi-step tasks across its huge app catalog. Zapier still wins for fast 2–3 step Zaps; reach for n8n when logic gets complex, Make for visual mid-complexity.",
+      "Zapier Agents execute multi-step tasks across its app catalog — the largest of the three. Zapier still wins for fast 2–3 step Zaps; reach for n8n when logic gets complex, Make for visual mid-complexity.",
     source: "https://zapier.com/agents",
-    sourceLabel: "Zapier Agents",
+    sourceLabel: "Zapier (product page)",
   },
   {
     date: "Landscape",

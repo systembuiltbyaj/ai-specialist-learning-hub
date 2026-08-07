@@ -2,44 +2,47 @@ import type { Metadata } from "next";
 import GhlHubClient from "./GhlHubClient";
 import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
 
+// Every item below was read directly off the HighLevel changelog, not a
+// third-party roundup. If you add one, open the changelog and confirm it — a
+// source link is a claim that you checked it.
 const GHL_NEWS: WhatsNewItem[] = [
   {
-    date: "Aug 5, 2026",
-    title: "WhatsApp delivery stats built into Workflows",
+    date: "Aug 7, 2026",
+    title: "Fixed pricing for AI products in SaaS Mode",
     blurb:
-      "Workflows now track the full delivery lifecycle of every WhatsApp message they send — sent, pending, delivered, read, failed — with custom date ranges and per-message detail including recipient and timestamp. You can finally prove a WhatsApp sequence is landing instead of guessing.",
+      "You can set fixed pricing on AI products when reselling through SaaS Mode. If you're rebilling AI features to clients, this is the difference between a predictable margin and one that moves with usage.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
   {
-    date: "Jul 2026",
-    title: "AI Builder does targeted and bulk edits",
+    date: "Aug 7, 2026",
+    title: "WhatsApp usernames",
     blurb:
-      "AI Builder takes precise edit instructions — change one action or trigger and leave the rest untouched — and handles bulk edits across many actions at once, such as updating copy, pipeline stages, or sender identity. Much safer to point at a live workflow.",
-    source: "https://ghldeveloper.io/blog/gohighlevel-july-2026-updates-hidden-features-you-probably-missed",
-    sourceLabel: "July 2026 roundup",
-  },
-  {
-    date: "Jul 2026",
-    title: "Rentals goes account-wide",
-    blurb:
-      "Rental management left limited release and joined the scheduling suite for all accounts: inventory tracking, flexible pricing models, multi-item bookings, and a dedicated rentals calendar. A new vertical you can sell into without leaving the platform.",
-    source: "https://ghldeveloper.io/blog/gohighlevel-july-2026-updates-hidden-features-you-probably-missed",
-    sourceLabel: "July 2026 roundup",
-  },
-  {
-    date: "Jul 2026",
-    title: "Conversation AI routing overhaul + new connectors",
-    blurb:
-      "The second week of July focused on automation and AI: reworked Conversation AI routing, new workflow connectors, and template packs. Worth re-testing any escalation logic you built against the old routing behaviour.",
+      "Contacts can now be captured by WhatsApp username rather than phone number alone — useful anywhere you're collecting WhatsApp as a channel without a reliable mobile number.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
   {
-    date: "Jun 2026",
-    title: "Workflow AI: structured output + test mode",
+    date: "Aug 6, 2026",
+    title: "Company custom fields in Snapshots",
     blurb:
-      "The Workflow AI action returns JSON with defined fields, injects contact variables into prompts at run time, and can be tested before activation — so you can route on an AI decision reliably without pushing data out to n8n or Make.",
+      "Company-level custom fields now travel with a Snapshot. One less thing to rebuild by hand every time you deploy your standard build into a new sub-account.",
+    source: "https://ideas.gohighlevel.com/changelog",
+    sourceLabel: "HighLevel changelog",
+  },
+  {
+    date: "Aug 7, 2026",
+    title: "TikTok Lead Ads moves to Marketplace architecture",
+    blurb:
+      "The TikTok Lead Ads integration migrated to the Marketplace app architecture, alongside a similar move for Slack. Worth re-checking the connection on any account running TikTok lead flows.",
+    source: "https://ideas.gohighlevel.com/changelog",
+    sourceLabel: "HighLevel changelog",
+  },
+  {
+    date: "Aug 6, 2026",
+    title: "Localized ringtones across 37 countries",
+    blurb:
+      "Outbound calling now plays the ringtone a recipient expects in their own country. Small detail, real pickup-rate impact on international outbound.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
