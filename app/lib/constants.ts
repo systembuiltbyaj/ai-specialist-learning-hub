@@ -50,8 +50,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Quiz Mode", href: "/quiz", description: "Auto-built exams from the dictionary", icon: "🧪" },
       { label: "Interview", href: "/interview", description: "Interview questions & answers", icon: "🎤" },
-      { label: "Presentation", href: "/presentation", description: "Client pitch & self-pitch scripts", icon: "▶" },
-      { label: "Tasks", href: "/tasks", description: "Plan your week", icon: "✓" },
+      { label: "Tasks", href: "/tasks", description: "Move cards across the board", icon: "✓" },
     ],
   },
   {

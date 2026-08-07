@@ -7,7 +7,7 @@ import {
 } from "@/app/lib/access";
 import { rateLimit, clientKey } from "@/app/lib/rateLimit";
 
-// Admin login for the private workspace (/interview, /presentation) and for
+// Admin login for the admin session, used to authorize
 // writes to /api/resources.
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes

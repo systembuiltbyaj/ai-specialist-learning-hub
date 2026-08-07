@@ -144,18 +144,6 @@ const ICONS: Record<string, IconDef> = {
       </>
     ),
   },
-  "/presentation": {
-    from: P,
-    to: V,
-    body: (
-      <>
-        <rect x="3" y="4" width="18" height="12" rx="2" />
-        <path d="M12 16v3" />
-        <path d="M9 21h6" />
-        <path d="M10 8.5l4 2.5-4 2.5z" />
-      </>
-    ),
-  },
   "/dev-tools": {
     from: B,
     to: V,

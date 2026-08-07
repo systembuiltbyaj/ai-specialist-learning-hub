@@ -258,33 +258,7 @@ export interface FrameworkStep {
   sections: FrameworkSection[];
 }
 
-// ── Presentation scripts ──
-export interface PresentationSlide {
-  n: string;
-  title: string;
-  goal: string; // what this section achieves
-  points: string[]; // talking points
-  say?: string; // a ready-to-say line
-}
-
-// A tailored, editable presentation per client you applied to.
-export interface AppliedSlide {
-  title: string;
-  goal: string;
-  points: string[];
-  say: string;
-}
-export interface AppliedClient {
-  id: string;
-  name: string;
-  company: string;
-  link: string;
-  notes: string;
-  slides: AppliedSlide[];
-  updatedAt: number;
-}
-
-// ── Weekly tasks ──
+// ── Tasks ──
 export type TaskStatus = "To Do" | "In Progress" | "Done";
 
 export interface TaskItem {

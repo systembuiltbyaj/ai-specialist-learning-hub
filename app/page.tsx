@@ -37,13 +37,25 @@ export default async function HomePage() {
           <div className="flex flex-col justify-center px-3 py-6 sm:px-8 sm:py-10">
             <p className="eyebrow">{BRAND.handle}</p>
             <h1 className="mt-3 text-balance font-display text-2xl font-extrabold leading-[1.15] tracking-[-0.03em] text-text sm:text-[2rem]">
-              Hello — welcome to the{" "}
+              Hello! — Welcome to the{" "}
               <span className="text-gold">AJ Learning Hub</span>
             </h1>
-            <p className="mt-3 max-w-md text-[0.9375rem] leading-relaxed text-muted">
-              A plain-English reference for the terms, acronyms, and tools behind
-              modern AI and automation. Start by looking something up.
-            </p>
+            <div className="mt-3 max-w-md space-y-2.5 text-[0.9375rem] leading-relaxed text-muted">
+              <p>
+                If you&apos;re just stepping into AI, half of it sounds like another
+                language — <span className="text-text/80">RAG</span>,{" "}
+                <span className="text-text/80">MCP</span>,{" "}
+                <span className="text-text/80">tokens</span>,{" "}
+                <span className="text-text/80">A2P 10DLC</span>. Nobody tells you
+                what any of it means; they just keep using the words.
+              </p>
+              <p>
+                I kept hitting terms I didn&apos;t know, so I started writing them
+                down in plain English. That&apos;s all this is — the vocabulary,
+                the tools, and the parts under the surface, explained the way I
+                wish someone had explained them to me.
+              </p>
+            </div>
 
             <div className="mt-6">
               <SiteSearch variant="hero" />
