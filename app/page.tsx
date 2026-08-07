@@ -3,6 +3,7 @@ import { BRAND, NAV_ITEMS } from "@/app/lib/constants";
 import Dashboard from "@/app/components/Dashboard";
 import NavIcon from "@/app/components/NavIcons";
 import SiteSearch from "@/app/components/SiteSearch";
+import WelcomeVideo from "@/app/components/WelcomeVideo";
 import TermOfTheDay from "@/app/components/TermOfTheDay";
 import { getTools } from "@/app/lib/data";
 import { DICTIONARY } from "@/data/dictionary";
@@ -24,39 +25,49 @@ export default async function HomePage() {
 
   return (
     <div className="container-hub space-y-16 py-8">
-      {/* ───────────── Hero — search is the main event ───────────── */}
-      <section className="relative overflow-hidden rounded-2xl border border-line bg-surface/40 px-6 py-14 shadow-glow sm:px-12 sm:py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow animate-fade-up">{BRAND.handle} · AI &amp; Automation</p>
-          <h1 className="mt-4 animate-fade-up text-balance font-display text-3xl font-extrabold uppercase leading-[1.05] tracking-tight text-text sm:text-5xl">
-            Look up anything in{" "}
-            <span className="bg-gradient-to-r from-gold via-gold-soft to-violet-light bg-clip-text text-transparent">
-              AI &amp; automation
-            </span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-xl animate-fade-up text-base text-white/70">
-            A plain-English reference for the terms, acronyms, and tools behind
-            modern AI and automation.
-          </p>
+      {/* ───────────── Welcome ─────────────
+          Two panels: the mascot on the left, the greeting and search on the
+          right. Search sits where a login form would — it is the one thing a
+          visitor came here to do, so it stays above the fold rather than being
+          pushed under a hero. */}
+      <section className="animate-fade-up overflow-hidden rounded-2xl border border-line bg-surface/50 p-3 shadow-glow sm:p-4">
+        <div className="grid gap-3 sm:gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
+          <WelcomeVideo />
 
-          <div className="mx-auto mt-8 max-w-xl animate-fade-up">
-            <SiteSearch variant="hero" />
+          <div className="flex flex-col justify-center px-3 py-6 sm:px-8 sm:py-10">
+            <p className="eyebrow">{BRAND.handle}</p>
+            <h1 className="mt-3 text-balance font-display text-2xl font-extrabold leading-[1.15] tracking-[-0.03em] text-text sm:text-[2rem]">
+              Hello — welcome to the{" "}
+              <span className="text-gold">AJ Learning Hub</span>
+            </h1>
+            <p className="mt-3 max-w-md text-[0.9375rem] leading-relaxed text-muted">
+              A plain-English reference for the terms, acronyms, and tools behind
+              modern AI and automation. Start by looking something up.
+            </p>
+
+            <div className="mt-6">
+              <SiteSearch variant="hero" />
+            </div>
+
+            <p className="mt-4 text-sm text-muted">
+              or browse{" "}
+              <Link href="/dictionary" className="text-gold hover:underline">
+                the dictionary
+              </Link>
+              ,{" "}
+              <Link href="/acronyms" className="text-gold hover:underline">
+                acronyms
+              </Link>
+              , or{" "}
+              <Link href="/tools" className="text-gold hover:underline">
+                tools
+              </Link>
+            </p>
+
+            <p className="mt-6 border-t border-line pt-4 font-mono text-[0.68rem] text-muted">
+              Free · no sign-up · nothing to install
+            </p>
           </div>
-
-          <p className="mt-4 animate-fade-up text-sm text-muted">
-            or browse{" "}
-            <Link href="/dictionary" className="text-gold hover:underline">
-              the dictionary
-            </Link>
-            ,{" "}
-            <Link href="/acronyms" className="text-gold hover:underline">
-              acronyms
-            </Link>
-            , or{" "}
-            <Link href="/tools" className="text-gold hover:underline">
-              tools
-            </Link>
-          </p>
         </div>
       </section>
 
