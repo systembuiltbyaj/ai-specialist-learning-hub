@@ -1,24 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { BRAND } from "@/app/lib/constants";
 import { siteUrl } from "@/app/lib/siteUrl";
 import Sidebar from "@/app/components/Sidebar";
 import Footer from "@/app/components/Footer";
 
-// Three roles, each doing a different job:
-//   sans  — interface chrome (nav, buttons). Deliberately neutral.
-//   serif — headwords and definitions. Every dictionary you've read is serif;
-//           it carries the authority of a reference work.
-//   mono  — metadata and annotation. The machine voice against the human one.
+// Two voices, not three. Inter carries headwords, definitions, and chrome —
+// hierarchy comes from weight and tracking rather than a second family. IBM Plex
+// Mono is the contrast voice, reserved for metadata and annotation.
 const sans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-});
-const serif = Newsreader({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
 });
 const mono = IBM_Plex_Mono({
   subsets: ["latin"],
@@ -65,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body className="min-h-screen font-sans">
         <Sidebar />
         {/* Content shell — offset by the fixed sidebar on desktop */}

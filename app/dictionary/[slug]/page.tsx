@@ -76,13 +76,13 @@ export default async function TermPage({ params }: Params) {
 
       <section className="entry-note">
         <h2 className="entry-note-label">Why it matters</h2>
-        <p className="entry-note-body not-italic">{term.whyItMatters}</p>
+        <p className="entry-note-body">{term.whyItMatters}</p>
       </section>
 
       {term.example && (
         <section className="entry-note">
           <h2 className="entry-note-label">In practice</h2>
-          <p className="entry-note-body not-italic">{term.example}</p>
+          <p className="entry-note-body">{term.example}</p>
         </section>
       )}
 

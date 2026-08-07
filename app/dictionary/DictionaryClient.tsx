@@ -130,7 +130,7 @@ export default function DictionaryClient() {
       </p>
 
       {filtered.length === 0 ? (
-        <p className="border-t border-line py-16 text-center font-serif text-lg italic text-muted">
+        <p className="border-t border-line py-16 text-center text-[0.9375rem] text-muted">
           No entries match{query && <> “{query}”</>}. Try a broader section or clear the search.
         </p>
       ) : (
@@ -247,7 +247,7 @@ const Entry = forwardRef<
 
           <section className="entry-note">
             <h4 className="entry-note-label">Why it matters</h4>
-            <p className="entry-note-body not-italic">
+            <p className="entry-note-body">
               {highlight(term.whyItMatters, query)}
             </p>
           </section>
@@ -255,7 +255,7 @@ const Entry = forwardRef<
           {term.example && (
             <section className="entry-note">
               <h4 className="entry-note-label">In practice</h4>
-              <p className="entry-note-body not-italic">
+              <p className="entry-note-body">
                 {highlight(term.example, query)}
               </p>
             </section>

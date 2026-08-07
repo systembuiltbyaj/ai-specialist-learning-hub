@@ -13,7 +13,7 @@ export default function DictionaryPage() {
     <div className="container-hub max-w-4xl space-y-7 py-10">
       <header className="border-b border-line/70 pb-6">
         <p className="eyebrow">The Reference</p>
-        <h1 className="mt-2 font-serif text-4xl font-semibold tracking-[-0.02em] text-text sm:text-5xl">
+        <h1 className="mt-2 text-4xl font-extrabold tracking-[-0.035em] text-text sm:text-5xl">
           Tech Dictionary
         </h1>
         <p className="entry-body mt-3 max-w-[58ch]">

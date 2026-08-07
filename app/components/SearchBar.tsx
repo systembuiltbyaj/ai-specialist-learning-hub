@@ -64,7 +64,7 @@ export default function SearchBar({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="input-hub pl-11 pr-28 font-serif text-[1.0625rem]"
+        className="input-hub pl-11 pr-28"
         aria-label="Search"
       />
       <div className="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-2">

@@ -108,8 +108,8 @@ body::before {
      The entry — this site's signature.
 
      A term is not a card. It is a typeset dictionary entry: hairline
-     rules, a serif headword, variant forms and category set as mono
-     annotation, cross-references in → notation. The same block renders
+     rules, a heavy tight-tracked headword, variant forms and category set as
+     mono annotation, cross-references in → notation. The same block renders
      in the list, on the term page, and in search results, which is what
      makes it read as one reference work rather than three screens.
      ───────────────────────────────────────────────────────────── */
@@ -120,9 +120,12 @@ body::before {
     @apply text-gold-soft;
   }
 
-  /* Headword — the one place gold is allowed to shout. */
+  /* Headword — the one place gold is allowed to shout.
+     Hierarchy comes from weight and tracking, not a second typeface: 800 against
+     the definition's 400, pulled tight at -0.03em so the term reads as a single
+     object rather than a line of text. */
   .entry-head {
-    @apply font-serif text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.01em] text-gold transition-colors sm:text-[2rem];
+    @apply font-sans text-[1.6rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-gold transition-colors sm:text-[1.85rem];
   }
 
   /* Variant forms, sitting immediately under the headword as in print. */
@@ -139,9 +142,11 @@ body::before {
     @apply text-violet-light;
   }
 
-  /* The definition. Serif, generous measure, the thing people came for. */
+  /* The definition — the thing people came for. Generous measure and open
+     line-height carry readability; weight contrast against the headword
+     (400 vs 800) carries the hierarchy. */
   .entry-body {
-    @apply mt-3 max-w-[62ch] font-serif text-[1.0625rem] leading-[1.65] text-text/85;
+    @apply mt-2.5 max-w-[68ch] font-sans text-[0.9375rem] font-normal leading-[1.7] text-text/80;
   }
 
   /* Cross-references — dictionary notation, not chips. */
@@ -164,7 +169,7 @@ body::before {
     @apply font-mono text-[0.62rem] uppercase tracking-[0.22em] text-gold;
   }
   .entry-note-body {
-    @apply mt-1.5 max-w-[60ch] font-serif text-[1rem] italic leading-[1.6] text-text/75;
+    @apply mt-1.5 max-w-[66ch] font-sans text-[0.9375rem] leading-[1.65] text-text/70;
   }
 
   /* Dev-tools pills & tags */
