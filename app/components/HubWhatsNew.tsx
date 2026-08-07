@@ -1,5 +1,9 @@
 // Server component — a dated "What's New" feed for the hub pages.
-// Verified against official changelogs / newsrooms (mid-2026).
+//
+// `verified` is required on purpose. The previous version hardcoded
+// "mid-2026" in the heading, which stayed put while the content aged and gave
+// no signal that anything had gone stale. Making the date a required prop means
+// it can only be wrong if someone edits the items without updating it.
 
 export interface WhatsNewItem {
   date: string; // e.g. "Jun 2026"
@@ -12,19 +16,27 @@ export interface WhatsNewItem {
 export default function HubWhatsNew({
   items,
   accent = "#f6cb1f",
+  verified,
   note,
 }: {
   items: WhatsNewItem[];
   accent?: string;
+  verified: string;
   note?: string;
 }) {
   return (
     <section className="card p-5" style={{ borderTopColor: accent, borderTopWidth: 2 }}>
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="font-display text-sm font-bold uppercase tracking-wide" style={{ color: accent }}>
-          🆕 What&apos;s New · mid-2026
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <h2
+          className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em]"
+          style={{ color: accent }}
+        >
+          What&apos;s new
         </h2>
-        {note && <span className="text-[0.65rem] text-muted">{note}</span>}
+        <span className="font-mono text-[0.62rem] text-muted">
+          verified {verified}
+          {note && <> · {note}</>}
+        </span>
       </div>
       <ul className="mt-4 space-y-3">
         {items.map((it) => (

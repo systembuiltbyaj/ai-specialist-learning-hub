@@ -4,28 +4,28 @@ import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
 
 const CLAUDE_NEWS: WhatsNewItem[] = [
   {
+    date: "Aug 31, 2026",
+    title: "Sonnet 5 introductory pricing ends",
+    blurb:
+      "Claude Sonnet 5 runs at $2 / $10 per million tokens until August 31, after which it moves to $3 / $15. If you're costing out a client automation on Sonnet 5, price it at the standard rate — not the promo.",
+    source: "https://platform.claude.com/docs/en/about-claude/pricing",
+    sourceLabel: "Claude pricing docs",
+  },
+  {
+    date: "Jul 24, 2026",
+    title: "Claude Opus 5 — the default for agentic work",
+    blurb:
+      "Anthropic's recommendation for complex agentic coding and enterprise workloads: 1M-token context, 128k max output, adaptive thinking on by default. This is the model to reach for when building automations that run long chains of tool calls.",
+    source: "https://platform.claude.com/docs/en/about-claude/models/overview",
+    sourceLabel: "Models overview",
+  },
+  {
     date: "Jun 9, 2026",
-    title: "Claude Fable 5 & Mythos 5 — then a US export hold",
+    title: "Fable 5 is the capability ceiling; Mythos 5 is invite-only",
     blurb:
-      "Anthropic released new flagship models (1M-token context, always-on adaptive thinking) on June 9. On June 12 a US government export-control directive suspended access to both — confirm availability before standardizing automations on them.",
-    source: "https://www.anthropic.com/news",
-    sourceLabel: "Anthropic newsroom",
-  },
-  {
-    date: "Jun 23, 2026",
-    title: "Claude Tag for team collaboration",
-    blurb:
-      "A new offering for collaborating with Claude across a team — relevant as you move from solo Claude use toward shared client workspaces.",
-    source: "https://www.anthropic.com/news",
-    sourceLabel: "Anthropic newsroom",
-  },
-  {
-    date: "2026",
-    title: "Managed agents run in your own sandbox + private MCP",
-    blurb:
-      "Claude's managed agents can execute tools in a sandbox you control and connect to your private MCP servers (self-hosted on AWS, Cloudflare, Modal, Vercel, and more) — keeping tool execution and data on your infrastructure.",
-    source: "https://www.anthropic.com/news",
-    sourceLabel: "Anthropic newsroom",
+      "Claude Fable 5 is generally available and is Anthropic's most capable widely released model — 1M context, always-on adaptive thinking, $10 / $50 per MTok. Claude Mythos 5 shares its specs but is not self-serve: it's limited to approved customers under Project Glasswing for defensive cybersecurity work.",
+    source: "https://platform.claude.com/docs/en/about-claude/models/overview",
+    sourceLabel: "Models overview",
   },
   {
     date: "Reminder",
@@ -59,7 +59,12 @@ export default function ClaudeHubPage() {
         </p>
       </header>
 
-      <HubWhatsNew items={CLAUDE_NEWS} accent="#ff8a3d" />
+      <HubWhatsNew
+        items={CLAUDE_NEWS}
+        accent="#ff8a3d"
+        verified="7 Aug 2026"
+        note="against Anthropic docs"
+      />
 
       <ClaudeHubClient />
     </div>

@@ -16,10 +16,10 @@ export const SEED_UPDATES: Update[] = [
   {
     id: "u-2026-w26-claude-1",
     week: "Week of 2026-06-08",
-    title: "Claude: Fable 5 & Mythos 5 launch — then a US export hold",
+    title: "Claude: Fable 5 launches; Mythos 5 stays invitation-only",
     category: "Claude",
     content:
-      "Anthropic released its new flagship models, Claude Fable 5 and Mythos 5, on June 9 (1M-token context, always-on adaptive thinking). On June 12 a US government export-control directive suspended access to both. Confirm availability before standardizing automations on them. Source: https://www.anthropic.com/news",
+      "Anthropic released Claude Fable 5 on June 9 — its most capable widely released model (1M-token context, always-on adaptive thinking), generally available on the Claude API, Bedrock, Google Cloud, and Microsoft Foundry. Claude Mythos 5 shares its specs but is not self-serve: it is limited to approved customers under Project Glasswing for defensive cybersecurity work. Source: https://platform.claude.com/docs/en/about-claude/models/overview",
   },
   {
     id: "u-2026-w26-news-1",
@@ -64,10 +64,10 @@ export const SEED_UPDATES: Update[] = [
   {
     id: "u-2026-w26-news-2",
     week: "Week of 2026-06-08",
-    title: "AI News: export controls now shape which models you can use",
+    title: "AI News: availability tiers now shape which models you can use",
     category: "AI News",
     content:
-      "On June 12 the US government issued an export-control directive suspending access to Anthropic's Fable 5 and Mythos 5 — a reminder that geopolitics now directly affects model availability. Design automations with a fallback model in mind so a single restriction can't break production. Source: https://www.anthropic.com/news",
+      "Frontier capability is increasingly gated behind access tiers rather than price alone — Claude Mythos 5 is invitation-only under Project Glasswing, while Fable 5 is generally available. Design automations with a fallback model in mind so a tier you can't get into never blocks production. Source: https://platform.claude.com/docs/en/about-claude/models/overview",
   },
   // ── Earlier history ──
   {

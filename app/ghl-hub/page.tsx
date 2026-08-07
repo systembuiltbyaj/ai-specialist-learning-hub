@@ -4,34 +4,42 @@ import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
 
 const GHL_NEWS: WhatsNewItem[] = [
   {
-    date: "May–Jun 2026",
-    title: "AI Employee unifies Voice + Conversation AI + Appointment Setter",
+    date: "Aug 5, 2026",
+    title: "WhatsApp delivery stats built into Workflows",
     blurb:
-      "GoHighLevel's AI Employee bundles Voice AI, Conversation AI, and the AI Appointment Setter under one interface — one place to configure the bot that answers calls, texts back leads, and books appointments. The headline AI release of 2026 so far.",
-    source: "https://www.highlevel.ai/blog/gohighlevel-ai-changelog",
-    sourceLabel: "GHL AI changelog",
-  },
-  {
-    date: "Jun 2026",
-    title: "Workflow AI gets structured output + test mode",
-    blurb:
-      "The Workflow AI action can now return JSON with defined fields, inject contact variables into prompts at run time, and be tested before activation — so you can route on an AI decision reliably without pushing data out to n8n/Make.",
+      "Workflows now track the full delivery lifecycle of every WhatsApp message they send — sent, pending, delivered, read, failed — with custom date ranges and per-message detail including recipient and timestamp. You can finally prove a WhatsApp sequence is landing instead of guessing.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
   {
-    date: "Jun 24, 2026",
-    title: "SLA workflow triggers for conversations",
+    date: "Jul 2026",
+    title: "AI Builder does targeted and bulk edits",
     blurb:
-      "New triggers fire when a conversation SLA is due soon, overdue, or manually dismissed, plus admin permission controls — build escalation automations that notify a rep before a lead goes cold.",
+      "AI Builder takes precise edit instructions — change one action or trigger and leave the rest untouched — and handles bulk edits across many actions at once, such as updating copy, pipeline stages, or sender identity. Much safer to point at a live workflow.",
+    source: "https://ghldeveloper.io/blog/gohighlevel-july-2026-updates-hidden-features-you-probably-missed",
+    sourceLabel: "July 2026 roundup",
+  },
+  {
+    date: "Jul 2026",
+    title: "Rentals goes account-wide",
+    blurb:
+      "Rental management left limited release and joined the scheduling suite for all accounts: inventory tracking, flexible pricing models, multi-item bookings, and a dedicated rentals calendar. A new vertical you can sell into without leaving the platform.",
+    source: "https://ghldeveloper.io/blog/gohighlevel-july-2026-updates-hidden-features-you-probably-missed",
+    sourceLabel: "July 2026 roundup",
+  },
+  {
+    date: "Jul 2026",
+    title: "Conversation AI routing overhaul + new connectors",
+    blurb:
+      "The second week of July focused on automation and AI: reworked Conversation AI routing, new workflow connectors, and template packs. Worth re-testing any escalation logic you built against the old routing behaviour.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
   {
     date: "Jun 2026",
-    title: "New integrations + 7 workflow templates",
+    title: "Workflow AI: structured output + test mode",
     blurb:
-      "One-click Calendly import and direct WhatsApp Business API reached general availability, plus 7 prebuilt workflow templates for Asana, ClickUp, Slack, and Google — drop-in starting points for cross-tool automations.",
+      "The Workflow AI action returns JSON with defined fields, injects contact variables into prompts at run time, and can be tested before activation — so you can route on an AI decision reliably without pushing data out to n8n or Make.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
@@ -61,7 +69,12 @@ export default function GhlHubPage() {
         </p>
       </header>
 
-      <HubWhatsNew items={GHL_NEWS} accent="#34d399" note="Verified vs GHL changelog" />
+      <HubWhatsNew
+        items={GHL_NEWS}
+        accent="#34d399"
+        verified="7 Aug 2026"
+        note="against the HighLevel changelog"
+      />
 
       <GhlHubClient />
     </div>
