@@ -1,6 +1,6 @@
 ﻿import type { InterviewEntry } from "@/app/lib/types";
 
-// GHL Specialist interview prep â€” draft answers to refine.
+// GHL Specialist interview prep — draft answers to refine.
 // Listed in question order; createdAt is set descending so they render in order.
 const RAW: Omit<InterviewEntry, "createdAt">[] = [
   {
@@ -15,14 +15,14 @@ const RAW: Omit<InterviewEntry, "createdAt">[] = [
     topic: "Process",
     question: "What is your approach to building automations in GoHighLevel?",
     answer:
-      "I believe simple automations are usually better than complex ones. Many people think that more workflows mean more leads, but that's not necessarily true. The goal is to create an efficient system that nurtures leads and converts them into paying clients. If a simple workflow can achieve that, there's no need to overcomplicate it. ðŸš€",
+      "I believe simple automations are usually better than complex ones. Many people think that more workflows mean more leads, but that's not necessarily true. The goal is to create an efficient system that nurtures leads and converts them into paying clients. If a simple workflow can achieve that, there's no need to overcomplicate it. 🚀",
   },
   {
     id: "iv-audit-account",
     topic: "Process",
     question: "How do you audit a system or account?",
     answer:
-      "The first thing I do is understand the business flow and how leads are coming into the business. Then I look at the customer journey to identify how contacts enter the CRM â€” whether through Facebook ads, website forms, landing pages, or other lead sources.\n\nOnce I understand the entire process, I create a workflow and automation plan that supports the customer's journey. The main objective is to move leads from cold prospects to qualified opportunities and ultimately closed deals. ðŸš€",
+      "The first thing I do is understand the business flow and how leads are coming into the business. Then I look at the customer journey to identify how contacts enter the CRM — whether through Facebook ads, website forms, landing pages, or other lead sources.\n\nOnce I understand the entire process, I create a workflow and automation plan that supports the customer's journey. The main objective is to move leads from cold prospects to qualified opportunities and ultimately closed deals. 🚀",
   },
   {
     id: "iv-q4",
@@ -99,7 +99,7 @@ const RAW: Omit<InterviewEntry, "createdAt">[] = [
     topic: "Communication",
     question: "How do you explain technical concepts to non-technical clients?",
     answer:
-      "I try to avoid technical jargon and explain things using business outcomes. Instead of talking about workflow triggers and conditions, I explain how the automation will save time, improve follow-up, or help convert more leads.\n\nI always focus on what the client cares about mostâ€”the results.",
+      "I try to avoid technical jargon and explain things using business outcomes. Instead of talking about workflow triggers and conditions, I explain how the automation will save time, improve follow-up, or help convert more leads.\n\nI always focus on what the client cares about most—the results.",
   },
   {
     id: "iv-q17",
