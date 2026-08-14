@@ -219,3 +219,219 @@ mark {
   border-radius: 2px;
   padding: 0 1px;
 }
+
+/* ── Cold-open intro overlay (app/components/IntroOverlay.tsx) ──
+   Matches the reference title sequence beat for beat, in brand violet: thin
+   rounded-rect wireframes fly outward while the name types on, re-centring
+   itself as it grows.
+
+   The re-centring is the whole trick, and it is pure CSS. The clip box is
+   centred in its grid cell and its width animates 0 → 100%; the text inside is
+   anchored to the clip's LEFT edge and never wraps. So as the box widens, its
+   left edge walks left at half the rate the text is revealed — which lands
+   every intermediate state dead centre, exactly like the reference. Anchoring
+   the text to the cell instead would type left-to-right from a fixed origin.
+
+   Retune the sequence with the four vars on `.intro`. */
+.intro {
+  --intro-rings: 1.5s;   /* wireframes fly out */
+  --intro-kicker: 0.45s; /* kicker fades in */
+  --intro-type: 1.2s;    /* name types on */
+  --intro-hold: 2.55s;   /* everything holds, then the overlay leaves */
+
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+  animation: intro-out 0.55s cubic-bezier(0.4, 0, 0.2, 1) var(--intro-hold)
+    forwards;
+}
+
+.intro-stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+/* Wireframe fragments. Three rounded rects at different scales, staggered so
+   they read as separate objects passing the camera rather than one pulse. */
+.intro-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid var(--violet);
+  border-radius: 1rem;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+}
+.intro-ring-1 {
+  width: 34rem;
+  height: 12rem;
+  animation: intro-ring var(--intro-rings) cubic-bezier(0.16, 0.8, 0.3, 1) 0.05s
+    forwards;
+}
+.intro-ring-2 {
+  width: 21rem;
+  height: 8.5rem;
+  border-radius: 0.75rem;
+  animation: intro-ring var(--intro-rings) cubic-bezier(0.16, 0.8, 0.3, 1) 0.32s
+    forwards;
+}
+.intro-ring-3 {
+  width: 48rem;
+  height: 17rem;
+  border-radius: 1.5rem;
+  animation: intro-ring var(--intro-rings) cubic-bezier(0.16, 0.8, 0.3, 1) 0.62s
+    forwards;
+}
+
+/* Vertical hairline that drops through the centre ahead of the type. */
+.intro-scan {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 15rem;
+  margin-left: -0.5px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--violet) 45%,
+    transparent
+  );
+  transform: translateY(-50%) scaleY(0);
+  transform-origin: top;
+  animation: intro-scan 1.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.intro-kicker {
+  position: relative;
+  margin-bottom: 0.5rem;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.62em;
+  /* The tracking pushes the block right by one gap; pull it back to centre. */
+  text-indent: 0.62em;
+  text-transform: uppercase;
+  color: var(--violet);
+  opacity: 0;
+  animation: intro-fade var(--intro-kicker) ease-out 0.5s forwards;
+}
+
+/* Ghost and clip share one grid cell: the ghost sizes the cell to the finished
+   name, the clip is centred inside it and grows to fill. */
+.intro-name {
+  position: relative;
+  display: inline-grid;
+  justify-items: center;
+  font-size: clamp(1.75rem, 7vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.intro-name-ghost,
+.intro-name-type {
+  grid-area: 1 / 1;
+}
+
+.intro-name-ghost {
+  visibility: hidden;
+}
+
+.intro-name-type {
+  position: relative;
+  width: 0;
+  overflow: hidden;
+  animation: intro-type var(--intro-type) steps(var(--intro-chars), end) 0.7s
+    forwards;
+}
+
+/* Anchored to the clip's left edge — see the note at the top of this block. */
+.intro-name-inner {
+  display: block;
+  white-space: nowrap;
+}
+
+.intro-caret {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--violet);
+  animation: intro-caret 0.72s steps(2, jump-none) infinite;
+}
+
+@keyframes intro-ring {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  22% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.85);
+  }
+}
+@keyframes intro-scan {
+  0% {
+    transform: translateY(-50%) scaleY(0);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translateY(-50%) scaleY(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-50%) scaleY(1);
+    opacity: 0;
+  }
+}
+@keyframes intro-fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes intro-type {
+  to {
+    width: 100%;
+  }
+}
+@keyframes intro-caret {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes intro-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* No cold-open for visitors who asked for less motion — the app opens straight
+   into the page rather than replacing one animation with a black flash. */
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}
+
+@media print {
+  .intro {
+    display: none;
+  }
+}

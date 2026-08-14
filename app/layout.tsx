@@ -5,6 +5,7 @@ import { BRAND } from "@/app/lib/constants";
 import { siteUrl } from "@/app/lib/siteUrl";
 import Sidebar from "@/app/components/Sidebar";
 import Footer from "@/app/components/Footer";
+import IntroOverlay from "@/app/components/IntroOverlay";
 
 // Two voices, not three. Inter carries headwords, definitions, and chrome —
 // hierarchy comes from weight and tracking rather than a second family. IBM Plex
@@ -60,6 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body className="min-h-screen font-sans">
+        <IntroOverlay />
         <Sidebar />
         {/* Content shell — offset by the fixed sidebar on desktop */}
         <div className="flex min-h-screen flex-col lg:pl-64">
