@@ -435,3 +435,81 @@ mark {
     display: none;
   }
 }
+
+/* ── Print / save-as-PDF ──
+   Powers the interview PDF export. Rather than enumerating every piece of site
+   chrome, the whole body is hidden and the `.print-doc` subtree is switched
+   back on — visibility inherits, so a descendant can opt back in where
+   `display: none` on an ancestor would be final. `.print-doc` is then lifted to
+   the page origin so the hidden chrome above it leaves no gap.
+
+   Nothing here is positioned relative on the way down from <body>, so the
+   absolute placement resolves against the page box. Adding a positioned
+   wrapper around the interview list would break that. */
+.print-only {
+  display: none;
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  /* The ambient brand glows are a screen device and cost a lot of ink. */
+  body::before {
+    display: none !important;
+  }
+
+  /* Nothing may be mid-flight when the page is snapshotted. `.card` carries
+     `transition-all`, and visibility transitions — so without this the stat
+     cards were still fading out at snapshot time and printed as grey slabs
+     across the first answer. Blur is meaningless on paper either way. */
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+  .print-doc,
+  .print-doc * {
+    visibility: visible;
+  }
+  .print-doc {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .print-only {
+    display: block;
+  }
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Cards flatten into document entries: ink on paper, not UI. */
+  .print-doc .card {
+    background: none !important;
+    border: 0 !important;
+    border-top: 1px solid #bbb !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 0.55rem 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .print-doc .accent-bar::before {
+    display: none !important;
+  }
+  .print-doc * {
+    color: #000 !important;
+  }
+}

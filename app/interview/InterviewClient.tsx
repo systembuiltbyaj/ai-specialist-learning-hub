@@ -50,6 +50,7 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
   const [topic, setTopic] = useState<string>("All");
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [printing, setPrinting] = useState(false);
 
   useEffect(() => {
     try {
@@ -129,6 +130,21 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
       "text/markdown",
     );
 
+  // PDF goes through the browser's own print-to-PDF rather than a bundled
+  // renderer: no dependency, and the output keeps selectable text. Answers are
+  // only mounted when their card is open, so the whole list is force-expanded
+  // for the print pass and released once the dialog closes.
+  useEffect(() => {
+    if (!printing) return;
+    const done = () => setPrinting(false);
+    window.addEventListener("afterprint", done);
+    const frame = requestAnimationFrame(() => window.print());
+    return () => {
+      window.removeEventListener("afterprint", done);
+      cancelAnimationFrame(frame);
+    };
+  }, [printing]);
+
   return (
     <div className="space-y-6">
       {/* Stats */}
@@ -166,7 +182,14 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
         </div>
         <div className="flex shrink-0 gap-2">
           <button onClick={handleExport} className="btn-ghost px-4 py-2 text-xs">
-            ⬇ Export
+            ⬇ Markdown
+          </button>
+          <button
+            onClick={() => setPrinting(true)}
+            className="btn-ghost px-4 py-2 text-xs"
+            title="Opens your browser's print dialog — choose “Save as PDF”"
+          >
+            ⬇ PDF
           </button>
           <button
             onClick={() => setAdding((v) => !v)}
@@ -187,38 +210,45 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
         />
       )}
 
-      {/* List */}
-      {filtered.length === 0 ? (
-        <div className="card p-10 text-center text-muted">
-          No questions here yet. Click{" "}
-          <span className="text-gold">+ Add Question</span> to log one.
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {filtered.map((e) =>
-            editingId === e.id ? (
-              <EntryForm
-                key={e.id}
-                initial={e}
-                submitLabel="Update"
-                onSubmit={(d) => updateEntry(e.id, d)}
-                onCancel={() => setEditingId(null)}
-              />
-            ) : (
-              <EntryCard
-                key={e.id}
-                entry={e}
-                onEdit={() => setEditingId(e.id)}
-                onDelete={() => removeEntry(e.id)}
-              />
-            ),
-          )}
-        </div>
-      )}
+      {/* List — also the print region. Everything outside `.print-doc` is
+          dropped by the print stylesheet. */}
+      <div className="print-doc">
+        <PrintHeader shown={filtered.length} total={entries.length} topic={topic} />
+
+        {filtered.length === 0 ? (
+          <div className="card p-10 text-center text-muted">
+            No questions here yet. Click{" "}
+            <span className="text-gold">+ Add Question</span> to log one.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map((e) =>
+              editingId === e.id ? (
+                <EntryForm
+                  key={e.id}
+                  initial={e}
+                  submitLabel="Update"
+                  onSubmit={(d) => updateEntry(e.id, d)}
+                  onCancel={() => setEditingId(null)}
+                />
+              ) : (
+                <EntryCard
+                  key={e.id}
+                  entry={e}
+                  forceOpen={printing}
+                  onEdit={() => setEditingId(e.id)}
+                  onDelete={() => removeEntry(e.id)}
+                />
+              ),
+            )}
+          </div>
+        )}
+      </div>
 
       <p className="text-center text-xs text-muted">
-        Saved to your browser (localStorage). Export to Markdown to keep a copy or
-        share for review.
+        Saved to your browser (localStorage) — clearing site data wipes it. Take
+        a copy with <span className="text-text/80">Markdown</span> to keep
+        editing, or <span className="text-text/80">PDF</span> to send to someone.
       </p>
     </div>
   );
@@ -243,16 +273,43 @@ function Stat({
   );
 }
 
+// Document header for the printed copy only — on screen the page already says
+// all of this. Names the filter so a partial export can't be mistaken for the
+// full set.
+function PrintHeader({
+  shown,
+  total,
+  topic,
+}: {
+  shown: number;
+  total: number;
+  topic: string;
+}) {
+  return (
+    <div className="print-only mb-6">
+      <h2 className="text-xl font-bold">Interview Prep — Q&amp;A</h2>
+      <p className="mt-1 text-sm">
+        {topic === "All"
+          ? `${total} question${total === 1 ? "" : "s"}`
+          : `Topic: ${topic} — ${shown} of ${total} questions`}
+      </p>
+    </div>
+  );
+}
+
 function EntryCard({
   entry,
   onEdit,
   onDelete,
+  forceOpen = false,
 }: {
   entry: InterviewEntry;
   onEdit: () => void;
   onDelete: () => void;
+  forceOpen?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const expanded = open || forceOpen;
 
   return (
     <article className="card card-hover accent-bar accent-purple animate-fade-up p-5">
@@ -260,7 +317,7 @@ function EntryCard({
         <button
           className="flex-1 text-left"
           onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
+          aria-expanded={expanded}
         >
           <h3 className="font-bold text-text">
             <span className="mr-1 text-gold">Q:</span>
@@ -270,10 +327,10 @@ function EntryCard({
             <span className="mt-1 inline-block text-xs text-muted">{entry.topic}</span>
           )}
         </button>
-        <span className="text-muted">{open ? "▲" : "▼"}</span>
+        <span className="print-hide text-muted">{expanded ? "▲" : "▼"}</span>
       </div>
 
-      {open && (
+      {expanded && (
         <div className="mt-4 space-y-4 border-t border-line pt-4">
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-text/85">
             <span className="font-semibold text-violet-light">A: </span>
@@ -281,7 +338,7 @@ function EntryCard({
               <span className="italic text-muted">No answer yet — click Edit.</span>
             )}
           </p>
-          <div className="flex justify-end gap-2">
+          <div className="print-hide flex justify-end gap-2">
             <button onClick={onEdit} className="btn-ghost px-3 py-1.5 text-xs">
               Edit
             </button>
