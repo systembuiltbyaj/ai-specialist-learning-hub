@@ -732,18 +732,23 @@ export const DICTIONARY: DictionaryTerm[] = [
   },
   {
     "id": "claude-model-tiers",
-    "term": "Claude Model Tiers: Opus, Sonnet, Haiku",
+    "term": "Claude Model Tiers: Fable, Opus, Sonnet, Haiku",
     "aliases": [
+      "Fable",
+      "Fable 5.1",
       "Opus",
+      "Opus 5.5",
       "Sonnet",
-      "Haiku"
+      "Sonnet 5",
+      "Haiku",
+      "Mythos"
     ],
     "category": "Claude",
     "level": "Beginner",
-    "definition": "Anthropic's three Claude model families balancing capability, speed, and cost: Opus is the most capable, Sonnet is balanced, and Haiku is the fastest and cheapest.",
-    "analogy": "Like shipping options: overnight (Opus) for hardest jobs, standard (Sonnet) for most, and economy (Haiku) for fast cheap tasks.",
+    "definition": "Anthropic's Claude model lineup balancing capability, speed, and cost: Fable is the flagship for long-running agents, coding, and research; Opus is the newest reasoning/coding model and matches Fable on most work at a lower cost; Sonnet is the balanced mid-tier; and Haiku is the fastest and cheapest. Mythos is an invite-only research tier above Fable, not generally available.",
+    "analogy": "Like shipping options: flagship courier (Fable) and next-day (Opus) for the hardest jobs, standard (Sonnet) for most, and economy (Haiku) for fast cheap tasks.",
     "whyItMatters": "Picking the right tier per task controls the cost and latency of automations that call Claude at scale.",
-    "example": "Using Haiku to classify incoming messages and Opus only for drafting complex proposals.",
+    "example": "Using Haiku to classify incoming messages, Sonnet for everyday drafting, and Opus or Fable only for the hardest research or coding tasks.",
     "related": [
       "inference",
       "batch-processing",
@@ -829,7 +834,7 @@ export const DICTIONARY: DictionaryTerm[] = [
     "level": "Intermediate",
     "definition": "Prebuilt integrations that connect Claude to external apps and services through MCP, letting it access tools and data from those systems within Claude products.",
     "analogy": "Like ready-made adapters you flip on to plug Claude into popular apps without wiring it yourself.",
-    "whyItMatters": "Connectors let you hook Claude into tools like Google Drive or your CRM without building an MCP server from scratch.",
+    "whyItMatters": "Connectors let you hook Claude into tools like Google Drive or your CRM without building an MCP server from scratch. MCP itself is now governed by the vendor-neutral Agentic AI Foundation under the Linux Foundation, which is why connectors and agent platforms outside Claude (n8n, GHL, and others) increasingly speak the same protocol.",
     "example": "Enabling a Google Drive connector so Claude can search and read your documents.",
     "related": [
       "mcp",

@@ -13,19 +13,19 @@ const AUTOMATION_NEWS: WhatsNewItem[] = [
   },
   {
     date: "2026",
-    title: "n8n's AI Agent node is the power pick",
+    title: "n8n's AI Agent node grows up — ReAct mode + native MCP",
     blurb:
-      "The rebuilt AI Agent node does tool-calling across six LLM providers, with 35+ new nodes including Anthropic Claude and Google Gemini, a Canvas UI overhaul, and production-grade error handling with configurable retries and error branching.",
-    source: "https://www.softomatesolutions.com/blog/n8n-updates-2026-whats-new/",
-    sourceLabel: "n8n 2026 roundup",
+      "The AI Agent node now ships a ReAct execution mode that logs the model's intermediate reasoning steps, structured tool calling with JSON-schema validation and configurable retries, four memory backends (in-memory, Redis, Postgres, Motorhead), and native MCP support — this is the agent everyone means when they say n8n \"has an agent now.\"",
+    source: "https://docs.n8n.io/release-notes",
+    sourceLabel: "n8n release notes",
   },
   {
-    date: "Jan 2026",
-    title: "n8n 2.0 added multi-agent orchestration",
+    date: "Dec 2025",
+    title: "MCP becomes the cross-platform standard",
     blurb:
-      "The AI Agent Tool Node enables multi-agent orchestration, with native LangChain integration across 70+ AI nodes, agent memory that persists between executions, vector-database support for RAG, and sandboxed code execution.",
-    source: "https://www.softomatesolutions.com/blog/n8n-updates-2026-whats-new/",
-    sourceLabel: "n8n 2026 roundup",
+      "Anthropic donated the Model Context Protocol to the Agentic AI Foundation under the Linux Foundation, with OpenAI, AWS, Google, Microsoft, Cloudflare, and Bloomberg on board. That's why n8n, Zapier, Make, and Claude can all now speak to the same tool servers instead of building one-off integrations.",
+    source: "https://blog.modelcontextprotocol.io/posts/2026-mcp-roadmap/",
+    sourceLabel: "MCP 2026 roadmap",
   },
   {
     date: "2026",
@@ -83,7 +83,7 @@ export default function AutomationHubPage() {
         </p>
       </header>
 
-      <HubWhatsNew items={AUTOMATION_NEWS} accent="#38bdf8" verified="7 Aug 2026" />
+      <HubWhatsNew items={AUTOMATION_NEWS} accent="#38bdf8" verified="24 Sep 2026" />
 
       <AutomationHubClient />
     </div>

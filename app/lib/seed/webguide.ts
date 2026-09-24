@@ -173,9 +173,9 @@ export const CLAUDE_FLOW = [
   },
   {
     n: 3,
-    title: "Claude models — Haiku · Sonnet · Opus",
+    title: "Claude models — Haiku · Sonnet · Opus · Fable",
     badge: "choose model",
-    desc: "Haiku = cheapest & fastest, for simple tasks. Sonnet = best balance, recommended for most apps. Opus = most powerful, for complex reasoning (pricier).",
+    desc: "Haiku 4.5 = cheapest & fastest, for simple tasks. Sonnet 5 = best balance, recommended for most apps. Opus 5.5 and flagship Fable 5.1 = most powerful, for complex reasoning and long-running agents (pricier).",
   },
   {
     n: 4,
@@ -405,8 +405,8 @@ export const TOOL_GROUPS: ToolGroup[] = [
     icon: "🤖",
     tools: [
       { name: "Anthropic", note: "Claude — best for coding" },
-      { name: "OpenAI", note: "GPT-4o — most popular" },
-      { name: "Google AI", note: "Gemini — cheap at scale" },
+      { name: "OpenAI", note: "GPT-6 Astra — most popular" },
+      { name: "Google AI", note: "Gemini 3.1 Pro — cheap at scale" },
       { name: "Groq", note: "Fastest inference · free tier" },
       { name: "Replicate", note: "Run open models via API" },
       { name: "Together AI", note: "Cheap open-model API" },

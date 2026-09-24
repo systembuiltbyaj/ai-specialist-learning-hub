@@ -7,18 +7,26 @@ import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
 // source link is a claim that you checked it.
 const GHL_NEWS: WhatsNewItem[] = [
   {
-    date: "Aug 7, 2026",
-    title: "Fixed pricing for AI products in SaaS Mode",
+    date: "Sep 23, 2026",
+    title: "GPT-6 Sol and GPT-6 Luna land in AI Agent",
     blurb:
-      "You can set fixed pricing on AI products when reselling through SaaS Mode. If you're rebilling AI features to clients, this is the difference between a predictable margin and one that moves with usage.",
+      "Two new OpenAI models are selectable inside the AI Agent action and GPT action in workflows: Sol for complex, multi-step agent tasks spanning multiple apps, Luna for high-volume classification, summaries, tagging, and quick replies. Both run about 50% cheaper than their predecessors.",
+    source: "https://ideas.gohighlevel.com/changelog",
+    sourceLabel: "HighLevel changelog",
+  },
+  {
+    date: "Sep 22, 2026",
+    title: "AI Studio Live for All",
+    blurb:
+      "AI Studio's live builder is now broadly available with updated permission settings — worth revisiting if you previously hit an access wall building or testing AI Agents for a client sub-account.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
   {
     date: "Aug 7, 2026",
-    title: "WhatsApp usernames",
+    title: "Fixed pricing for AI products in SaaS Mode",
     blurb:
-      "Contacts can now be captured by WhatsApp username rather than phone number alone — useful anywhere you're collecting WhatsApp as a channel without a reliable mobile number.",
+      "You can set fixed pricing on AI products when reselling through SaaS Mode. If you're rebilling AI features to clients, this is the difference between a predictable margin and one that moves with usage.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
@@ -35,14 +43,6 @@ const GHL_NEWS: WhatsNewItem[] = [
     title: "TikTok Lead Ads moves to Marketplace architecture",
     blurb:
       "The TikTok Lead Ads integration migrated to the Marketplace app architecture, alongside a similar move for Slack. Worth re-checking the connection on any account running TikTok lead flows.",
-    source: "https://ideas.gohighlevel.com/changelog",
-    sourceLabel: "HighLevel changelog",
-  },
-  {
-    date: "Aug 6, 2026",
-    title: "Localized ringtones across 37 countries",
-    blurb:
-      "Outbound calling now plays the ringtone a recipient expects in their own country. Small detail, real pickup-rate impact on international outbound.",
     source: "https://ideas.gohighlevel.com/changelog",
     sourceLabel: "HighLevel changelog",
   },
@@ -75,7 +75,7 @@ export default function GhlHubPage() {
       <HubWhatsNew
         items={GHL_NEWS}
         accent="#34d399"
-        verified="7 Aug 2026"
+        verified="23 Sep 2026"
         note="against the HighLevel changelog"
       />
 

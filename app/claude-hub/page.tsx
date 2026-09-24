@@ -4,28 +4,28 @@ import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
 
 const CLAUDE_NEWS: WhatsNewItem[] = [
   {
+    date: "Sep 22, 2026",
+    title: "Opus 5.5 ships — matches Fable 5.1, 40% cheaper",
+    blurb:
+      "Claude Opus 5.5 is now the default Opus model in Claude Code: 1M-token context, state-of-the-art coding and knowledge-work performance, and roughly 40% cheaper to run than Opus 5 on typical workloads. It matches flagship Fable 5.1 on most tasks.",
+    source: "https://platform.claude.com/docs/en/about-claude/models/overview",
+    sourceLabel: "Models overview",
+  },
+  {
+    date: "Sep 1, 2026",
+    title: "Fable 5.1 succeeds Fable 5",
+    blurb:
+      "Claude Fable 5.1 ships at the same $10 / $50 list price as Fable 5, but with cache reads cut 75% to $0.25 per million tokens — worth revisiting any automation that leans on prompt caching for cost control.",
+    source: "https://platform.claude.com/docs/en/about-claude/models/overview",
+    sourceLabel: "Models overview",
+  },
+  {
     date: "Aug 31, 2026",
     title: "Sonnet 5 introductory pricing ends",
     blurb:
-      "Claude Sonnet 5 runs at $2 / $10 per million tokens until August 31, after which it moves to $3 / $15. If you're costing out a client automation on Sonnet 5, price it at the standard rate — not the promo.",
+      "Claude Sonnet 5 ran at $2 / $10 per million tokens through August 31; it's now at the standard $3 / $15 rate. If you're costing out a client automation on Sonnet 5, price it at the standard rate — not the promo.",
     source: "https://platform.claude.com/docs/en/about-claude/pricing",
     sourceLabel: "Claude pricing docs",
-  },
-  {
-    date: "Jul 24, 2026",
-    title: "Claude Opus 5 — the default for agentic work",
-    blurb:
-      "Anthropic's recommendation for complex agentic coding and enterprise workloads: 1M-token context, 128k max output, adaptive thinking on by default. This is the model to reach for when building automations that run long chains of tool calls.",
-    source: "https://platform.claude.com/docs/en/about-claude/models/overview",
-    sourceLabel: "Models overview",
-  },
-  {
-    date: "Jun 9, 2026",
-    title: "Fable 5 is the capability ceiling; Mythos 5 is invite-only",
-    blurb:
-      "Claude Fable 5 is generally available and is Anthropic's most capable widely released model — 1M context, always-on adaptive thinking, $10 / $50 per MTok. Claude Mythos 5 shares its specs but is not self-serve: it's limited to approved customers under Project Glasswing for defensive cybersecurity work.",
-    source: "https://platform.claude.com/docs/en/about-claude/models/overview",
-    sourceLabel: "Models overview",
   },
   {
     date: "Reminder",
@@ -62,7 +62,7 @@ export default function ClaudeHubPage() {
       <HubWhatsNew
         items={CLAUDE_NEWS}
         accent="#ff8a3d"
-        verified="7 Aug 2026"
+        verified="24 Sep 2026"
         note="against Anthropic docs"
       />
 

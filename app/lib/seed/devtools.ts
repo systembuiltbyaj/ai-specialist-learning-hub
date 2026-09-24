@@ -1,7 +1,7 @@
 import type { RefCard, RefTable, StackItem } from "@/app/lib/types";
 
 // ───────────────────────── 01 · AI CODE EDITORS ─────────────────────────
-// Most-used editors, June 2026.
+// Most-used editors, verified Sept 2026.
 export const AI_EDITORS: RefCard[] = [
   {
     name: "Cursor",
@@ -29,7 +29,7 @@ export const AI_EDITORS: RefCard[] = [
     badge: { label: "Paid", kind: "paid" },
     accent: "orange",
     tagline: "#1 on SWE-bench — correctness & terminal workflows.",
-    desc: "Anthropic's CLI agent. Strongest SWE-bench scores for complex reasoning; it reads files, runs commands, and verifies its own work. Ideal for terminal-first devs. (This hub was built with it.)",
+    desc: "Anthropic's CLI agent, now running on Opus 5.5 by default. Strongest SWE-bench scores for complex reasoning; it reads files, runs commands, and verifies its own work. Ideal for terminal-first devs. (This hub was built with it.)",
     tags: ["Terminal / CLI", "Code quality #1", "Agentic"],
     bestFor: "code quality & complex tasks",
   },
@@ -96,25 +96,25 @@ export const EDITOR_WINNERS = [
 ];
 
 // ───────────────────────── 02 · LLMs ─────────────────────────
-// Most-used models, June 2026 — closed vs open source.
+// Most-used models, verified Sept 2026 — closed vs open source.
 export const LLMS: RefCard[] = [
   {
-    name: "Claude Opus 4.8",
+    name: "Claude Opus 5.5",
     pill: "Closed Source",
     badge: { label: "API", kind: "paid" },
     accent: "orange",
-    tagline: "Coding king — 80.8% SWE-Bench, ~1M-token context.",
-    desc: "Anthropic's flagship and the #1 pick for coding and agentic work in 2026. Best-in-class SWE-Bench with a very long context window. Powers Claude Code.",
+    tagline: "Coding king — SOTA coding & knowledge work, 1M-token context.",
+    desc: "Anthropic's newest model and the #1 pick for coding and agentic work in 2026. Matches flagship Fable 5.1 on most work at ~40% lower cost. Powers Claude Code by default.",
     tags: ["Anthropic", "Coding #1", "1M context"],
   },
   {
-    name: "GPT-5.5",
+    name: "GPT-6 Astra",
     pill: "Closed Source",
     badge: { label: "API", kind: "paid" },
     accent: "pink",
-    tagline: "Best all-round general intelligence & writing.",
-    desc: "OpenAI's flagship — the go-to for general intelligence, writing, and broad tasks, with the largest tooling ecosystem.",
-    tags: ["OpenAI", "General intelligence", "Writing"],
+    tagline: "Best all-round general intelligence, computer use & browsing.",
+    desc: "OpenAI's flagship — the go-to for general intelligence, computer use, and broad professional tasks, with the largest tooling ecosystem.",
+    tags: ["OpenAI", "Computer use", "Browsing"],
   },
   {
     name: "Gemini 3.1 Pro",
@@ -135,7 +135,7 @@ export const LLMS: RefCard[] = [
     tags: ["Meta", "10M context", "Self-host"],
   },
   {
-    name: "GLM-5.1",
+    name: "GLM-5.3",
     pill: "Open Source",
     badge: { label: "Free", kind: "os" },
     accent: "purple",
@@ -144,7 +144,7 @@ export const LLMS: RefCard[] = [
     tags: ["Open weights", "Coding agents", "Tool use"],
   },
   {
-    name: "DeepSeek V4",
+    name: "DeepSeek V4.1",
     pill: "Open Source",
     badge: { label: "Free", kind: "os" },
     accent: "yellow",
