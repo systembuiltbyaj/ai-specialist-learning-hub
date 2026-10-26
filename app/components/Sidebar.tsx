@@ -33,7 +33,7 @@ export default function Sidebar() {
       >
         <span className="h-10 w-10 shrink-0 overflow-hidden rounded-xl shadow-glow">
           <Image
-            src="/systemlab-mark.png"
+            src="/aj-mark.png"
             alt=""
             width={256}
             height={256}
@@ -103,7 +103,7 @@ export default function Sidebar() {
         <Link href="/" className="flex items-center gap-2">
           <span className="h-9 w-9 shrink-0 overflow-hidden rounded-lg">
             <Image
-              src="/systemlab-mark.png"
+              src="/aj-mark.png"
               alt=""
               width={256}
               height={256}

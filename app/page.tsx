@@ -50,8 +50,8 @@ export default async function HomePage() {
           <div className="flex flex-col justify-center px-3 py-6 sm:px-8 sm:py-10">
             <p className="eyebrow">{BRAND.handle}</p>
             <h1 className="mt-3 text-balance font-display text-2xl font-extrabold leading-[1.15] tracking-[-0.03em] text-text sm:text-[2rem]">
-              Hello! — Welcome to{" "}
-              <span className="text-gold">{BRAND.shortName}</span>
+              Hello! — Welcome to the{" "}
+              <span className="text-gold">{BRAND.name}</span>
             </h1>
             <div className="mt-3 max-w-md space-y-2.5 text-[0.9375rem] leading-relaxed text-muted">
               <p>

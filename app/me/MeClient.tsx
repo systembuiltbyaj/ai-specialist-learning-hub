@@ -85,14 +85,14 @@ export default function MeClient({ catalog }: { catalog: MeCatalog }) {
     .filter((b): b is typeof b & { target: { title: string; href: string } } => Boolean(b.target));
 
   const exportBackup = () => {
-    downloadFile(serializeState(learner), `systemlab-progress-${today}.json`, "application/json");
+    downloadFile(serializeState(learner), `aj-learning-hub-progress-${today}.json`, "application/json");
     setNotice({ tone: "ok", text: "Backup downloaded." });
   };
 
   const importBackup = async (file: File) => {
     // A backup is untrusted input: size-capped and schema-validated before it replaces anything.
     if (file.size > 2_000_000) {
-      setNotice({ tone: "error", text: "That file is too large to be a SystemLab backup." });
+      setNotice({ tone: "error", text: "That file is too large to be an AJ Learning Hub backup." });
       return;
     }
     const parsed = parseState(await file.text());

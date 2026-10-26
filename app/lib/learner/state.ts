@@ -250,5 +250,5 @@ export function parseState(raw: string): { ok: true; state: LearnerState } | { o
   const result = LearnerStateSchema.safeParse(data);
   return result.success
     ? { ok: true, state: result.data }
-    : { ok: false, error: "That file isn't a SystemLab backup (or it's from an incompatible version)." };
+    : { ok: false, error: "That file isn't an AJ Learning Hub backup (or it's from an incompatible version)." };
 }

@@ -49,7 +49,7 @@ default) and a dark ("midnight glass") set; `tailwind.config.ts` only maps class
 names onto them. Never hardcode a hex or `text-white` in a component: it breaks one
 of the two themes. For inline-style colours use `TOKEN` / `tint()` from
 `app/lib/color.ts`. Brand name, tagline and logo live in `BRAND` (`app/lib/constants.ts`)
-and `public/systemlab-mark.png` / `app/icon.png`.
+and `public/aj-mark.png` / `app/icon.png`.
 
 ---
 

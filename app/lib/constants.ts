@@ -4,9 +4,8 @@
 // palette. These mirror it for the few places that need a raw hex (e.g. the
 // theme-color meta tag) — if you change a colour, change it there first, then here.
 export const BRAND = {
-  name: "SystemLab by AJ",
-  shortName: "SystemLab",
-  tagline: "Learn AI & automation by building real systems",
+  name: "AJ Learning Hub",
+  tagline: "The practical playbook for AI, agents & automation",
   statement: "I Don't Chase Growth. I Engineer The System Behind It.",
   owner: "Allen Bactad",
   handle: "System-BuiltBy AJ",
