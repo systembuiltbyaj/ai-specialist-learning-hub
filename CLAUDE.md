@@ -15,21 +15,32 @@ you will edit a file that no page reads.
 
 | Store | Holds | Read by |
 |---|---|---|
-| **`data/`** (repo root) | `dictionary.ts` · `acronyms.ts` | `/dictionary`, `/dictionary/[slug]`, `/acronyms`, `/acronyms/[slug]`, `/quiz`, Term-of-the-Day, home stats, search index |
-| **`app/lib/seed/`** | everything else — tools, hubs, web guide, dev tools, interview, presentation, discovery, updates archive | the matching route |
+| **`data/`** (repo root) | `dictionary.ts` · `acronyms.ts` · `models.ts` | `/dictionary`, `/dictionary/[slug]`, `/acronyms`, `/acronyms/[slug]`, `/quiz`, Term-of-the-Day, home stats, search index; `models.ts` feeds tools, dev tools, web guide and hub pages |
+| **`app/lib/seed/`** | everything else — tools, hubs (Claude Hub renders `arsenal.ts` + `arsenal-skills.ts`), web guide, dev tools, interview, discovery, updates archive | the matching route |
 
 **`data/dictionary.ts` is the canonical dictionary**, exported as `DICTIONARY` /
 `DICTIONARY_BY_ID`. (No count written here — see Conventions. The live count
 renders on the home page.)
 
 Every entry is validated by `app/lib/content/schema.ts` (zod) in
-`tests/content.test.ts` — a bad date, an `http://` source, a broken `related`
-id, or a deprecated term with no successor fails the test run. The
-verification fields (`simple`, `sources`, `lastVerified`, `status`) are optional
-until the M1 backfill lands, then become required.
+`tests/content.test.ts`. **A term ships only with provenance**: `simple`,
+`sources` (https, at least one) and `lastVerified` are required; a bad date, a
+broken `related` id, or a deprecated term with no successor or note fails the
+test run. `status` is `current` (omitted), `emerging` or `deprecated` —
+deprecated terms stay findable but are flagged in the list and search, and are
+excluded from quizzes.
 
-The old `seed/terms.ts` and `seed/glossary.ts` stores were content-diffed and
-deleted (2026-10-26). Do not recreate a second term store.
+**`data/models.ts` is the model registry** — the one place a model name,
+version, price or lifecycle status is written. Seed files reference it via
+`model("<id>").name` / `.pricingNote` instead of hardcoding names; `model()`
+throws on an unknown id, so a removed model fails the build rather than
+rendering "undefined". Prices are dated notes with a source, never bare numbers.
+
+Never write a fact from memory. Research registers with an official URL per
+claim live in `docs/research/<yyyy-mm>/`; reuse and extend them.
+
+Dead stores were content-diffed and deleted on 2026-10-26: `seed/terms.ts`,
+`seed/glossary.ts` and `seed/claude.ts` (never imported). Do not recreate them.
 
 ### Precedence, in one line
 `data/dictionary.ts` is the source of truth for terms. `tailwind.config.ts` is
@@ -80,16 +91,22 @@ do not hand-maintain anything it derives.
 
 - `TERM_IDS` — one page per dictionary term at `/dictionary/<id>`
 - `ACRONYM_SLUGS` — acronyms that get their **own** page at `/acronyms/<slug>`
-- `ACRONYM_TO_TERM` — the 22 acronyms the dictionary already covers, mapped to
-  their term id. These get **no page**; `/acronyms/<slug>` issues a 308 into
+- `ACRONYM_TO_TERM` — acronyms the dictionary already covers, mapped to their
+  term id. These get **no page**; `/acronyms/<slug>` issues a 308 into
   `/dictionary/<id>`.
 
-Why: 14 acronyms collide with a term id (`rag`, `llm`, `mcp`, `api`…) and 8 more
-are registered dictionary aliases (`CoT`, `HITL`, `SPF`…). Publishing both would
-put two pages about one concept on the same domain, competing in search.
+Why: some acronyms collide with a term id (`rag`, `llm`, `mcp`, `api`…) and
+others are registered dictionary aliases (`CoT`, `HITL`, `MoE`…). Publishing
+both would put two pages about one concept on the same domain, competing in search.
+
+**Adding a dictionary term or alias can silently create a new overlap.**
+`tests/reference.test.ts` pins the exact count so that happens on purpose: when
+it fails, check every new mapping points at the *same concept*, then bump it.
+- `HOMONYM_SLUGS` — same letters, different concept (ReAct the agent pattern vs
+  React the UI library). Homonyms keep their own acronym page and never redirect.
 
 `/dictionary/[slug]` sets `dynamicParams = false`. `/acronyms/[slug]` leaves it
-true so the 22 overlap slugs stay routable and can redirect.
+true so the overlap slugs stay routable and can redirect.
 
 ---
 
@@ -148,7 +165,7 @@ are deleted. Do not reintroduce them without a reason.
 | `npm run build` | production build — also the real typecheck |
 | `npm run start` | serve the build |
 | `npm test` | Vitest — slug/overlap resolution, search ranking, content schema and freshness |
-| `npm run content:check` | read-only staleness report (unverified, unsourced, >120 days old); exits 1 only on integrity errors. `--max-age=<days>` overrides the threshold |
+| `npm run content:check` | read-only staleness report — dictionary terms and model registry rows not re-verified in 120 days; exits 1 only on integrity errors. `--max-age=<days>` overrides the threshold. Run it before any content refresh |
 | `npm run lint` | **broken** — ESLint is unconfigured and this drops into an interactive setup prompt |
 
 **Windows path quirk:** the `&` in this repo's path (`Apps & Systems`) breaks

@@ -22,7 +22,8 @@ export function GET() {
       type: "term",
       title: term.term,
       keywords: term.aliases,
-      snippet: clip(term.definition),
+      // Deprecated terms stay findable (people still search old names) but say so up front.
+      snippet: clip(term.status === "deprecated" ? `Deprecated — ${term.definition}` : term.definition),
       category: term.category,
       url: `/dictionary/${term.id}`,
     });

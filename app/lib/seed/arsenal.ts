@@ -92,14 +92,15 @@ export const ARSENAL_MCPS: ArsenalMcp[] = [
   {
     name: "GoHighLevel MCP (Official)",
     pkg: "services.leadconnectorhq.com/mcp",
-    cmd: "https://services.leadconnectorhq.com/mcp/",
+    // Claude's endpoint; OpenAI clients use /mcp/openai/v2/ and Cursor /mcp/cursor/v2.
+    cmd: "https://services.leadconnectorhq.com/mcp/anthropic/v2",
     remote: true,
     description:
-      "HighLevel's official MCP server. 36 tools across Contacts, Conversations, Opportunities, Calendars, Payments, Social, Blogs, and Emails. Auth via Private Integration Token scoped to a single sub-account.",
+      "HighLevel's official LeadConnector MCP server. Four meta-tools (find, describe and run an operation) front 550+ read/create/update/delete operations across 38 CRM domains. Connects via OAuth — you pick the sub-accounts and approve scopes.",
     features: [
-      "36 tools — contacts, conversations, opportunities, calendars, payments, social, blogs, emails",
-      "Private Integration Token auth (Settings → Private Integrations on the sub-account)",
-      "Remote HTTP MCP — no local install, always current with the GHL API",
+      "550+ CRM operations across 38 domains, scoped by the OAuth permissions you grant",
+      "OAuth consent flow — no tokens to copy; review or revoke access in LeadConnector",
+      "Per-client endpoints for Claude, ChatGPT/Codex and Cursor; agencies can work across sub-accounts",
     ],
   },
 ];

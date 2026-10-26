@@ -222,6 +222,13 @@ const Entry = forwardRef<
           <p className="entry-meta shrink-0">
             {term.category} <span className="text-line">·</span>{" "}
             <span className="entry-meta-strong">{term.level}</span>
+            {term.status && term.status !== "current" && (
+              <>
+                {" "}
+                <span className="text-line">·</span>{" "}
+                <span className="text-gold">{term.status === "deprecated" ? "Deprecated" : "Emerging"}</span>
+              </>
+            )}
           </p>
         </div>
 

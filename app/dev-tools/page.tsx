@@ -42,7 +42,7 @@ export default function DevToolsPage() {
     <div className="container-hub py-8">
       {/* Hero */}
       <header className="mb-6">
-        <p className="eyebrow">Reference · compiled June 2026</p>
+        <p className="eyebrow">Reference · verified 26 Oct 2026</p>
         <h1 className="mt-3 bg-gradient-to-r from-gold via-gold-soft to-violet-light bg-clip-text font-display text-3xl font-extrabold uppercase tracking-tight text-transparent sm:text-5xl">
           Dev Tools Universe
         </h1>
@@ -62,9 +62,9 @@ export default function DevToolsPage() {
       {/* 01 — AI Code Editors */}
       <SectionLabel num="01" title="AI Code Editors" id="editors" />
       <p className="mb-5 mt-3 text-[0.78rem] leading-relaxed text-muted">
-        The most-used AI editors right now (June 2026). Most pros run 2–3
-        together — Cursor for daily editing, Claude Code for complex tasks, and
-        open-source agents for background automation.
+        The main AI editors and coding agents as of October 2026. A common setup
+        pairs a full AI editor for daily work with a terminal agent such as Claude
+        Code or Codex for larger, multi-step tasks.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {AI_EDITORS.map((c) => (
@@ -93,8 +93,8 @@ export default function DevToolsPage() {
       {/* 02 — LLMs */}
       <SectionLabel num="02" title="AI Language Models (LLMs)" id="llms" />
       <p className="mb-5 mt-3 text-[0.78rem] leading-relaxed text-muted">
-        The most-used models right now (June 2026) — closed source (API) vs open
-        source (run it yourself).
+        The main models as of October 2026 — closed models (API only) vs
+        open-weight models (download the weights and run them yourself).
       </p>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {LLMS.map((c) => (
@@ -224,7 +224,7 @@ export default function DevToolsPage() {
       </div>
 
       <p className="mt-10 text-center font-mono text-[0.65rem] tracking-wide text-muted">
-        Compiled June 2026 · comparisons are approximate · pricing changes
+        Verified 26 Oct 2026 · comparisons are approximate · pricing changes
         frequently
       </p>
     </div>

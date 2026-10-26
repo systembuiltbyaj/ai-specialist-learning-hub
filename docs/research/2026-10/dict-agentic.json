@@ -1,0 +1,440 @@
+{
+  "updates": {
+    "agent": {
+      "simple": "An AI that you give a goal to, which then works out the steps itself, uses tools like search or your CRM, checks the results, and keeps going until the job is done.",
+      "sources": [
+        { "label": "Anthropic: Building effective agents", "url": "https://www.anthropic.com/research/building-effective-agents" },
+        { "label": "Wikipedia: AI agent", "url": "https://en.wikipedia.org/wiki/AI_agent" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "tool-calling": {
+      "simple": "The way an AI asks your software to do something real, like look up a contact or send a message, by filling in a structured request your code then runs.",
+      "sources": [
+        { "label": "Claude docs: Tool use overview", "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview" },
+        { "label": "OpenAI docs: Function calling", "url": "https://developers.openai.com/api/docs/guides/function-calling" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "mcp": {
+      "simple": "A shared standard that lets AI apps plug into outside tools and data the same way every time, so one integration works with many AI assistants.",
+      "sources": [
+        { "label": "MCP: What is the Model Context Protocol?", "url": "https://modelcontextprotocol.io/docs/getting-started/intro" },
+        { "label": "MCP: Governance and stewardship", "url": "https://modelcontextprotocol.io/community/governance" },
+        { "label": "Agentic AI Foundation (AAIF) projects", "url": "https://aaif.io/" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "An open protocol, created by Anthropic and now a Linux Foundation project hosted by the Agentic AI Foundation, that defines how AI applications connect to external tools, data and context through a standard client-server protocol.",
+        "reason": "\"An open standard from Anthropic\" is stale framing. MCP is now established as \"Model Context Protocol a Series of LF Projects, LLC\" (modelcontextprotocol.io/community/governance) and is listed as a project of the Linux Foundation's Agentic AI Foundation (aaif.io)."
+      }
+    },
+    "mcp-server": {
+      "simple": "A small program that offers an AI assistant a set of abilities and data, such as reading files or searching a database, in the standard MCP format.",
+      "sources": [
+        { "label": "MCP: Architecture overview", "url": "https://modelcontextprotocol.io/docs/learn/architecture" },
+        { "label": "MCP spec 2026-07-28: Tools", "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "mcp-client": {
+      "simple": "The part of an AI app that connects to MCP servers, finds out what they can do, and passes the AI's requests to them.",
+      "sources": [
+        { "label": "MCP: Architecture overview", "url": "https://modelcontextprotocol.io/docs/learn/architecture" },
+        { "label": "MCP specification 2026-07-28", "url": "https://modelcontextprotocol.io/specification/2026-07-28" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "mcp-transport": {
+      "simple": "How MCP messages physically travel between the AI app and the tool: either through a program running on your own computer, or over the internet using web requests.",
+      "sources": [
+        { "label": "MCP spec 2026-07-28: Transports", "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports" },
+        { "label": "MCP spec 2026-07-28: Changelog", "url": "https://modelcontextprotocol.io/specification/2026-07-28/changelog" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "mcp-primitive": {
+      "simple": "The three kinds of things an MCP server can offer an AI: actions it can take (tools), information it can read (resources), and ready-made prompt templates (prompts).",
+      "sources": [
+        { "label": "MCP: Architecture overview", "url": "https://modelcontextprotocol.io/docs/learn/architecture" },
+        { "label": "MCP specification 2026-07-28", "url": "https://modelcontextprotocol.io/specification/2026-07-28" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "mcp-sampling": {
+      "simple": "An older MCP feature that let a tool borrow the AI app's own model to do some thinking. The MCP standard now marks it as on its way out, and new tools should call an AI provider directly.",
+      "sources": [
+        { "label": "MCP spec 2026-07-28: Sampling (deprecated)", "url": "https://modelcontextprotocol.io/specification/2026-07-28/client/sampling" },
+        { "label": "MCP spec 2026-07-28: Changelog", "url": "https://modelcontextprotocol.io/specification/2026-07-28/changelog" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "deprecated",
+      "deprecationNote": "Deprecated in MCP spec revision 2026-07-28 (SEP-2577), together with Roots and Logging. It still works during a deprecation window of at least twelve months, but new implementations should not adopt it; the spec's suggested migration is to integrate directly with LLM provider APIs.",
+      "fix": {
+        "definition": "A deprecated MCP client feature that lets a server request a completion from the client's LLM, so the server can use model reasoning without holding its own API key. It was deprecated in spec revision 2026-07-28 and remains in the spec only for a deprecation window.",
+        "whyItMatters": "You will still meet sampling in existing MCP servers and clients, but new servers should not rely on it: the spec recommends calling an LLM provider API directly instead, and clients may drop support once the deprecation window ends.",
+        "example": "An older summarization server asks the client's model to condense a fetched document; a server written today would call a model provider's API itself instead.",
+        "reason": "The MCP 2026-07-28 revision deprecates Sampling (SEP-2577): \"New implementations SHOULD NOT adopt it; existing implementations SHOULD migrate to integrating directly with LLM provider APIs\" (modelcontextprotocol.io/specification/2026-07-28/client/sampling). The old text presented it as a current feature."
+      }
+    },
+    "rag": {
+      "simple": "Before answering, the AI looks up the most relevant pages from your own documents and uses them, so its answer is based on your information instead of its memory.",
+      "sources": [
+        { "label": "Lewis et al. (2020): Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks", "url": "https://arxiv.org/abs/2005.11401" },
+        { "label": "Anthropic: Introducing Contextual Retrieval", "url": "https://www.anthropic.com/research/contextual-retrieval" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "agentic-rag": {
+      "simple": "Instead of one quick lookup, the AI decides what to search for, runs several searches, checks what it found, and searches again until it has enough to answer well.",
+      "sources": [
+        { "label": "Microsoft Learn: Agentic retrieval in Azure AI Search", "url": "https://learn.microsoft.com/en-us/azure/search/agentic-retrieval-overview" },
+        { "label": "Anthropic: How we built our multi-agent research system", "url": "https://www.anthropic.com/research/multi-agent-research-system" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "a2a": {
+      "simple": "A shared standard that lets AI agents built by different companies find each other, hand off tasks, and work together.",
+      "sources": [
+        { "label": "A2A Protocol: What is A2A?", "url": "https://a2a-protocol.org/latest/" },
+        { "label": "A2A blog: A2A joins the Agentic AI Foundation", "url": "https://a2a-protocol.org/latest/blog/2026/08/27/a-new-chapter-for-a2a-joining-the-agentic-ai-foundation/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "orchestration": {
+      "simple": "Deciding which step, tool or AI agent runs when, in what order, and what gets passed between them, so a multi-step process runs reliably from start to finish.",
+      "sources": [
+        { "label": "Anthropic: Building effective agents", "url": "https://www.anthropic.com/research/building-effective-agents" },
+        { "label": "OpenAI Agents SDK: Agent orchestration", "url": "https://openai.github.io/openai-agents-python/multi_agent/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "multi-agent": {
+      "simple": "Several AI agents, each with its own job, working together on one bigger task, usually with a lead agent handing out the work and combining the results.",
+      "sources": [
+        { "label": "Anthropic: How we built our multi-agent research system", "url": "https://www.anthropic.com/research/multi-agent-research-system" },
+        { "label": "OpenAI Agents SDK: Agent orchestration", "url": "https://openai.github.io/openai-agents-python/multi_agent/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "subagent": {
+      "simple": "A helper AI that the main AI sends off to do one focused job with its own clean workspace, and that reports back only the result.",
+      "sources": [
+        { "label": "Claude Code docs: Create custom subagents", "url": "https://code.claude.com/docs/en/sub-agents" },
+        { "label": "Anthropic: How we built our multi-agent research system", "url": "https://www.anthropic.com/research/multi-agent-research-system" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "guardrails": {
+      "simple": "Safety checks around an AI that stop it from accepting harmful requests, saying the wrong thing, or taking actions it shouldn't.",
+      "sources": [
+        { "label": "OpenAI Agents SDK: Guardrails", "url": "https://openai.github.io/openai-agents-python/guardrails/" },
+        { "label": "Claude docs: Mitigate jailbreaks and prompt injections", "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks" },
+        { "label": "OWASP Top 10 for LLM Applications", "url": "https://genai.owasp.org/llm-top-10/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "evals": {
+      "simple": "A repeatable test for your AI: a fixed set of sample questions with a way to score the answers, so you can tell whether a change made it better or worse.",
+      "sources": [
+        { "label": "Claude docs: Define success criteria and build evaluations", "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests" },
+        { "label": "OpenAI docs: Graders", "url": "https://developers.openai.com/api/docs/guides/graders" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "computer-use": {
+      "simple": "The AI looks at screenshots of a computer screen and moves the mouse and types, so it can use apps the same way a person would, even ones with no API.",
+      "sources": [
+        { "label": "Claude docs: Computer use tool", "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "memory-persistent-vs-session": {
+      "simple": "Session memory is what the AI remembers during one conversation; persistent memory is saved somewhere so it can remember you next time too.",
+      "sources": [
+        { "label": "Claude docs: Memory tool", "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool" },
+        { "label": "Claude Code docs: How Claude remembers your project", "url": "https://code.claude.com/docs/en/memory" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "human-in-the-loop": {
+      "simple": "A person checks and approves what the AI wants to do before it actually happens, especially for risky steps like sending money or messaging customers.",
+      "sources": [
+        { "label": "OWASP LLM06:2025 Excessive Agency", "url": "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/" },
+        { "label": "OpenAI Agents SDK: Human-in-the-loop", "url": "https://openai.github.io/openai-agents-python/human_in_the_loop/" },
+        { "label": "Claude Code docs: Configure permissions", "url": "https://code.claude.com/docs/en/permissions" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "claude-model-tiers": {
+      "simple": "Claude comes in sizes: Haiku is the quick, cheap one, Sonnet is the everyday all-rounder, Opus is the strong default for serious work, and Fable is for the hardest jobs.",
+      "sources": [
+        { "label": "Claude docs: Models overview", "url": "https://platform.claude.com/docs/en/models/overview" },
+        { "label": "Claude docs: What's new in Claude Fable 5.1 (Mythos access)", "url": "https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" },
+        { "label": "Claude docs: Pricing", "url": "https://platform.claude.com/docs/en/about-claude/pricing" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "term": "Claude Model Tiers: Haiku, Sonnet, Opus, Fable",
+        "aliases": ["Haiku", "Sonnet", "Opus", "Fable", "Mythos", "Claude models"],
+        "definition": "Anthropic's Claude models come in named tiers that trade capability against speed and cost: Haiku is the fastest and cheapest, for high-volume tasks like classification, extraction and routing; Sonnet is the balance of speed and intelligence; Opus targets long-running agentic coding and knowledge work and is the docs' suggested starting point for most workloads; Fable is for the most demanding reasoning and long-horizon agentic work. Mythos offers the same capabilities as Fable, restricted to organizations verified through Anthropic's verification programs; it is a restricted-access variant, not a tier above Fable.",
+        "analogy": "Like shipping options: economy (Haiku) for quick cheap parcels, standard (Sonnet) for everyday deliveries, express (Opus) as the dependable default for important ones, and a specialist courier (Fable) for the hardest jobs.",
+        "example": "A lead-handling automation uses Haiku to classify inbound messages, Sonnet to draft routine replies, and Opus or Fable only for multi-step research or coding; the current version and price of each tier lives in the model list, not in this definition.",
+        "reason": "The old text hardcoded versions in aliases (\"Fable 5.1\", \"Opus 5.5\", \"Sonnet 5\") and called Opus \"the newest\" model, which went stale when Sonnet 5.5 and Haiku 5.5 shipped. It also called Mythos \"an invite-only research tier above Fable\"; the Fable 5.1 docs say Mythos 5.1 offers \"the same capabilities\" only to organizations verified through Anthropic's verification programs. Tier descriptions follow the models overview page (platform.claude.com/docs/en/models/overview). Versions belong in data/models.ts."
+      }
+    },
+    "claude-projects": {
+      "simple": "A workspace in Claude where you keep a client's documents and standing instructions, so every chat inside it already knows the background.",
+      "sources": [
+        { "label": "Claude Help Center: What are projects?", "url": "https://support.claude.com/en/articles/9517075-what-are-projects" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "claude-artifacts": {
+      "simple": "When Claude makes something you'd show other people, like a document, slide deck, dashboard or small app, it appears in its own window next to the chat, where you can edit and share it.",
+      "sources": [
+        { "label": "Claude Help Center: What are artifacts and how do I use them?", "url": "https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them" },
+        { "label": "Claude blog: Claude Cowork and chat are now one Claude", "url": "https://claude.com/resources/articles/cowork-is-now-claude" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "A Claude feature for content you would put in front of someone (a document, slide deck, design, dashboard or small interactive tool) that opens beside the conversation, where you can edit it, come back to it and share it. Artifacts work in Claude chats and in Claude Code, and can start from templates such as Docs, Slides and Design.",
+        "reason": "The old text described a Claude.ai-only side-panel renderer for code, documents or web apps. The help center now defines an artifact as \"anything Claude makes for you that you'd put in front of someone\", available \"in any conversation with Claude, including in Claude Code\", shareable and template-based; artifacts made in chat before September 16, 2026 are labelled legacy (support.claude.com/en/articles/17153992)."
+      }
+    },
+    "claude-code": {
+      "simple": "An AI coding assistant from Anthropic that works directly in your project: it reads your code, makes the edits, runs the commands and tests, and reports back.",
+      "sources": [
+        { "label": "Claude Code docs: Overview", "url": "https://code.claude.com/docs/en/overview" },
+        { "label": "Claude Code docs: Extend Claude Code", "url": "https://code.claude.com/docs/en/features-overview" },
+        { "label": "Claude Code docs: Agent SDK overview", "url": "https://code.claude.com/docs/en/agent-sdk/overview" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "Anthropic's agentic coding tool that reads your codebase, edits files, runs commands and integrates with your development tools, available in the terminal, IDEs, a desktop app and the browser. It is extended with CLAUDE.md files, skills, subagents, hooks, MCP servers and plugins, and the Claude Agent SDK exposes the same agent loop and tools for building your own agents.",
+        "reason": "The old text described a terminal-only tool. The docs now say Claude Code is \"Available in your terminal, IDE, desktop app, and browser\" (code.claude.com/docs/en/overview), its extension layer covers CLAUDE.md, skills, subagents, hooks, MCP and plugins (code.claude.com/docs/en/features-overview), and the Agent SDK gives \"the same tools, agent loop, and context management that power Claude Code\" (code.claude.com/docs/en/agent-sdk/overview)."
+      }
+    },
+    "claude-skills": {
+      "simple": "A packaged how-to guide an AI agent loads only when a task needs it, such as your step-by-step process for building a funnel. Claude uses them, and so do many other AI tools.",
+      "sources": [
+        { "label": "Agent Skills: Overview", "url": "https://agentskills.io/" },
+        { "label": "Anthropic: Donating Agent Skills to the Agentic AI Foundation", "url": "https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation" },
+        { "label": "Claude Code docs: Extend Claude with skills", "url": "https://code.claude.com/docs/en/skills" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "term": "Agent Skills",
+        "aliases": ["Skills", "Claude Skills", "SKILL.md"],
+        "definition": "An open format for packaging reusable agent expertise: a folder containing a SKILL.md file (name and description metadata plus instructions) and optional scripts, references and assets, which an agent loads only when a task calls for it. Anthropic published the standard and donated it to the Agentic AI Foundation in October 2026; Claude, Claude Code and many other agent platforms support it.",
+        "whyItMatters": "Skills let you package a repeatable workflow once and have Claude, or any other agent that supports the format, apply it consistently across projects without pasting the same instructions every time.",
+        "reason": "The old text framed Skills as a Claude-only feature. Anthropic donated Agent Skills, \"the open standard that gives AI agents specialized knowledge and workflows\", to the Agentic AI Foundation on Oct 22, 2026, and other platforms (ChatGPT, Cursor, GitHub Copilot, VS Code) have integrated it (anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation). Format per agentskills.io. Id kept as claude-skills to avoid breaking links."
+      }
+    },
+    "mcp-connectors": {
+      "simple": "Ready-made links you switch on so Claude can work with apps you already use, like Google Drive, without anyone writing integration code.",
+      "sources": [
+        { "label": "Claude Help Center: Use connectors to extend Claude's capabilities", "url": "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" },
+        { "label": "Claude docs: Get started with connectors", "url": "https://claude.com/docs/connectors/getting-started" },
+        { "label": "Agentic AI Foundation (AAIF) projects", "url": "https://aaif.io/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "constitutional-ai": {
+      "simple": "Anthropic trains Claude against a written set of principles and has the model check and revise its own answers against them, rather than relying only on people labelling every bad answer.",
+      "sources": [
+        { "label": "Anthropic: Constitutional AI: Harmlessness from AI Feedback", "url": "https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback" },
+        { "label": "Anthropic: Claude's Constitution", "url": "https://www.anthropic.com/constitution" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "prompt-caching": {
+      "simple": "Claude can remember the long, unchanging start of your prompt, like a brand guide, so repeat requests run faster and you pay much less for that repeated part.",
+      "sources": [
+        { "label": "Claude docs: Prompt caching", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching" },
+        { "label": "Claude docs: Pricing", "url": "https://platform.claude.com/docs/en/about-claude/pricing" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "batch-processing": {
+      "simple": "You send Claude a big pile of jobs at once and collect the answers later, usually within the hour, at about half the normal price.",
+      "sources": [
+        { "label": "Claude docs: Batch processing", "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing" }
+      ],
+      "lastVerified": "2026-10-26"
+    }
+  },
+  "newTerms": [
+    {
+      "id": "agentic-ai",
+      "term": "Agentic AI",
+      "aliases": ["agentic systems"],
+      "category": "Agentic AI",
+      "level": "Beginner",
+      "definition": "AI systems that pursue a goal by planning steps, calling tools and acting on the results with limited human direction, ranging from fixed LLM workflows with predefined code paths to agents that direct their own process.",
+      "simple": "AI that does tasks rather than just answering questions: you give it a goal and it takes the steps, using your apps along the way.",
+      "analogy": "Like the difference between a reference librarian who answers questions and an assistant who goes off, runs the errands and reports back.",
+      "whyItMatters": "It is the umbrella term for the shift from chatbots to systems that act, so knowing where a build sits on the workflow-to-agent spectrum tells you how much autonomy, testing and human approval it needs.",
+      "example": "A lead-response system that reads a form submission, enriches the contact, scores the lead, drafts a reply and books a call in the CRM, with a person approving anything sent to the customer.",
+      "related": ["agent", "orchestration", "multi-agent", "agent-harness", "human-in-the-loop"],
+      "sources": [
+        { "label": "Anthropic: Building effective agents", "url": "https://www.anthropic.com/research/building-effective-agents" },
+        { "label": "Wikipedia: AI agent (agentic AI)", "url": "https://en.wikipedia.org/wiki/AI_agent" },
+        { "label": "Agentic AI Foundation (AAIF)", "url": "https://aaif.io/" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "agent-harness",
+      "term": "Agent Harness",
+      "aliases": ["agent scaffold", "agent scaffolding"],
+      "category": "Agentic AI",
+      "level": "Intermediate",
+      "definition": "The software layer around a language model that turns it into a working agent: the loop that calls the model, the tools it may use, context and memory management, permissions, sandboxing and the handling of results.",
+      "simple": "Everything wrapped around the AI model that lets it act as an agent: the tools it can use, what it remembers, what it's allowed to do, and the loop that keeps it working.",
+      "analogy": "Like the cockpit around a pilot: the controls, instruments and checklists are what let the pilot actually fly the plane.",
+      "whyItMatters": "Two agents on the same model can behave very differently because of their harness, so choosing or building one (Claude Code, the Claude Agent SDK, a managed agent service, or an n8n agent node) is as important a decision as choosing the model.",
+      "example": "Using Anthropic's Claude Managed Agents as a hosted harness for a long-running onboarding agent, instead of writing your own loop, tool execution and session storage.",
+      "related": ["agent", "claude-code", "context-engineering", "subagent", "agentic-ai"],
+      "sources": [
+        { "label": "Wikipedia: Agent harness", "url": "https://en.wikipedia.org/wiki/Agent_harness" },
+        { "label": "Claude docs: Claude Managed Agents overview", "url": "https://platform.claude.com/docs/en/managed-agents/overview" },
+        { "label": "Anthropic: Effective harnesses for long-running agents", "url": "https://www.anthropic.com/research/effective-harnesses-for-long-running-agents" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "emerging"
+    },
+    {
+      "id": "observability",
+      "term": "LLM Observability",
+      "aliases": ["agent observability", "LLM tracing", "AI observability"],
+      "category": "Agentic AI",
+      "level": "Intermediate",
+      "definition": "Recording traces, metrics and events for every model call, tool call and agent step so you can see what an AI system did, why, and at what cost; the OpenTelemetry GenAI semantic conventions standardise the span and attribute names for this.",
+      "simple": "A detailed activity log for your AI, showing every question it asked the model, every tool it used, how long each step took and what it cost.",
+      "analogy": "Like a flight data recorder for your agent: when something goes wrong you replay exactly what happened instead of guessing.",
+      "whyItMatters": "Agents fail in ways that ordinary logs miss, such as a wrong tool choice, a retry loop or a runaway token bill, so tracing is how you debug production automations, attribute cost per client and prove an agent behaved correctly.",
+      "example": "Exporting Claude Code or agent telemetry over OpenTelemetry to your monitoring stack, then filtering traces to find the run where a CRM-update tool was called twice for the same contact.",
+      "related": ["evals", "guardrails", "agent", "ai-gateway", "llm-as-judge"],
+      "sources": [
+        { "label": "OpenTelemetry GenAI Semantic Conventions (GitHub)", "url": "https://github.com/open-telemetry/semantic-conventions-genai" },
+        { "label": "Claude Code docs: Monitoring", "url": "https://code.claude.com/docs/en/monitoring-usage" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "emerging"
+    },
+    {
+      "id": "llm-as-judge",
+      "term": "LLM-as-a-Judge",
+      "aliases": ["LLM-as-judge", "LLM-based grading", "model-graded evals"],
+      "category": "Agentic AI",
+      "level": "Intermediate",
+      "definition": "An evaluation method in which a language model scores or compares another model's outputs against a rubric, used where exact-match or code-based checks cannot capture quality.",
+      "simple": "Using one AI to grade another AI's answers against a checklist, so you can test hundreds of responses without a person reading every one.",
+      "analogy": "Like a senior editor marking a stack of drafts against a style guide: fast and consistent, but you still spot-check the editor.",
+      "whyItMatters": "It makes evals affordable for open-ended outputs like support replies or summaries, but judges have known biases, so you validate the judge against human-graded samples before trusting it at scale.",
+      "example": "Scoring 200 AI-drafted follow-up emails on tone, accuracy and whether they include the booking link, using a judge prompt with a 1-5 rubric and checking 20 of them by hand.",
+      "related": ["evals", "guardrails", "hallucination", "observability"],
+      "sources": [
+        { "label": "Zheng et al. (2023): Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena", "url": "https://arxiv.org/abs/2306.05685" },
+        { "label": "Claude docs: Define success criteria and build evaluations", "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests" },
+        { "label": "OpenAI docs: Graders", "url": "https://developers.openai.com/api/docs/guides/graders" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "ai-gateway",
+      "term": "AI Gateway",
+      "aliases": ["LLM gateway", "LLM proxy", "model gateway"],
+      "category": "Agentic AI",
+      "level": "Intermediate",
+      "definition": "A proxy layer between your applications and one or more model providers that gives a single API and centralises routing, fallbacks, authentication, rate and spend limits, caching and logging for model (and sometimes MCP tool) traffic.",
+      "simple": "One central doorway all your apps use to reach AI models, so you can switch providers, set budgets and see usage in one place.",
+      "analogy": "Like a company switchboard: every outside call goes through it, so you can route, limit and log calls without rewiring each phone.",
+      "whyItMatters": "Once several automations call several models, a gateway stops API keys and model choices from being scattered across workflows and gives you failover, per-client spend caps and one usage log.",
+      "example": "Routing every n8n and app call through a gateway so classification goes to a cheap model, drafting to a stronger one, and traffic fails over to a second provider if the first returns errors.",
+      "related": ["rate-limit", "api-key", "observability", "claude-model-tiers", "retry-error-handling"],
+      "sources": [
+        { "label": "Vercel docs: AI Gateway", "url": "https://vercel.com/docs/ai-gateway" },
+        { "label": "Cloudflare docs: AI Gateway", "url": "https://developers.cloudflare.com/ai-gateway/" },
+        { "label": "AAIF project: Agent Router (open-source AI gateway)", "url": "https://aaif.io/projects/agent-router" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "vibe-coding",
+      "term": "Vibe Coding",
+      "aliases": [],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "Building software by describing what you want to an AI and accepting its code based on whether the result works, with little or no review of the code itself; the term was coined by Andrej Karpathy in February 2025.",
+      "simple": "Making an app by telling an AI what you want in plain language and judging it by whether it works, without reading the code it writes.",
+      "analogy": "Like renovating a house by describing the result to a builder and only checking the finished rooms, never the wiring behind the walls.",
+      "whyItMatters": "It is a fast way to prototype a demo or internal tool, but unreviewed code can hide security holes and bugs, so anything touching client data or payments needs review, tests and specs before production.",
+      "example": "Prompting an AI app builder into a working lead-capture page in an afternoon to test an offer, then rebuilding it with reviewed code before connecting the real CRM and payment flow.",
+      "related": ["spec-driven-development", "claude-code", "ide-extension", "evals"],
+      "sources": [
+        { "label": "Wikipedia: Vibe coding", "url": "https://en.wikipedia.org/wiki/Vibe_coding" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "spec-driven-development",
+      "term": "Spec-Driven Development",
+      "aliases": ["SDD"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "A way of building software with AI coding agents in which a written specification (requirements, design and a task list) is created first and treated as the source of truth, and the agent implements and verifies code against it.",
+      "simple": "Write down exactly what you're building and how you'll know it works before the AI writes any code, then have the AI build to that plan.",
+      "analogy": "Like building from architect's drawings instead of telling the crew \"make it nice\" and seeing what comes back.",
+      "whyItMatters": "It turns AI coding from one-off prompts into a reviewable process: requirements are agreed before work starts, the agent has a clear target, and the spec doubles as documentation for whoever maintains the system.",
+      "example": "Writing requirements.md, design.md and tasks.md for a client onboarding portal, getting the client to sign off on requirements, then having a coding agent work through the tasks one by one with tests.",
+      "related": ["vibe-coding", "claude-code", "agents-md", "evals"],
+      "sources": [
+        { "label": "GitHub Spec Kit: Spec-Driven Development", "url": "https://github.com/github/spec-kit/blob/main/spec-driven.md" },
+        { "label": "Kiro docs: Specs", "url": "https://kiro.dev/docs/specs/" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "emerging"
+    },
+    {
+      "id": "agents-md",
+      "term": "AGENTS.md",
+      "aliases": ["AGENTS.md file"],
+      "category": "Agentic AI",
+      "level": "Beginner",
+      "definition": "An open convention for a plain Markdown file, usually at the repository root, that gives AI coding agents a project's setup commands, test steps, conventions and other working instructions; it is stewarded by the Agentic AI Foundation under the Linux Foundation.",
+      "simple": "A \"read me first\" note for AI coding assistants, kept in your project, that tells them how to install, test and follow your house rules.",
+      "analogy": "Like the onboarding sheet you hand a new contractor on day one: where things are, how to run them, and what not to touch.",
+      "whyItMatters": "One file gives every compatible coding agent the same project context, so you stop repeating instructions in chat and agents are less likely to run the wrong commands or break conventions.",
+      "example": "An AGENTS.md in a Next.js repo that says to run npm test before finishing, never commit .env files, and keep dictionary data in data/dictionary.ts.",
+      "related": ["claude-code", "claude-skills", "context-engineering", "system-prompt", "spec-driven-development"],
+      "sources": [
+        { "label": "AGENTS.md: Open format for guiding coding agents", "url": "https://agents.md/" },
+        { "label": "Agentic AI Foundation (AAIF) projects", "url": "https://aaif.io/" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    }
+  ],
+  "notes": [
+    "fix entries (6): mcp, mcp-sampling (also status deprecated + deprecationNote), claude-model-tiers (term, aliases, definition, analogy, example), claude-artifacts, claude-code, claude-skills (term, aliases, definition, whyItMatters).",
+    "fix may carry term and aliases (claude-model-tiers, claude-skills). Aliases are full replacement lists; in claude-skills, 'Agent Skills' moves from alias to term.",
+    "claude-skills is generalised to the open Agent Skills standard (donated to AAIF on 2026-10-22); id kept to avoid breaking links. Category left as 'Claude'. Recommend the lead move it to 'Agentic AI', because the format is now cross-vendor.",
+    "claude-model-tiers no longer names versions. Mythos is described as restricted access with the same capabilities as Fable, not a higher tier. Note: the claude.com nav groups models as 'Mythos (including Fable)'. Versions stay in data/models.ts.",
+    "mcp-sampling is marked deprecated with no supersededBy, because no dictionary term replaces it (the spec's migration is direct LLM provider API calls). Roots and Logging, deprecated alongside it, have no dictionary entries.",
+    "mcp-transport, mcp-primitive, mcp-client, mcp-server: re-checked against spec 2026-07-28. Nothing is factually wrong (stdio and Streamable HTTP are still the standard transports; tools/resources/prompts are still the server features), so no fix. Possible future addition: the 2026-07-28 stateless change (no initialize handshake, server/discover).",
+    "a2a: AAIF Growth Stage membership (2026-08-27) is confirmed. The existing text makes no stewardship claim, so there is no fix; the sources carry it.",
+    "mcp-connectors: the AAIF stewardship sentence is confirmed. The clause '(n8n, GHL, and others) increasingly speak the same protocol' is unsourced; the lead may want to trim it.",
+    "claude-projects: no fix. The current version matches the text, but the help center shows a new Projects beta (one conversation, parallel cloud threads, Library), rolling out from Claude Code. Revisit when it reaches GA. The Cowork-to-Claude merge (2026-09-16) only affects claude-artifacts (pre-Sep-16 chat artifacts are now 'legacy').",
+    "prompt-caching / batch-processing: no fix. The existing text has no unconfirmed numbers. The batch example's 'roughly half' matches the docs' 50%. The 5-minute/1-hour TTLs and the 1.25x/2x write and 0.1x read multipliers were confirmed but deliberately not added to the prose (live-number convention).",
+    "tool-calling: no fix, but the definition ('your code runs it') covers client tools only. Claude also has server tools (web search, code execution) that Anthropic runs.",
+    "vibe-coding has a single Wikipedia source: Karpathy's original X post can't be fetched and Merriam-Webster returned 403.",
+    "observability: opentelemetry.io/docs/specs/semconv/gen-ai/ is now a 'Moved' stub. I cited the new open-telemetry/semantic-conventions-genai repo instead.",
+    "agents-md is filed under 'Agentic AI', as requested. The steward is confirmed on agents.md ('stewarded by the Agentic AI Foundation under the Linux Foundation'). The '60k projects' figure was left out as a live number."
+  ]
+}

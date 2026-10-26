@@ -1,4 +1,5 @@
 import type { Tool } from "@/app/lib/types";
+import { formatIsoDate } from "@/app/lib/content/format";
 
 function Rating({ value }: { value: number }) {
   return (
@@ -22,6 +23,7 @@ export default function ToolCard({ tool }: { tool: Tool }) {
 
       <p className="mb-4 text-sm text-white/70">{tool.tagline}</p>
 
+      <p className="mb-1.5 text-[0.6rem] uppercase tracking-widest text-white/40">Editorial rating (1–5)</p>
       <div className="mb-4 grid grid-cols-2 gap-x-4 gap-y-1.5">
         {Object.entries(tool.ratings).map(([k, v]) => (
           <div key={k} className="flex items-center justify-between text-xs">
@@ -65,6 +67,23 @@ export default function ToolCard({ tool }: { tool: Tool }) {
           <span className="font-semibold text-white/80">Pricing: </span>
           {tool.pricing}
         </p>
+        {(tool.sources?.length || tool.lastVerified) && (
+          <p className="text-white/45">
+            {tool.lastVerified && (
+              <>
+                Verified <time dateTime={tool.lastVerified}>{formatIsoDate(tool.lastVerified)}</time>
+              </>
+            )}
+            {tool.sources?.map((source) => (
+              <span key={source.url}>
+                {" · "}
+                <a href={source.url} target="_blank" rel="noopener noreferrer" className="underline decoration-white/20 underline-offset-2 hover:text-gold">
+                  {source.label}
+                </a>
+              </span>
+            ))}
+          </p>
+        )}
       </div>
     </article>
   );

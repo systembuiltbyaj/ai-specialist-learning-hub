@@ -79,8 +79,9 @@ export const ACRONYMS: Acronym[] = [
   { acronym: "PE", full: "Prompt Engineering", icon: "🛠️", category: "Prompting & Techniques", meaning: "The craft of writing instructions that reliably get the best output from a model." },
 
   // ───────── Agents & Protocols ─────────
-  { acronym: "MCP", full: "Model Context Protocol", icon: "🔌", category: "Agents & Protocols", meaning: "Anthropic's open standard that lets AI apps connect to tools and data — like a USB-C port for AI." },
-  { acronym: "A2A", full: "Agent-to-Agent", icon: "🤝", category: "Agents & Protocols", meaning: "An open protocol that lets separate AI agents discover each other and collaborate on tasks." },
+  { acronym: "MCP", full: "Model Context Protocol", icon: "🔌", category: "Agents & Protocols", meaning: "The open standard that lets AI apps connect to tools and data — like a USB-C port for AI. Created by Anthropic, now hosted by the Agentic AI Foundation under the Linux Foundation." },
+  { acronym: "A2A", full: "Agent2Agent Protocol", icon: "🤝", category: "Agents & Protocols", meaning: "An open protocol that lets separate AI agents discover each other, delegate tasks, and exchange results. Stable at v1.0 and hosted by the Agentic AI Foundation." },
+  { acronym: "AAIF", full: "Agentic AI Foundation", icon: "🏛️", category: "Agents & Protocols", meaning: "The Linux Foundation body, co-founded by Anthropic, Block, and OpenAI, that hosts open agent standards such as MCP, A2A, AGENTS.md, Agent Skills, and goose — so no single vendor controls them." },
   { acronym: "API", full: "Application Programming Interface", icon: "🔗", category: "Agents & Protocols", meaning: "A defined way for two pieces of software to talk and exchange data — the backbone of every integration." },
   { acronym: "SDK", full: "Software Development Kit", icon: "🧰", category: "Agents & Protocols", meaning: "A bundle of tools and libraries that makes building on a platform (like the Claude API) much easier." },
   { acronym: "CLI", full: "Command Line Interface", icon: "⌨️", category: "Agents & Protocols", meaning: "Controlling software by typing commands instead of clicking — how tools like Claude Code and git work." },
@@ -93,7 +94,7 @@ export const ACRONYMS: Acronym[] = [
   { acronym: "TTS", full: "Text-to-Speech", icon: "🔊", category: "Speech, Vision & Media", meaning: "Converting written text into spoken audio — the tech behind AI voices." },
   { acronym: "STT", full: "Speech-to-Text", icon: "🎙️", category: "Speech, Vision & Media", meaning: "Converting spoken audio into written text — used for transcription and voice commands." },
   { acronym: "ASR", full: "Automatic Speech Recognition", icon: "🗣️", category: "Speech, Vision & Media", meaning: "The technology behind speech-to-text — machines transcribing what people say." },
-  { acronym: "T2I", full: "Text-to-Image", icon: "🖼️", category: "Speech, Vision & Media", meaning: "Generating images from a text prompt, like Midjourney or DALL·E." },
+  { acronym: "T2I", full: "Text-to-Image", icon: "🖼️", category: "Speech, Vision & Media", meaning: "Generating images from a text prompt, like Midjourney, GPT Image, or Nano Banana." },
   { acronym: "T2V", full: "Text-to-Video", icon: "🎬", category: "Speech, Vision & Media", meaning: "Generating video clips from a text prompt." },
   { acronym: "I2V", full: "Image-to-Video", icon: "📹", category: "Speech, Vision & Media", meaning: "Animating a still image into a short video." },
 
@@ -105,6 +106,9 @@ export const ACRONYMS: Acronym[] = [
   { acronym: "PII", full: "Personally Identifiable Information", icon: "🔐", category: "Eval, Safety & Data", meaning: "Data that identifies a person (name, email, phone). Handle it carefully and never log it carelessly." },
   { acronym: "AUP", full: "Acceptable Use Policy", icon: "📜", category: "Eval, Safety & Data", meaning: "The rules for what you're allowed to do with a product or API." },
   { acronym: "TOS", full: "Terms of Service", icon: "📄", category: "Eval, Safety & Data", meaning: "The legal agreement that governs how you may use a service." },
+  { acronym: "ZDR", full: "Zero Data Retention", icon: "🧹", category: "Eval, Safety & Data", meaning: "A setting or contract under which a model provider doesn't store your prompts or train on them. AI gateways can route only to ZDR providers." },
+  { acronym: "GPAI", full: "General-Purpose AI (model)", icon: "⚖️", category: "Eval, Safety & Data", meaning: "The EU AI Act's term for broad models like the big LLMs. Their providers have had obligations since August 2025, enforced from August 2026." },
+  { acronym: "AIMS", full: "AI Management System", icon: "📐", category: "Eval, Safety & Data", meaning: "The organization-wide system of AI policies, risk checks, and controls that ISO/IEC 42001 defines — and that a company can get certified against." },
 
   // ───────── Dev & Infrastructure ─────────
   { acronym: "JSON", full: "JavaScript Object Notation", icon: "📄", category: "Dev & Infrastructure", meaning: "A simple text format for structured data — how most APIs and webhooks exchange information." },
@@ -128,6 +132,8 @@ export const ACRONYMS: Acronym[] = [
   { acronym: "UX", full: "User Experience", icon: "🧭", category: "Dev & Infrastructure", meaning: "How it feels to use a product — the flow, clarity, and ease." },
   { acronym: "OSS", full: "Open Source Software", icon: "🌍", category: "Dev & Infrastructure", meaning: "Software whose code is public and free to use, modify, and share." },
   { acronym: "DB", full: "Database", icon: "🗄️", category: "Dev & Infrastructure", meaning: "An organized store of data your app reads from and writes to." },
+  { acronym: "OTel", full: "OpenTelemetry", icon: "📡", category: "Dev & Infrastructure", meaning: "The open standard for traces, metrics, and logs. Its GenAI conventions name the gen_ai.* fields (model, token counts, messages) so any observability tool can read your AI app's telemetry." },
+  { acronym: "BYOK", full: "Bring Your Own Key", icon: "🗝️", category: "Dev & Infrastructure", meaning: "Using your own model-provider API key inside a gateway or platform, so usage bills to your provider account directly." },
 
   // ───────── Business & Product ─────────
   { acronym: "MVP", full: "Minimum Viable Product", icon: "🚀", category: "Business & Product", meaning: "The simplest version of a product with only the essential features needed to solve a real problem and gather feedback." },
@@ -152,6 +158,7 @@ export const ACRONYMS: Acronym[] = [
   { acronym: "2FA", full: "Two-Factor Authentication", icon: "🔐", category: "Automation & Comms", meaning: "A second proof of identity beyond your password — like a code from an app." },
   { acronym: "MFA", full: "Multi-Factor Authentication", icon: "🛡️", category: "Automation & Comms", meaning: "Two or more verification steps for stronger account security." },
   { acronym: "OAuth", full: "Open Authorization", icon: "🎟️", category: "Automation & Comms", meaning: "A standard that lets apps access your account without you sharing your password." },
+  { acronym: "PIT", full: "Private Integration Token", icon: "🎫", category: "Automation & Comms", meaning: "HighLevel's API v2 token for your own internal integrations. Marketplace apps use OAuth instead." },
   { acronym: "SSO", full: "Single Sign-On", icon: "🔓", category: "Automation & Comms", meaning: "Logging into many apps with one set of credentials." },
   { acronym: "SPF", full: "Sender Policy Framework", icon: "✉️", category: "Automation & Comms", meaning: "A DNS record listing who's allowed to send email for your domain — helps you avoid spam folders." },
   { acronym: "DKIM", full: "DomainKeys Identified Mail", icon: "🔏", category: "Automation & Comms", meaning: "A digital signature proving an email really came from your domain and wasn't tampered with." },

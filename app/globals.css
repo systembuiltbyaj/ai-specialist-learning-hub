@@ -171,6 +171,10 @@ body::before {
   .entry-note-body {
     @apply mt-1.5 max-w-[66ch] font-sans text-[0.9375rem] leading-[1.65] text-text/70;
   }
+  /* Deprecation notice — same rule-and-label grammar, heavier gold rule. */
+  .entry-notice {
+    @apply mt-6 border-l-2 border-gold pl-5;
+  }
 
   /* Dev-tools pills & tags */
   .pill {

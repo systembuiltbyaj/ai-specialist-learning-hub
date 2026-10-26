@@ -1,76 +1,87 @@
 import type { RefCard, RefTable, StackItem } from "@/app/lib/types";
+import { model } from "@/data/models";
+
+const OPUS = model("claude-opus-5-5");
+const SONNET = model("claude-sonnet-5-5");
+const ARGON = model("gemini-4-argon");
+const GEMINI_FLASH = model("gemini-3-8-flash");
+const MUSE_GLIMMER = model("muse-glimmer");
+const LLAMA_4 = model("llama-4");
+const GLM = model("glm-5-3");
+const DEEPSEEK_FLASH = model("deepseek-v4-1-flash");
+const DEEPSEEK_PRO = model("deepseek-v4-pro");
 
 // ───────────────────────── 01 · AI CODE EDITORS ─────────────────────────
-// Most-used editors, verified Sept 2026.
+// Widely used editors, verified October 2026. Research trail: docs/research/2026-10/.
 export const AI_EDITORS: RefCard[] = [
   {
     name: "Cursor",
-    pill: "Best overall",
-    badge: { label: "Paid", kind: "paid" },
+    pill: "AI-native IDE",
+    badge: { label: "Free tier", kind: "free" },
     accent: "pink",
-    tagline: "The best overall AI code editor — 1M+ daily active users.",
-    desc: "VS Code fork with Supermaven-powered autocomplete, multi-model support, and Composer for multi-file edits. Cursor 2.0 can orchestrate up to ~8 agents. The default for daily AI coding.",
-    tags: ["Composer", "Multi-model", "1M+ DAU"],
-    bestFor: "general coding — the all-round winner",
+    tagline: "A dedicated AI editor with its own Composer and Grok models built in.",
+    desc: "Made by Anysphere, a SpaceX subsidiary since August 2026. Plans include Cursor's own Composer 2.5 and Grok models; Claude, GPT and Gemini are available on Premium ($30/mo) and up, billed at API list price. Runs agents in parallel, locally or in the cloud.",
+    tags: ["Composer 2.5", "Grok models", "Parallel agents"],
+    bestFor: "daily coding in a dedicated AI IDE",
   },
   {
-    name: "Windsurf",
-    pill: "Best for beginners",
+    name: "Devin Desktop (formerly Windsurf)",
+    pill: "Agent-led editor",
     badge: { label: "Free tier", kind: "free" },
     accent: "yellow",
-    tagline: "Cursor's closest rival — lowest friction to start.",
-    desc: "Originally built by Codeium, now owned by OpenAI. The agentic 'Cascade' flow plus a gentle learning curve make it the top pick for beginners.",
-    tags: ["Cascade", "Beginner-friendly", "by OpenAI"],
-    bestFor: "beginners / easiest on-ramp",
+    tagline: "The former Windsurf editor, now Cognition's Devin Desktop.",
+    desc: "Cognition acquired Windsurf in July 2025 and renamed it Devin Desktop in June 2026. The Devin Local agent replaced Cascade, VS Code extensions and keybindings still work, and the same plans cover Devin's cloud agent. The free tier has a light quota.",
+    tags: ["Devin Local", "by Cognition", "VS Code-compatible"],
+    bestFor: "agent-led coding with a path to Devin's cloud agent",
   },
   {
     name: "Claude Code",
-    pill: "Best code quality",
+    pill: "Terminal agent",
     badge: { label: "Paid", kind: "paid" },
     accent: "orange",
-    tagline: "#1 on SWE-bench — correctness & terminal workflows.",
-    desc: "Anthropic's CLI agent, now running on Opus 5.5 by default. Strongest SWE-bench scores for complex reasoning; it reads files, runs commands, and verifies its own work. Ideal for terminal-first devs. (This hub was built with it.)",
-    tags: ["Terminal / CLI", "Code quality #1", "Agentic"],
-    bestFor: "code quality & complex tasks",
+    tagline: "Anthropic's agentic coding tool — terminal-first and extensible.",
+    desc: `Anthropic's coding agent, running on ${OPUS.name} by default on paid plans and the API. It reads files, runs commands and checks its own work, and extends with skills, subagents, hooks, MCP servers and plugins. Included on every Claude plan except Free. (This hub was built with it.)`,
+    tags: ["Terminal / CLI", "Subagents & hooks", "Agentic"],
+    bestFor: "complex, multi-step coding tasks",
   },
   {
     name: "GitHub Copilot",
     pill: "Enterprise / teams",
-    badge: { label: "Paid", kind: "paid" },
+    badge: { label: "Free tier", kind: "free" },
     accent: "blue",
-    tagline: "Widest IDE support, SSO & audit trails.",
-    desc: "The enterprise standard — works across the most IDEs with SSO and audit trails. Strong autocomplete plus chat and agent modes. No editor switch needed.",
-    tags: ["All major IDEs", "SSO", "Enterprise"],
+    tagline: "AI in the IDE you already use, with SSO & audit trails.",
+    desc: "GitHub's (Microsoft) assistant: completions, chat and agent mode, plus the Copilot cloud agent, CLI and app on every plan. Models come from OpenAI, Anthropic and Google. Free and Student tiers; paid plans from Pro at $10/mo, with usage metered in GitHub AI Credits since June 2026.",
+    tags: ["All major IDEs", "Cloud agent", "Enterprise"],
     bestFor: "enterprise & teams",
   },
   {
     name: "Antigravity",
     pill: "Multi-agent",
-    badge: { label: "Free preview", kind: "free" },
+    badge: { label: "Free tier", kind: "free" },
     accent: "purple",
-    tagline: "Google's agent-first IDE — up to 8 agents.",
-    desc: "Google's agentic IDE (Gemini-powered) built for multi-agent coding — orchestrate several agents at once. Built on the VS Code base.",
-    tags: ["Multi-agent", "Gemini", "Agent-first"],
+    tagline: "Google's agent-first development platform — generally available.",
+    desc: `Google's agent-first IDE, CLI and SDK. Version 2.0 added subagents and custom agents. ${GEMINI_FLASH.name} runs on every plan, and ${SONNET.name} and ${OPUS.name} on paid tiers. The individual plan is free; Google AI Pro or Ultra raise the limits.`,
+    tags: ["Subagents", "Gemini + Claude", "Agent-first"],
     bestFor: "multi-agent coding",
   },
   {
     name: "Zed",
-    pill: "Fastest",
-    badge: { label: "Free", kind: "os" },
+    pill: "Lightweight",
+    badge: { label: "Free", kind: "free" },
     accent: "teal",
-    tagline: "The fastest AI IDE — startup under 1 second.",
-    desc: "A blazing-fast, Rust-built editor with AI features and sub-second startup. Best when raw speed and responsiveness matter most.",
-    tags: ["Fastest", "Rust", "Lightweight"],
-    bestFor: "speed",
+    tagline: "A performance-focused editor with AI built in.",
+    desc: "A lean editor with built-in AI and agent features. The Personal plan is free; Pro is $10/mo and includes $5 of model tokens. A good pick when responsiveness matters more than a huge extension catalogue.",
+    tags: ["Lightweight", "Free personal plan", "Pro $10/mo"],
+    bestFor: "speed and a minimal setup",
   },
   {
-    name: "VS Code + Cline / Continue.dev",
-    pill: "Free & quality",
+    name: "VS Code + Cline",
+    pill: "Free & open source",
     badge: { label: "Free", kind: "os" },
     accent: "blue",
     tagline: "Open-source AI inside the universal editor.",
-    desc: "Stay in plain VS Code and add open-source AI: Cline (5M+ installs) or Continue.dev. The best free, high-quality route with full control over your stack.",
-    tags: ["Open source", "Cline", "Continue.dev"],
+    desc: "Stay in plain VS Code and add Cline, the open-source (Apache-2.0) coding agent with 5M+ installs. Free for individuals — bring your own model key and pay only for inference, with full control over your stack.",
+    tags: ["Open source", "Cline", "Bring your own key"],
     bestFor: "free + quality, full control",
   },
 ];
@@ -78,79 +89,80 @@ export const AI_EDITORS: RefCard[] = [
 export const EDITOR_COMPARISON: RefTable = {
   columns: ["Tool", "AI built-in", "Multi-file / agents", "Free tier", "Best for"],
   rows: [
-    ["Cursor", "✓", "✓ Composer (8 agents)", "~ Limited", "General coding"],
-    ["Windsurf", "✓", "✓ Cascade", "✓", "Beginners"],
-    ["Claude Code", "✓ CLI", "✓", "✗", "Code quality / terminal"],
-    ["GitHub Copilot", "✓ ext", "~ Limited", "✗", "Enterprise / teams"],
-    ["Antigravity", "✓", "✓ up to 8 agents", "✓ preview", "Multi-agent"],
+    ["Cursor", "✓", "✓ Parallel agents", "~ Limited", "General coding"],
+    ["Devin Desktop", "✓", "✓ Devin Local", "✓", "Agent-led coding"],
+    ["Claude Code", "✓ CLI", "✓ Subagents", "✗", "Complex tasks / terminal"],
+    ["GitHub Copilot", "✓ ext", "✓ Agent mode + cloud agent", "✓", "Enterprise / teams"],
+    ["Antigravity", "✓", "✓ Subagents", "✓", "Multi-agent"],
     ["Zed", "✓", "~", "✓", "Speed"],
     ["VS Code + Cline", "✓ ext", "✓ (Cline)", "✓", "Free & quality"],
   ],
 };
 
-// 2026 verdict shown under the editors section.
+// Editorial picks shown under the editors section — guidance, not rankings.
 export const EDITOR_WINNERS = [
-  { label: "General coding", pick: "Cursor", note: "best overall" },
-  { label: "Code quality", pick: "Claude Code", note: "#1 on SWE-bench" },
-  { label: "Beginners", pick: "Windsurf", note: "easiest learning curve" },
+  { label: "General coding", pick: "Cursor", note: "good default for a dedicated AI IDE" },
+  { label: "Complex tasks", pick: "Claude Code", note: "good fit for terminal-first, multi-step work" },
+  { label: "Beginners", pick: "GitHub Copilot", note: "free tier inside the editor you already use" },
 ];
 
 // ───────────────────────── 02 · LLMs ─────────────────────────
-// Most-used models, verified Sept 2026 — closed vs open source.
+// Current flagship and open-weight models, verified October 2026 — closed vs open-weight.
+// Names and prices come from data/models.ts.
 export const LLMS: RefCard[] = [
   {
-    name: "Claude Opus 5.5",
+    name: OPUS.name,
     pill: "Closed Source",
     badge: { label: "API", kind: "paid" },
     accent: "orange",
-    tagline: "Coding king — SOTA coding & knowledge work, 1M-token context.",
-    desc: "Anthropic's newest model and the #1 pick for coding and agentic work in 2026. Matches flagship Fable 5.1 on most work at ~40% lower cost. Powers Claude Code by default.",
-    tags: ["Anthropic", "Coding #1", "1M context"],
+    tagline: "Anthropic's recommended starting model — strong coding and agentic work, 1M-token context.",
+    desc: `Anthropic's docs recommend it as the starting model for most workloads. Anthropic says it performs at the level of ${model("claude-fable-5-1").name} on most work and costs about 40% less to run than ${model("claude-opus-5").name}. ${OPUS.pricingNote}. The default model in Claude Code.`,
+    tags: ["Anthropic", "Claude Code default", "1M context"],
   },
   {
-    name: "GPT-6 Astra",
+    name: model("gpt-6-astra").name,
     pill: "Closed Source",
     badge: { label: "API", kind: "paid" },
     accent: "pink",
-    tagline: "Best all-round general intelligence, computer use & browsing.",
-    desc: "OpenAI's flagship — the go-to for general intelligence, computer use, and broad professional tasks, with the largest tooling ecosystem.",
-    tags: ["OpenAI", "Computer use", "Browsing"],
+    tagline: "OpenAI's flagship for complex reasoning, coding and computer use.",
+    desc: `OpenAI's flagship for complex reasoning, coding, agentic work and computer use. For lower cost, ${model("gpt-6-1-sol").name} is the balanced tier and ${model("gpt-6-luna").name} the cheapest.`,
+    tags: ["OpenAI", "Computer use", "Agentic"],
   },
   {
-    name: "Gemini 3.1 Pro",
+    name: ARGON.name,
     pill: "Closed Source",
     badge: { label: "API", kind: "paid" },
     accent: "blue",
-    tagline: "Scientific research, reasoning & multimodal.",
-    desc: "Google DeepMind's flagship — excels at scientific research, deep reasoning, and multimodal tasks, with huge context and strong price-performance.",
-    tags: ["Google", "Reasoning", "Multimodal"],
+    tagline: "Google's flagship reasoning model, 1M-token context.",
+    desc: `Google's flagship Gemini model, generally available since 13 October 2026, with a 1M-token context and long-decode output. ${ARGON.pricingNote}. For cheap, high-volume work, ${GEMINI_FLASH.name} has a free tier.`,
+    tags: ["Google", "Reasoning", "1M context"],
   },
   {
-    name: "Llama 4 (Scout / Maverick)",
-    pill: "Open Source",
-    badge: { label: "Free", kind: "os" },
+    name: MUSE_GLIMMER.name,
+    pill: "Open weights",
+    badge: { label: "Free", kind: "free" },
     accent: "teal",
-    tagline: "Largest open community — up to 10M-token context.",
-    desc: "Meta's open weights with the biggest community and ecosystem. Scout/Maverick variants push context up to ~10M tokens. Self-host or run via Ollama.",
-    tags: ["Meta", "10M context", "Self-host"],
+    tagline: "Meta's current open-weight model — small enough for one GPU.",
+    desc: `Meta's open weights now come from the Muse family. ${MUSE_GLIMMER.name} (Apache 2.0, August 2026) is distilled from the closed Muse Spark and runs on a single consumer GPU. ${LLAMA_4.name} (April 2025) was Meta's last Llama release — still downloadable, with a 10M-token context on Scout, but no longer updated.`,
+    tags: ["Meta", "Apache 2.0", "Self-host"],
   },
   {
-    name: "GLM-5.3",
-    pill: "Open Source",
-    badge: { label: "Free", kind: "os" },
+    name: GLM.name,
+    pill: "Open weights",
+    badge: { label: "Free", kind: "free" },
     accent: "purple",
-    tagline: "Top open model for coding agents.",
-    desc: "A leading open-weights choice for coding agents in 2026 — strong tool use and function calling at open-source cost.",
-    tags: ["Open weights", "Coding agents", "Tool use"],
+    tagline: "Z.ai's coding-focused open-weight flagship.",
+    desc: `Z.ai calls it "the most capable open-weights model for coding". Free to use under its own licence, not an OSI open-source one: ${GLM.pricingNote}.`,
+    tags: ["Open weights", "Coding agents", "Custom licence"],
   },
   {
-    name: "DeepSeek V4.1",
-    pill: "Open Source",
-    badge: { label: "Free", kind: "os" },
+    name: DEEPSEEK_FLASH.name,
+    pill: "Open weights",
+    badge: { label: "Free", kind: "free" },
     accent: "yellow",
-    tagline: "Cheapest path to frontier-level quality.",
-    desc: "Open weights delivering near-frontier quality at the lowest cost. Self-hostable; popular for budget-conscious, high-volume use.",
-    tags: ["Cheapest frontier", "Reasoning", "Self-host"],
+    tagline: "Very low API prices, MIT-licensed weights.",
+    desc: `DeepSeek's fast multimodal model with a 1M-token context. ${DEEPSEEK_FLASH.pricingNote}. The flagship ${DEEPSEEK_PRO.name} (text only) is also MIT. Self-hostable for budget-conscious, high-volume use.`,
+    tags: ["MIT licence", "Low cost", "Self-host"],
   },
 ];
 

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { DictCategory, DictionaryTerm, DictLevel } from "@/data/dictionary";
 import { CATEGORIES, LEVELS } from "@/data/dictionary";
+import type { ModelEntry } from "@/app/lib/content/types";
 
 // Runtime contract for hand-edited content files. TypeScript only checks shape;
 // this also checks the things that rot silently — malformed dates, http links,
@@ -33,9 +34,10 @@ export const DictionaryTermSchema = z
     whyItMatters: z.string().trim().min(10),
     example: z.string().trim().min(10).optional(),
     related: z.array(z.string().regex(ID)),
-    simple: z.string().trim().min(20).optional(),
-    sources: z.array(SourceSchema).optional(),
-    lastVerified: IsoDateSchema.optional(),
+    // Required since the M1 backfill: a term without provenance doesn't ship.
+    simple: z.string().trim().min(20),
+    sources: z.array(SourceSchema).min(1),
+    lastVerified: IsoDateSchema,
     status: ContentStatusSchema.optional(),
     supersededBy: z.string().regex(ID).optional(),
     deprecationNote: z.string().trim().min(10).optional(),
@@ -44,3 +46,19 @@ export const DictionaryTermSchema = z
     (term) => term.status !== "deprecated" || Boolean(term.supersededBy || term.deprecationNote),
     { message: "a deprecated term needs supersededBy or deprecationNote", path: ["status"] },
   ) satisfies z.ZodType<DictionaryTerm>;
+
+export const ModelEntrySchema = z.strictObject({
+  id: z.string().regex(ID, "id must be kebab-case"),
+  vendor: z.string().trim().min(2),
+  name: z.string().trim().min(2),
+  apiId: z.string().trim().min(2).optional(),
+  tier: z.enum(["flagship", "balanced", "fast", "reasoning", "open-weight", "media", "other"]),
+  releasedOn: z.string().regex(/^\d{4}-\d{2}(?:-\d{2})?$/, "expected YYYY-MM or YYYY-MM-DD").optional(),
+  status: z.enum(["preview", "current", "legacy", "deprecated", "retired"]),
+  contextTokens: z.number().int().positive().optional(),
+  pricingNote: z.string().trim().min(5).optional(),
+  summary: z.string().trim().min(20),
+  // A model claim with no source is exactly what this registry exists to prevent.
+  sources: z.array(SourceSchema).min(1),
+  lastVerified: IsoDateSchema,
+}) satisfies z.ZodType<ModelEntry>;

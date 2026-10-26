@@ -46,20 +46,24 @@ export const QUIZ_SUBJECTS: {
   },
 ];
 
+// Deprecated terms stay in the dictionary for people searching old names, but
+// nobody should be examined on something they're told not to use.
+const QUIZZABLE = DICTIONARY.filter((t) => t.status !== "deprecated");
+
 // Map each exam subject onto dictionary categories.
 function poolFor(subject: QuizSubject): DictionaryTerm[] {
   switch (subject) {
     case "Claude":
-      return DICTIONARY.filter((t) => t.category === "Claude");
+      return QUIZZABLE.filter((t) => t.category === "Claude");
     case "GoHighLevel":
-      return DICTIONARY.filter((t) => t.category === "GoHighLevel");
+      return QUIZZABLE.filter((t) => t.category === "GoHighLevel");
     case "Automation Hub":
-      return DICTIONARY.filter(
+      return QUIZZABLE.filter(
         (t) => t.category === "Automation Platforms" || t.category === "Agentic AI",
       );
     case "Tech Dictionary":
     default:
-      return DICTIONARY;
+      return QUIZZABLE;
   }
 }
 
@@ -106,7 +110,7 @@ function pickDistractors(
 ): string[] {
   const seen = new Set([answer.trim()]);
   const out: string[] = [];
-  for (const t of shuffle([...pool, ...DICTIONARY])) {
+  for (const t of shuffle([...pool, ...QUIZZABLE])) {
     if (t.id === answerId) continue;
     const v = valueOf(t).trim();
     if (!v || seen.has(v)) continue;

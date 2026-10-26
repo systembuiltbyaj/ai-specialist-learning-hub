@@ -21,6 +21,9 @@ export default function ComparisonTable({ tools, columns }: ComparisonTableProps
   return (
     <div className="card overflow-x-auto">
       <table className="w-full min-w-[640px] border-collapse text-sm">
+        <caption className="caption-bottom px-4 py-2 text-left text-[0.65rem] text-white/45">
+          Ratings (1–5) are editorial judgement, not benchmark scores. Switch to card view for sources.
+        </caption>
         <thead>
           <tr className="border-b border-navy-border">
             <th className="sticky left-0 z-10 bg-navy-card px-4 py-3 text-left font-semibold text-white">

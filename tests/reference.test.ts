@@ -6,6 +6,7 @@ import {
   ACRONYM_TO_TERM,
   ACRONYM_SLUGS,
   TERM_IDS,
+  HOMONYM_SLUGS,
   acronymBySlug,
 } from "@/app/lib/reference";
 
@@ -23,8 +24,23 @@ describe("slugify", () => {
 });
 
 describe("ACRONYM_TO_TERM", () => {
-  it("maps exactly the 22 overlapping acronyms", () => {
-    expect(Object.keys(ACRONYM_TO_TERM)).toHaveLength(22);
+  // Bump this deliberately when the dictionary gains a term or alias that an
+  // acronym duplicates — and check the new mapping points at the same concept.
+  it("maps exactly the 26 overlapping acronyms", () => {
+    expect(Object.keys(ACRONYM_TO_TERM)).toHaveLength(26);
+  });
+
+  it("leaves homonyms alone so ReAct never redirects to the React library", () => {
+    expect(ACRONYM_TO_TERM["react"]).toBeUndefined();
+    expect(ACRONYM_SLUGS).toContain("react");
+  });
+
+  it("routes acronyms covered by newer terms and aliases", () => {
+    expect(ACRONYM_TO_TERM["moe"]).toBe("mixture-of-experts");
+    expect(ACRONYM_TO_TERM["http"]).toBe("http-https");
+    expect(ACRONYM_TO_TERM["https"]).toBe("http-https");
+    expect(ACRONYM_TO_TERM["sql"]).toBe("sql-vs-nosql");
+    expect(ACRONYM_TO_TERM["db"]).toBe("database");
   });
 
   it("maps direct id collisions to themselves", () => {
@@ -50,7 +66,7 @@ describe("ACRONYM_TO_TERM", () => {
 
 describe("page slug sets", () => {
   it("excludes overlapping acronyms from getting their own page", () => {
-    expect(ACRONYM_SLUGS).toHaveLength(ACRONYMS.length - 22);
+    expect(ACRONYM_SLUGS).toHaveLength(ACRONYMS.length - 26);
     for (const slug of ACRONYM_SLUGS) {
       expect(ACRONYM_TO_TERM[slug]).toBeUndefined();
     }
@@ -61,9 +77,14 @@ describe("page slug sets", () => {
     expect(new Set(TERM_IDS).size).toBe(TERM_IDS.length);
   });
 
-  it("never collides a term id with an acronym page slug", () => {
+  // A shared slug means two pages about one concept — except declared homonyms,
+  // which are different concepts that happen to spell the same.
+  it("never collides a term id with an acronym page slug, except declared homonyms", () => {
     const terms = new Set(TERM_IDS);
-    for (const slug of ACRONYM_SLUGS) expect(terms.has(slug)).toBe(false);
+    for (const slug of ACRONYM_SLUGS) {
+      if (HOMONYM_SLUGS.has(slug)) continue;
+      expect(terms.has(slug), `${slug} would duplicate /dictionary/${slug}`).toBe(false);
+    }
   });
 });
 
