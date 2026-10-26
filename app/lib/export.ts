@@ -1,4 +1,4 @@
-import type { Term, Resource, InterviewEntry } from "@/app/lib/types";
+import type { Resource, InterviewEntry } from "@/app/lib/types";
 
 // Triggers a client-side file download from a string.
 export function downloadFile(content: string, filename: string, mime: string) {
@@ -11,40 +11,6 @@ export function downloadFile(content: string, filename: string, mime: string) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-}
-
-export function exportTermsToMarkdown(terms: Term[]): string {
-  const lines: string[] = [
-    "# 🔷 Tech Dictionary Export",
-    "",
-    `*${terms.length} terms · generated from AJ Learning Hub*`,
-    "",
-    "---",
-    "",
-  ];
-
-  for (const t of terms) {
-    lines.push(`## ${t.name}`);
-    lines.push(`**Category:** ${t.category}`, "");
-    lines.push(`**Definition**  \n${t.definition}`, "");
-    lines.push(`**Beginner Explanation**  \n${t.explanation}`, "");
-    if (t.use_cases.length) {
-      lines.push("**Use Cases**");
-      t.use_cases.forEach((u) => lines.push(`- ${u}`));
-      lines.push("");
-    }
-    if (t.examples.length) {
-      lines.push("**Example**");
-      t.examples.forEach((e) => lines.push(`> ${e}`));
-      lines.push("");
-    }
-    if (t.related_terms.length) {
-      lines.push(`**Related Terms:** ${t.related_terms.join(", ")}`, "");
-    }
-    lines.push("---", "");
-  }
-
-  return lines.join("\n");
 }
 
 export function exportInterviewToMarkdown(entries: InterviewEntry[]): string {

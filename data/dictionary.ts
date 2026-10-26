@@ -1,4 +1,7 @@
 // AUTO-GENERATED dictionary data. Single source of truth — import from "@/data/dictionary".
+// Validated by app/lib/content/schema.ts; tests/content.test.ts fails the build on a bad entry.
+import type { ContentStatus, Source } from "../app/lib/content/types";
+
 export type DictCategory =
   | "AI Foundations"
   | "Prompting"
@@ -21,6 +24,14 @@ export interface DictionaryTerm {
   whyItMatters: string;
   example?: string;
   related: string[];
+  // Verification fields. Optional until every entry is backfilled (roadmap M1),
+  // after which the schema makes them required.
+  simple?: string;
+  sources?: Source[];
+  lastVerified?: string;
+  status?: ContentStatus;
+  supersededBy?: string;
+  deprecationNote?: string;
 }
 
 export const CATEGORIES: DictCategory[] = ["AI Foundations","Prompting","Agentic AI","Claude","Automation Platforms","GoHighLevel","Web/Dev"];

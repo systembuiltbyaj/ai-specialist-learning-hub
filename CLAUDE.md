@@ -22,14 +22,14 @@ you will edit a file that no page reads.
 `DICTIONARY_BY_ID`. (No count written here — see Conventions. The live count
 renders on the home page.)
 
-Two older stores still exist and are **unreachable** — nothing imports them.
-Their counts are given because they are frozen, and the gap is the point:
+Every entry is validated by `app/lib/content/schema.ts` (zod) in
+`tests/content.test.ts` — a bad date, an `http://` source, a broken `related`
+id, or a deprecated term with no successor fails the test run. The
+verification fields (`simple`, `sources`, `lastVerified`, `status`) are optional
+until the M1 backfill lands, then become required.
 
-- `app/lib/seed/terms.ts` — 76 entries; reachable only via `getTerms()`, which has no callers
-- `app/lib/seed/glossary.ts` — 63 entries; reachable only via `GlossaryClient.tsx`, which nothing imports
-
-They are a stalled migration, pending a content diff before deletion. Until that
-happens: **do not edit them, and do not quote them as current.**
+The old `seed/terms.ts` and `seed/glossary.ts` stores were content-diffed and
+deleted (2026-10-26). Do not recreate a second term store.
 
 ### Precedence, in one line
 `data/dictionary.ts` is the source of truth for terms. `tailwind.config.ts` is
@@ -147,11 +147,18 @@ are deleted. Do not reintroduce them without a reason.
 | `npm run dev` | dev server |
 | `npm run build` | production build — also the real typecheck |
 | `npm run start` | serve the build |
-| `npm test` | Vitest — slug/overlap resolution and search ranking |
+| `npm test` | Vitest — slug/overlap resolution, search ranking, content schema and freshness |
+| `npm run content:check` | read-only staleness report (unverified, unsourced, >120 days old); exits 1 only on integrity errors. `--max-age=<days>` overrides the threshold |
 | `npm run lint` | **broken** — ESLint is unconfigured and this drops into an interactive setup prompt |
 
+**Windows path quirk:** the `&` in this repo's path (`Apps & Systems`) breaks
+npm's `.cmd` shims, so `npm test` / `npm run build` fail locally with
+"'Systems\' is not recognized". Call the binaries through node instead:
+`node node_modules/vitest/vitest.mjs run`, `node node_modules/next/dist/bin/next build`.
+Vercel builds are unaffected.
+
 Tests cover the pure functions where a silent bug has wide blast radius. Anything
-added to `app/lib/reference.ts` or `app/lib/search.ts` should come with tests.
+added to `app/lib/reference.ts`, `app/lib/search.ts` or `app/lib/content/` should come with tests.
 
 ## Environment
 
@@ -164,11 +171,14 @@ and the sitemap, falling back to `VERCEL_URL` then localhost.
 - `audits/os-audit-2026-08-07.md` — drift audit: what was fixed, what is open.
 - `docs/superpowers/specs/` and `docs/superpowers/plans/` — the reframe design
   and its implementation plan.
-- Dependencies are clean: `npm audit --omit=dev` reports 0 vulnerabilities on
-  Next 16. The 21 high-severity advisories against 14.2.35 were the reason for
-  the upgrade; do not downgrade.
-- **Still open:** ESLint is unconfigured, and the two dead dictionary stores
-  (Rule 0) await a content diff before deletion.
+- `npm audit --omit=dev` reports 0 vulnerabilities (rechecked 2026-10-26, after
+  an in-range bump to Next 16.4.3 closed a critical RCE advisory). Never run
+  `npm audit fix --omit=dev` — it prunes devDependencies from `node_modules`.
+  Do not downgrade Next.
+- `docs/superpowers/plans/2026-10-26-hub-2.0-roadmap.md` — the Hub 2.0 milestones (M0–M5).
+- **Still open:** ESLint is unconfigured. Dev-only advisories (vitest, vite,
+  browserslist) remain because `npm audit fix` hits an npm arborist bug
+  (`reading 'edgesOut'`) on vitest's optional jsdom peer; none ship to production.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

@@ -1,36 +1,6 @@
 // Shared domain types for the Learning Hub.
 // These mirror the Supabase table columns so seed data and live data are interchangeable.
 
-export type TermCategory = "Concepts" | "Tools" | "GHL-Specific" | "Automation";
-
-// ── Glossary (BrewedOps-style) ──
-export interface GlossaryTerm {
-  term: string;
-  fullName?: string;
-  category: string;
-  tagline: string; // one-line short definition
-  eli5: string; // plain-English explanation
-  analogy?: string;
-  example?: string; // "in practice"
-}
-
-export interface GlossaryCategory {
-  key: string;
-  color: string; // hex
-}
-
-export interface Term {
-  id: string;
-  name: string;
-  category: TermCategory;
-  definition: string;
-  use_cases: string[];
-  explanation: string; // beginner explanation
-  related_terms: string[];
-  examples: string[];
-  created_at?: string;
-}
-
 export type ToolCategory =
   | "AI Models"
   | "Coding Agents"
