@@ -49,7 +49,7 @@ export default function LearnPage() {
                 <li key={lesson.id}>
                   <Link
                     href={lessonHref(path.id, lesson.id)}
-                    className="flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors hover:bg-white/5"
+                    className="flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors hover:bg-text/5"
                   >
                     <LessonDone lessonId={lesson.id} />
                     <span className="flex-1 text-text/85">

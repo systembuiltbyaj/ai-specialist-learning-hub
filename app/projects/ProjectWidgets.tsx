@@ -29,7 +29,7 @@ function ProgressLine({ done, total }: { done: number; total: number }) {
   const pct = total ? Math.round((done / total) * 100) : 0;
   return (
     <div className="flex items-center gap-2 text-xs text-muted">
-      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10" aria-hidden>
+      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-text/10" aria-hidden>
         <div className="h-full rounded-full bg-gradient-to-r from-gold to-violet-soft" style={{ width: `${pct}%` }} />
       </div>
       <span className="font-mono">
@@ -105,7 +105,7 @@ export function StepCheck({ projectId, step, title }: { projectId: string; step:
       aria-pressed={done}
       aria-label={done ? `Mark step ${step + 1}, ${title}, as not done` : `Mark step ${step + 1}, ${title}, as done`}
       className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border font-mono text-xs font-bold transition-colors ${
-        done ? "border-[#34d399] bg-[#34d399]/15 text-[#34d399]" : "border-gold/60 text-gold hover:bg-gold/10"
+        done ? "border-success bg-success/15 text-success" : "border-gold/60 text-gold hover:bg-gold/10"
       }`}
     >
       {done ? "✓" : step + 1}

@@ -50,8 +50,8 @@ export default async function HomePage() {
           <div className="flex flex-col justify-center px-3 py-6 sm:px-8 sm:py-10">
             <p className="eyebrow">{BRAND.handle}</p>
             <h1 className="mt-3 text-balance font-display text-2xl font-extrabold leading-[1.15] tracking-[-0.03em] text-text sm:text-[2rem]">
-              Hello! — Welcome to the{" "}
-              <span className="text-gold">AJ Learning Hub</span>
+              Hello! — Welcome to{" "}
+              <span className="text-gold">{BRAND.shortName}</span>
             </h1>
             <div className="mt-3 max-w-md space-y-2.5 text-[0.9375rem] leading-relaxed text-muted">
               <p>
@@ -140,7 +140,7 @@ export default async function HomePage() {
                 <NavIcon href={m.href} className="h-6 w-6" />
               </span>
               <div>
-                <h3 className="font-bold text-white group-hover:text-gold">{m.label}</h3>
+                <h3 className="font-bold text-text group-hover:text-violet-light">{m.label}</h3>
                 <p className="mt-1 text-sm text-muted">{m.description}</p>
               </div>
               <span className="ml-auto text-muted transition-transform group-hover:translate-x-1 group-hover:text-gold">
@@ -153,7 +153,7 @@ export default async function HomePage() {
 
       {/* ───────────── CTA ───────────── */}
       <section className="relative overflow-hidden rounded-2xl border border-violet-soft/30 bg-gradient-to-br from-violet/25 via-surface to-surface px-6 py-12 text-center shadow-glow">
-        <h2 className="font-display text-2xl font-extrabold uppercase tracking-tight text-white sm:text-3xl">
+        <h2 className="font-display text-2xl font-extrabold tracking-[-0.025em] text-text sm:text-3xl">
           Everything here is free to use.
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-muted">

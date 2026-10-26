@@ -7,6 +7,7 @@ import { formatIsoDate } from "@/app/lib/content/format";
 import { CodeBlock, Paragraphs } from "@/app/components/Prose";
 import BookmarkButton from "@/app/components/BookmarkButton";
 import { LessonActions } from "../../LearnWidgets";
+import { BRAND } from "@/app/lib/constants";
 
 export const dynamicParams = false;
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title: ref.lesson.title,
     description: ref.lesson.summary,
     alternates: { canonical: lessonHref(path, lesson) },
-    openGraph: { title: `${ref.lesson.title} — AJ Learning Hub`, description: ref.lesson.summary, type: "article" },
+    openGraph: { title: `${ref.lesson.title} — ${BRAND.name}`, description: ref.lesson.summary, type: "article" },
   };
 }
 
@@ -98,8 +99,8 @@ export default async function LessonPage({ params }: Params) {
             <li key={i}>{step}</li>
           ))}
         </ol>
-        <p className="border-l-2 border-[#34d399]/60 pl-3 text-sm text-text/75">
-          <span className="font-semibold text-[#34d399]">You&apos;re done when: </span>
+        <p className="border-l-2 border-success/60 pl-3 text-sm text-text/75">
+          <span className="font-semibold text-success">You&apos;re done when: </span>
           {lesson.exercise.successCheck}
         </p>
       </section>

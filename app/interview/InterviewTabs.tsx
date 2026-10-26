@@ -41,13 +41,13 @@ export default function InterviewTabs({
             aria-selected={mode === m.key}
             onClick={() => setMode(m.key)}
             className={`card flex items-start gap-3 p-4 text-left transition-colors ${
-              mode === m.key ? "border-gold bg-gold/5" : "card-hover"
+              mode === m.key ? "!border-violet-soft/60 bg-violet-soft/10" : "card-hover"
             }`}
           >
             <span className="text-xl">{m.icon}</span>
             <span>
               <span
-                className={`block font-bold ${mode === m.key ? "text-gold" : "text-text"}`}
+                className={`block font-bold ${mode === m.key ? "text-violet-light" : "text-text"}`}
               >
                 {m.title}
               </span>

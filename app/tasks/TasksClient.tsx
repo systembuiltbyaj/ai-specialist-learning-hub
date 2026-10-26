@@ -23,7 +23,7 @@ const COLUMN: Record<TaskStatus, { rail: string; head: string; tint: string }> =
   Done: {
     rail: "bg-line",
     head: "text-muted",
-    tint: "bg-white/[0.02]",
+    tint: "bg-text/[0.02]",
   },
 };
 
@@ -422,7 +422,7 @@ function CardForm({
             type="checkbox"
             checked={urgent}
             onChange={(e) => setUrgent(e.target.checked)}
-            className="accent-[#ff6ba3]"
+            className="accent-neon-pink"
           />
           urgent
         </label>
@@ -430,7 +430,7 @@ function CardForm({
       <div className="flex gap-2">
         <button
           type="submit"
-          className="rounded-md bg-gold px-3 py-1.5 text-[0.75rem] font-bold text-bg transition-colors hover:brightness-110"
+          className="rounded-md bg-gold-fill px-3 py-1.5 text-[0.75rem] font-bold text-onaccent transition-colors hover:brightness-110"
         >
           {submitLabel}
         </button>

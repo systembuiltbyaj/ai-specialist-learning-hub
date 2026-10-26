@@ -44,9 +44,9 @@ interface Draft {
 const EMPTY_DRAFT: Draft = { question: "", answer: "", topic: "" };
 
 export const RATING_STYLE: Record<InterviewRating | "unrated", { label: string; className: string }> = {
-  nailed: { label: "Nailed", className: "border-[#34d399]/50 bg-[#34d399]/10 text-[#34d399]" },
+  nailed: { label: "Nailed", className: "border-success/50 bg-success/10 text-success" },
   shaky: { label: "Shaky", className: "border-gold/50 bg-gold/10 text-gold" },
-  missed: { label: "Missed", className: "border-[#ff6b6b]/50 bg-[#ff6b6b]/10 text-[#ff9b9b]" },
+  missed: { label: "Missed", className: "border-danger/50 bg-danger/10 text-danger" },
   unrated: { label: "Not practised", className: "border-line text-muted" },
 };
 
@@ -192,7 +192,7 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
                   onClick={() => setTopic(t)}
                   aria-current={topic === t ? "true" : undefined}
                   className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-sm transition-colors ${
-                    topic === t ? "bg-gold/10 font-semibold text-gold" : "text-text/75 hover:bg-white/5 hover:text-text"
+                    topic === t ? "bg-violet/10 font-semibold text-violet-light" : "text-text/75 hover:bg-text/5 hover:text-text"
                   }`}
                 >
                   <span className="truncate">{t === "All" ? "All topics" : t}</span>
@@ -229,14 +229,14 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
           <details className="relative">
             <summary className="btn-ghost cursor-pointer list-none px-4 py-2 text-xs">Export ▾</summary>
             <div className="absolute left-0 z-20 mt-1 w-56 rounded-lg border border-line bg-surface p-1 shadow-card">
-              <button onClick={handleMarkdown} className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5">
+              <button onClick={handleMarkdown} className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-text/5">
                 Markdown — all questions
                 <span className="block text-muted">Best for editing and backups</span>
               </button>
               <button
                 onClick={handlePdf}
                 disabled={buildingPdf}
-                className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-white/5 disabled:opacity-60"
+                className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-text/5 disabled:opacity-60"
               >
                 {buildingPdf ? "Building PDF…" : "PDF — what's shown"}
                 <span className="block text-muted">Best for sending to someone</span>
@@ -353,7 +353,7 @@ function EntryCard({
             {confirming ? (
               <>
                 <span className="text-xs text-muted">Delete this question?</span>
-                <button onClick={onDelete} className="rounded-md border border-[#ff6b6b]/60 px-3 py-1.5 text-xs text-[#ff9b9b] hover:bg-[#ff6b6b]/10">
+                <button onClick={onDelete} className="rounded-md border border-danger/60 px-3 py-1.5 text-xs text-danger hover:bg-danger/10">
                   Delete
                 </button>
                 <button onClick={() => setConfirming(false)} className="btn-ghost px-3 py-1.5 text-xs">

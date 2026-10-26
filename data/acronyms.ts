@@ -1,6 +1,8 @@
 // AI-world acronym decoder. Source of truth for /acronyms.
 // Plain-English meanings written for a beginner-to-intermediate AI builder.
 
+import { TOKEN } from "../app/lib/color";
+
 export type AcronymCategory =
   | "AI & ML Core"
   | "Models & Training"
@@ -21,15 +23,15 @@ export interface Acronym {
 }
 
 export const ACRONYM_CATEGORIES: { key: AcronymCategory; icon: string; color: string }[] = [
-  { key: "AI & ML Core", icon: "🤖", color: "#7c5cfc" },
-  { key: "Models & Training", icon: "🏋️", color: "#ac4bff" },
-  { key: "Prompting & Techniques", icon: "✍️", color: "#f6cb1f" },
-  { key: "Agents & Protocols", icon: "🔌", color: "#ff8a3d" },
-  { key: "Speech, Vision & Media", icon: "🎬", color: "#f472b6" },
-  { key: "Eval, Safety & Data", icon: "🛡️", color: "#34d399" },
-  { key: "Dev & Infrastructure", icon: "💻", color: "#38bdf8" },
-  { key: "Business & Product", icon: "📊", color: "#f6cb1f" },
-  { key: "Automation & Comms", icon: "📶", color: "#34d399" },
+  { key: "AI & ML Core", icon: "🤖", color: TOKEN.violet },
+  { key: "Models & Training", icon: "🏋️", color: TOKEN.purple },
+  { key: "Prompting & Techniques", icon: "✍️", color: TOKEN.gold },
+  { key: "Agents & Protocols", icon: "🔌", color: TOKEN.orange },
+  { key: "Speech, Vision & Media", icon: "🎬", color: TOKEN.pink },
+  { key: "Eval, Safety & Data", icon: "🛡️", color: TOKEN.green },
+  { key: "Dev & Infrastructure", icon: "💻", color: TOKEN.blue },
+  { key: "Business & Product", icon: "📊", color: TOKEN.gold },
+  { key: "Automation & Comms", icon: "📶", color: TOKEN.green },
 ];
 
 export const ACRONYMS: Acronym[] = [

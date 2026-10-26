@@ -40,7 +40,7 @@ export function RecipeCard({ recipe }: { recipe: AutomationRecipe }) {
       </ol>
 
       <div className="mt-auto pt-3">
-        <div className="rounded-lg border border-line bg-white/[0.03] p-2.5">
+        <div className="rounded-lg border border-line bg-text/[0.03] p-2.5">
           <span className={`font-mono text-[0.6rem] font-bold uppercase tracking-wider ${accentText}`}>
             ✓ Outcome
           </span>

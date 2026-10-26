@@ -4,6 +4,7 @@
 // "mid-2026" in the heading, which stayed put while the content aged and gave
 // no signal that anything had gone stale. Making the date a required prop means
 // it can only be wrong if someone edits the items without updating it.
+import { TOKEN, tint } from "@/app/lib/color";
 
 export interface WhatsNewItem {
   date: string; // e.g. "Jun 2026"
@@ -15,7 +16,7 @@ export interface WhatsNewItem {
 
 export default function HubWhatsNew({
   items,
-  accent = "#f6cb1f",
+  accent = TOKEN.gold,
   verified,
   note,
 }: {
@@ -44,7 +45,7 @@ export default function HubWhatsNew({
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span
                 className="rounded-full border px-2 py-0.5 font-mono text-[0.55rem] font-bold uppercase tracking-wide"
-                style={{ color: accent, borderColor: `${accent}66`, backgroundColor: `${accent}14` }}
+                style={{ color: accent, borderColor: tint(accent, 40), backgroundColor: tint(accent, 8) }}
               >
                 {it.date}
               </span>

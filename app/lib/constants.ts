@@ -1,20 +1,25 @@
 // Static brand + navigation constants used across the app.
 
-// tailwind.config.ts is the single source of truth for the palette. These
-// mirror it for the few places that need a raw hex (e.g. the theme-color meta
-// tag) — if you change a colour, change it in Tailwind first, then here.
+// app/globals.css (the --c-* variables) is the single source of truth for the
+// palette. These mirror it for the few places that need a raw hex (e.g. the
+// theme-color meta tag) — if you change a colour, change it there first, then here.
 export const BRAND = {
-  name: "AJ Learning Hub",
+  name: "SystemLab by AJ",
+  shortName: "SystemLab",
+  tagline: "Learn AI & automation by building real systems",
   statement: "I Don't Chase Growth. I Engineer The System Behind It.",
   owner: "Allen Bactad",
   handle: "System-BuiltBy AJ",
   colors: {
-    bg: "#08060e", // tailwind `bg`
-    accent: "#f6cb1f", // tailwind `gold.DEFAULT`
-    violet: "#5e17eb", // tailwind `violet.DEFAULT`
-    text: "#f3f1fb", // tailwind `text`
+    bg: "#f4f1fc", // --c-bg, light theme
+    bgDark: "#0b081a", // --c-bg, dark theme
+    accent: "#f6cb1f", // --c-gold-fill
+    violet: "#5e17eb", // --c-violet
   },
 } as const;
+
+// Shared by the pre-paint script in app/layout.tsx and ThemeToggle — one key, two readers.
+export const THEME_STORAGE_KEY = "lh.theme.v1";
 
 export interface NavItem {
   label: string;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ClaudeHubClient from "./ClaudeHubClient";
 import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
 import { model } from "@/data/models";
+import { TOKEN } from "@/app/lib/color";
 
 const RELEASE_NOTES = "https://platform.claude.com/docs/en/release-notes/overview";
 const PRICING = "https://platform.claude.com/docs/en/about-claude/pricing";
@@ -113,7 +114,7 @@ export default function ClaudeHubPage() {
 
       <HubWhatsNew
         items={CLAUDE_NEWS}
-        accent="#ff8a3d"
+        accent={TOKEN.orange}
         verified="26 Oct 2026"
         note="against Anthropic docs"
       />

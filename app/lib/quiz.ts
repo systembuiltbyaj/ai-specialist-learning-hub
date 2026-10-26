@@ -2,6 +2,7 @@
 // Pure data logic — no React. Runs client-side, so Math.random is fine here.
 
 import { DICTIONARY, type DictionaryTerm, type DictLevel } from "@/data/dictionary";
+import { TOKEN } from "@/app/lib/color";
 
 export type QuizSubject =
   | "Tech Dictionary"
@@ -21,28 +22,28 @@ export const QUIZ_SUBJECTS: {
     label: "Tech Dictionary",
     blurb: "Everything — all 7 categories.",
     icon: "📘",
-    color: "#f6cb1f",
+    color: TOKEN.violet,
   },
   {
     key: "Claude",
     label: "Claude",
     blurb: "Models, MCP, Claude Code, Skills.",
     icon: "✦",
-    color: "#ff8a3d",
+    color: TOKEN.orange,
   },
   {
     key: "GoHighLevel",
     label: "GoHighLevel",
     blurb: "LC Phone, A2P, AI Employee, workflows.",
     icon: "📶",
-    color: "#34d399",
+    color: TOKEN.green,
   },
   {
     key: "Automation Hub",
     label: "Automation Hub",
     blurb: "n8n · Make · Zapier + agentic AI.",
     icon: "⚙",
-    color: "#38bdf8",
+    color: TOKEN.blue,
   },
 ];
 
@@ -195,8 +196,8 @@ export function generateQuizFromTerms(termIds: string[], count: number): QuizQue
 }
 
 export function gradeLabel(pct: number): { label: string; color: string } {
-  if (pct >= 90) return { label: "Expert 🏆", color: "#34d399" };
-  if (pct >= 75) return { label: "Sharp 🔥", color: "#f6cb1f" };
-  if (pct >= 50) return { label: "Getting there 💪", color: "#ff8a3d" };
-  return { label: "Keep studying 📚", color: "#ff6b6b" };
+  if (pct >= 90) return { label: "Expert 🏆", color: TOKEN.green };
+  if (pct >= 75) return { label: "Sharp 🔥", color: TOKEN.gold };
+  if (pct >= 50) return { label: "Getting there 💪", color: TOKEN.orange };
+  return { label: "Keep studying 📚", color: TOKEN.red };
 }

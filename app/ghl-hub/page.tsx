@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import GhlHubClient from "./GhlHubClient";
 import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
 import { model } from "@/data/models";
+import { TOKEN } from "@/app/lib/color";
 
 // Every item below was read directly off HighLevel's own changelog, docs, or
 // help center, not a third-party roundup. If you add one, open the page and
@@ -99,7 +100,7 @@ export default function GhlHubPage() {
 
       <HubWhatsNew
         items={GHL_NEWS}
-        accent="#34d399"
+        accent={TOKEN.green}
         verified="26 Oct 2026"
         note="against HighLevel's changelog and docs"
       />

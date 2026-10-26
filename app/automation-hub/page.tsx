@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AutomationHubClient from "./AutomationHubClient";
 import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
+import { TOKEN } from "@/app/lib/color";
 
 const AUTOMATION_NEWS: WhatsNewItem[] = [
   {
@@ -99,7 +100,7 @@ export default function AutomationHubPage() {
         </p>
       </header>
 
-      <HubWhatsNew items={AUTOMATION_NEWS} accent="#38bdf8" verified="26 Oct 2026" />
+      <HubWhatsNew items={AUTOMATION_NEWS} accent={TOKEN.blue} verified="26 Oct 2026" />
 
       <AutomationHubClient />
     </div>

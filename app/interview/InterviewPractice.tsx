@@ -9,9 +9,9 @@ import { practiceOrder, rateInterviewAnswer, type InterviewRating } from "@/app/
 const ANSWER_SECONDS = 120;
 
 const RATINGS: { rating: InterviewRating; key: string; label: string; hint: string; tone: string }[] = [
-  { rating: "missed", key: "1", label: "Missed", hint: "Blanked or rambled", tone: "border-[#ff6b6b]/60 hover:bg-[#ff6b6b]/10" },
+  { rating: "missed", key: "1", label: "Missed", hint: "Blanked or rambled", tone: "border-danger/60 hover:bg-danger/10" },
   { rating: "shaky", key: "2", label: "Shaky", hint: "Right idea, weak delivery", tone: "border-gold/60 hover:bg-gold/10" },
-  { rating: "nailed", key: "3", label: "Nailed", hint: "Clear, specific, on time", tone: "border-[#34d399]/60 hover:bg-[#34d399]/10" },
+  { rating: "nailed", key: "3", label: "Nailed", hint: "Clear, specific, on time", tone: "border-success/60 hover:bg-success/10" },
 ];
 
 function clock(seconds: number): string {
@@ -90,9 +90,9 @@ export default function InterviewPractice({
           <p className="eyebrow">Practice round complete · {scope}</p>
           <p className="mt-3 text-2xl font-black text-gold">{results.length} answers rehearsed</p>
           <div className="mt-4 flex justify-center gap-6 text-sm">
-            <span className="text-[#34d399]">{count("nailed")} nailed</span>
+            <span className="text-success">{count("nailed")} nailed</span>
             <span className="text-gold">{count("shaky")} shaky</span>
-            <span className="text-[#ff9b9b]">{count("missed")} missed</span>
+            <span className="text-danger">{count("missed")} missed</span>
           </div>
           <p className="mt-4 text-sm text-muted">
             Rewrite the shaky and missed answers while they&apos;re fresh — they&apos;ll come up first next round.
@@ -118,7 +118,7 @@ export default function InterviewPractice({
         </span>
       </div>
 
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10" aria-hidden>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-text/10" aria-hidden>
         <div className="h-full rounded-full bg-gradient-to-r from-gold to-violet-soft transition-all" style={{ width: `${(index / order.length) * 100}%` }} />
       </div>
 
@@ -133,7 +133,7 @@ export default function InterviewPractice({
             disabled={revealed}
             aria-label={timing ? "Pause timer" : "Start two-minute timer"}
             className={`shrink-0 rounded-lg border px-3 py-2 font-mono text-sm transition-colors disabled:opacity-40 ${
-              overTime ? "border-[#ff6b6b]/60 text-[#ff9b9b]" : timing ? "border-gold/60 text-gold" : "border-line text-muted hover:text-text"
+              overTime ? "border-danger/60 text-danger" : timing ? "border-gold/60 text-gold" : "border-line text-muted hover:text-text"
             }`}
           >
             {timing ? "⏸" : "⏱"} {clock(remaining)}

@@ -15,6 +15,7 @@ import {
 } from "@/app/lib/quiz";
 import { useHydrated, useLearner } from "@/app/lib/learner/store";
 import { addCards, localDay, recordQuizRun, weakTermIds } from "@/app/lib/learner/state";
+import { tint } from "@/app/lib/color";
 
 type Phase = "setup" | "active" | "results";
 type Mode = "practice" | "exam";
@@ -228,9 +229,9 @@ function Setup({
               role="radio"
               aria-checked={mode === key}
               onClick={() => setMode(key)}
-              className={`card p-4 text-left transition-colors ${mode === key ? "border-gold bg-gold/5" : "card-hover"}`}
+              className={`card p-4 text-left transition-colors ${mode === key ? "!border-violet-soft/60 bg-violet-soft/10" : "card-hover"}`}
             >
-              <span className={`block font-bold ${mode === key ? "text-gold" : "text-text"}`}>{title}</span>
+              <span className={`block font-bold ${mode === key ? "text-violet-light" : "text-text"}`}>{title}</span>
               <span className="text-xs text-muted">{blurb}</span>
             </button>
           ))}
@@ -250,7 +251,7 @@ function Setup({
                 onClick={() => setSubject(s.key)}
                 aria-pressed={active}
                 className={`card flex items-start gap-3 p-4 text-left transition-colors ${active ? "" : "card-hover"}`}
-                style={active ? { borderColor: s.color, backgroundColor: `${s.color}12` } : undefined}
+                style={active ? { borderColor: s.color, backgroundColor: tint(s.color, 7) } : undefined}
               >
                 <span className="text-2xl" aria-hidden>
                   {s.icon}
@@ -264,7 +265,7 @@ function Setup({
                 {best && (
                   <span
                     className="shrink-0 rounded-full border px-2 py-0.5 text-[0.6rem] font-bold"
-                    style={{ color: s.color, borderColor: `${s.color}66`, backgroundColor: `${s.color}14` }}
+                    style={{ color: s.color, borderColor: tint(s.color, 40), backgroundColor: tint(s.color, 8) }}
                     title={`Best exam: ${best.correct}/${best.total}`}
                   >
                     ★ {best.pct}%
@@ -435,7 +436,7 @@ function Exam({
       </div>
 
       <div
-        className="h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+        className="h-1.5 w-full overflow-hidden rounded-full bg-text/10"
         role="progressbar"
         aria-valuenow={current + 1}
         aria-valuemin={1}
@@ -458,9 +459,9 @@ function Exam({
           {q.options.map((opt, i) => {
             const selected = chosen === i;
             const isAnswer = i === q.correctIndex;
-            let tone = selected ? "border-gold bg-gold/10 text-text" : "border-line text-text/85 hover:border-violet-soft/60";
-            if (revealed && isAnswer) tone = "border-[#34d399] bg-[#34d399]/10 text-text";
-            else if (revealed && selected) tone = "border-[#ff6b6b] bg-[#ff6b6b]/10 text-text";
+            let tone = selected ? "border-violet-soft bg-violet-soft/10 text-text" : "border-line text-text/85 hover:border-violet-soft/60";
+            if (revealed && isAnswer) tone = "border-success bg-success/10 text-text";
+            else if (revealed && selected) tone = "border-danger bg-danger/10 text-text";
             else if (revealed) tone = "border-line text-text/50";
             return (
               <button
@@ -472,14 +473,14 @@ function Exam({
               >
                 <span
                   className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-bold ${
-                    selected ? "border-gold bg-gold text-bg" : "border-line text-muted"
+                    selected ? "border-violet bg-violet text-white" : "border-line text-muted"
                   }`}
                 >
                   {i + 1}
                 </span>
                 <span className="flex-1">{opt}</span>
-                {revealed && isAnswer && <span className="text-[#34d399]">✓</span>}
-                {revealed && selected && !isAnswer && <span className="text-[#ff6b6b]">✗</span>}
+                {revealed && isAnswer && <span className="text-success">✓</span>}
+                {revealed && selected && !isAnswer && <span className="text-danger">✗</span>}
               </button>
             );
           })}
@@ -487,7 +488,7 @@ function Exam({
 
         {revealed && (
           <div className="mt-5 border-l-2 border-gold pl-4" aria-live="polite">
-            <p className={`text-sm font-bold ${chosen === q.correctIndex ? "text-[#34d399]" : "text-[#ff9b9b]"}`}>
+            <p className={`text-sm font-bold ${chosen === q.correctIndex ? "text-success" : "text-danger"}`}>
               {chosen === q.correctIndex ? "Correct." : `Not quite — it's ${q.term}.`}
             </p>
             <p className="mt-1 text-sm leading-relaxed text-text/80">{q.explanation}</p>
@@ -507,7 +508,7 @@ function Exam({
               aria-label={`Go to question ${i + 1}${answers[i] !== null ? " (answered)" : ""}`}
               className={`h-7 w-7 rounded-md border text-[0.65rem] font-bold transition-colors ${
                 i === current
-                  ? "border-gold bg-gold text-bg"
+                  ? "border-violet bg-violet text-white"
                   : answers[i] !== null
                     ? "border-violet-soft/60 bg-violet/20 text-violet-light"
                     : "border-line text-muted hover:border-violet-soft/60"
@@ -656,7 +657,7 @@ function Results({
                 <span className="font-mono text-xs text-muted">
                   {right}/{total}
                 </span>
-                <span className="col-span-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+                <span className="col-span-2 h-1.5 overflow-hidden rounded-full bg-text/10">
                   <span
                     className="block h-full rounded-full bg-gradient-to-r from-gold to-violet-soft"
                     style={{ width: `${(right / total) * 100}%` }}
@@ -677,22 +678,22 @@ function Results({
             return (
               <article
                 key={q.id}
-                className={`card overflow-hidden border-l-[3px] p-5 ${right ? "border-l-[#34d399]" : "border-l-[#ff6b6b]"}`}
+                className={`card overflow-hidden border-l-[3px] p-5 ${right ? "border-l-success" : "border-l-danger"}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted">
                     Q{i + 1} · {q.promptLabel}
                   </p>
-                  <span className={right ? "text-[#34d399]" : "text-[#ff6b6b]"}>{right ? "✓ Correct" : "✗ Wrong"}</span>
+                  <span className={right ? "text-success" : "text-danger"}>{right ? "✓ Correct" : "✗ Wrong"}</span>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-text/90">{q.prompt}</p>
                 <div className="mt-3 space-y-1.5 text-sm">
                   {!right && (
-                    <p className="text-[#ff9b9b]">
+                    <p className="text-danger">
                       Your answer: {your === null ? <span className="italic text-muted">(blank)</span> : q.options[your]}
                     </p>
                   )}
-                  <p className="text-[#34d399]">Answer: {q.options[q.correctIndex]}</p>
+                  <p className="text-success">Answer: {q.options[q.correctIndex]}</p>
                   {!right && <p className="text-text/70">{q.explanation}</p>}
                 </div>
                 <Link href={`/dictionary/${q.termId}`} className="mt-3 inline-flex text-xs font-medium text-gold hover:underline">

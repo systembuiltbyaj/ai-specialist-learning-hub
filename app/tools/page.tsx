@@ -16,7 +16,7 @@ export default async function ToolsPage() {
       <header>
         <p className="eyebrow">Core feature</p>
         <h1 className="section-title">⚖️ AI Tools Comparison</h1>
-        <p className="mt-2 max-w-2xl text-white/70">
+        <p className="mt-2 max-w-2xl text-muted">
           Models, coding agents, agent platforms, and automation tools — compared
           in a matrix or as detailed cards, with pricing and clear &quot;when to
           use&quot; guidance.

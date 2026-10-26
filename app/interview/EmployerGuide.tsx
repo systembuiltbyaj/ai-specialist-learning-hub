@@ -32,7 +32,7 @@ export default function EmployerGuide({ discovery }: { discovery: DiscoveryData 
     <div className="space-y-8">
       <nav
         aria-label="Playbook sections"
-        className="sticky top-0 z-10 -mx-1 flex gap-2 overflow-x-auto bg-bg/90 px-1 py-2 backdrop-blur"
+        className="sticky top-0 z-10 -mx-1 flex gap-2 overflow-x-auto bg-bg/70 px-1 py-2 backdrop-blur-md"
       >
         {SECTIONS.map(([id, label]) => (
           <a key={id} href={`#${id}`} className="chip shrink-0 hover:border-gold/60">
@@ -55,7 +55,7 @@ export default function EmployerGuide({ discovery }: { discovery: DiscoveryData 
         <ol className="space-y-2">
           {DISCOVERY_FLOW.map((s) => (
             <li key={s.n} className="card flex items-start gap-4 p-4">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold font-mono text-xs font-bold text-bg">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-violet font-mono text-xs font-bold text-white">
                 {s.n}
               </span>
               <div>

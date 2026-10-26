@@ -79,7 +79,7 @@ export default function DevToolsPage() {
         <p className="font-display text-sm font-bold text-gold">🏆 The verdict (2026)</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           {EDITOR_WINNERS.map((w) => (
-            <div key={w.label} className="rounded-lg border border-line bg-white/5 p-3">
+            <div key={w.label} className="rounded-lg border border-line bg-text/5 p-3">
               <p className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">
                 {w.label}
               </p>
@@ -126,7 +126,7 @@ export default function DevToolsPage() {
             className="card card-hover flex items-start gap-4 p-4"
           >
             <div
-              className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/5 text-lg`}
+              className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-text/5 text-lg`}
             >
               {item.icon}
             </div>
@@ -164,7 +164,7 @@ export default function DevToolsPage() {
           {T3_STACK.map((s) => (
             <span
               key={s.name}
-              className="rounded-full border border-line bg-white/5 px-3 py-1.5 text-xs"
+              className="rounded-full border border-line bg-text/5 px-3 py-1.5 text-xs"
             >
               <span className="font-semibold text-text">{s.name}</span>
               <span className="ml-1.5 font-mono text-[0.6rem] uppercase tracking-wide text-muted">
@@ -191,7 +191,7 @@ export default function DevToolsPage() {
             {STACK_FLOW.map((step, i) => (
               <li key={step.name}>
                 <div className="flex items-center gap-3">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line bg-white/5 text-lg">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line bg-text/5 text-lg">
                     {step.icon}
                   </span>
                   <div className="min-w-0">

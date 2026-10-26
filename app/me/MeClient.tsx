@@ -85,14 +85,14 @@ export default function MeClient({ catalog }: { catalog: MeCatalog }) {
     .filter((b): b is typeof b & { target: { title: string; href: string } } => Boolean(b.target));
 
   const exportBackup = () => {
-    downloadFile(serializeState(learner), `learning-hub-progress-${today}.json`, "application/json");
+    downloadFile(serializeState(learner), `systemlab-progress-${today}.json`, "application/json");
     setNotice({ tone: "ok", text: "Backup downloaded." });
   };
 
   const importBackup = async (file: File) => {
     // A backup is untrusted input: size-capped and schema-validated before it replaces anything.
     if (file.size > 2_000_000) {
-      setNotice({ tone: "error", text: "That file is too large to be a Learning Hub backup." });
+      setNotice({ tone: "error", text: "That file is too large to be a SystemLab backup." });
       return;
     }
     const parsed = parseState(await file.text());
@@ -147,7 +147,7 @@ export default function MeClient({ catalog }: { catalog: MeCatalog }) {
                       {done}/{path.lessonIds.length}
                     </span>
                   </div>
-                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-text/10">
                     <div className="h-full rounded-full bg-gradient-to-r from-gold to-violet-soft" style={{ width: `${pct}%` }} />
                   </div>
                 </li>
@@ -155,7 +155,7 @@ export default function MeClient({ catalog }: { catalog: MeCatalog }) {
             })}
           </ul>
           {derived.next && (
-            <Link href={derived.next.href} className="mt-4 flex items-center justify-between rounded-lg border border-gold/40 bg-gold/5 p-3 text-sm">
+            <Link href={derived.next.href} className="mt-4 flex items-center justify-between rounded-lg border border-violet-soft/30 bg-violet-soft/[0.08] p-3 text-sm">
               <span>
                 <span className="eyebrow block">Next lesson</span>
                 <span className="font-semibold text-text">{derived.next.title}</span>
@@ -220,9 +220,9 @@ export default function MeClient({ catalog }: { catalog: MeCatalog }) {
             <p className="text-sm text-muted">Run a practice round in Interview and your ratings show up here.</p>
           ) : (
             <div className="flex gap-6 text-sm">
-              <span className="text-[#34d399]">{derived.interview.nailed} nailed</span>
+              <span className="text-success">{derived.interview.nailed} nailed</span>
               <span className="text-gold">{derived.interview.shaky} shaky</span>
-              <span className="text-[#ff9b9b]">{derived.interview.missed} missed</span>
+              <span className="text-danger">{derived.interview.missed} missed</span>
             </div>
           )}
         </Panel>
@@ -286,7 +286,7 @@ export default function MeClient({ catalog }: { catalog: MeCatalog }) {
                   setConfirmingReset(false);
                   setNotice({ tone: "ok", text: "Progress reset." });
                 }}
-                className="rounded-md border border-[#ff6b6b]/60 px-3 py-1.5 text-[#ff9b9b] hover:bg-[#ff6b6b]/10"
+                className="rounded-md border border-danger/60 px-3 py-1.5 text-danger hover:bg-danger/10"
               >
                 Erase
               </button>
@@ -301,7 +301,7 @@ export default function MeClient({ catalog }: { catalog: MeCatalog }) {
           )}
         </div>
         {notice && (
-          <p role="status" className={`mt-3 text-xs ${notice.tone === "ok" ? "text-[#34d399]" : "text-[#ff9b9b]"}`}>
+          <p role="status" className={`mt-3 text-xs ${notice.tone === "ok" ? "text-success" : "text-danger"}`}>
             {notice.text}
           </p>
         )}

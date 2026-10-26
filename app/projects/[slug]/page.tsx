@@ -7,6 +7,7 @@ import { formatIsoDate } from "@/app/lib/content/format";
 import { CodeBlock, Paragraphs } from "@/app/components/Prose";
 import BookmarkButton from "@/app/components/BookmarkButton";
 import { ProjectProgress, StepCheck } from "../ProjectWidgets";
+import { BRAND } from "@/app/lib/constants";
 
 export const dynamicParams = false;
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title: project.title,
     description: project.summary,
     alternates: { canonical: `/projects/${project.id}` },
-    openGraph: { title: `${project.title} — AJ Learning Hub`, description: project.summary, type: "article" },
+    openGraph: { title: `${project.title} — ${BRAND.name}`, description: project.summary, type: "article" },
   };
 }
 
@@ -130,7 +131,7 @@ export default async function ProjectPage({ params }: Params) {
           <ul className="space-y-2 text-sm text-text/85">
             {project.testing.map((item, i) => (
               <li key={i} className="flex gap-2">
-                <span className="text-[#34d399]">✓</span>
+                <span className="text-success">✓</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -141,7 +142,7 @@ export default async function ProjectPage({ params }: Params) {
           <ul className="space-y-2 text-sm text-text/85">
             {project.pitfalls.map((item, i) => (
               <li key={i} className="flex gap-2">
-                <span className="text-[#ff9b9b]">!</span>
+                <span className="text-danger">!</span>
                 <span>{item}</span>
               </li>
             ))}

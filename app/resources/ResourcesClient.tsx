@@ -222,7 +222,7 @@ export default function ResourcesClient({
               onClick={() => toggleComplete(r.id)}
               className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded border text-xs transition-colors ${
                 r.completed
-                  ? "border-gold bg-gold text-bg"
+                  ? "border-violet bg-violet text-white"
                   : "border-line text-transparent hover:border-gold"
               }`}
               aria-label={r.completed ? "Mark incomplete" : "Mark complete"}
@@ -279,7 +279,7 @@ function StatPanel({ title, value, icon }: { title: string; value: number; icon:
 
 function ProgressBar({ pct }: { pct: number }) {
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-black/40">
+    <div className="h-2 w-full overflow-hidden rounded-full bg-text/10">
       <div
         className="h-full rounded-full bg-gold transition-all duration-500"
         style={{ width: `${pct}%` }}

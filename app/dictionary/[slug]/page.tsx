@@ -5,6 +5,7 @@ import { DICTIONARY_BY_ID } from "@/data/dictionary";
 import { TERM_IDS } from "@/app/lib/reference";
 import { formatIsoDate } from "@/app/lib/content/format";
 import BookmarkButton from "@/app/components/BookmarkButton";
+import { BRAND } from "@/app/lib/constants";
 
 // Every term is known at build time, so an unknown slug is a 404 rather than an
 // attempt to render something that cannot exist.
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description,
     keywords: [term.term, ...term.aliases, term.category],
     openGraph: {
-      title: `${term.term} — AJ Learning Hub`,
+      title: `${term.term} — ${BRAND.name}`,
       description,
       type: "article",
     },

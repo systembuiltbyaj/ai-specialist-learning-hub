@@ -20,12 +20,12 @@ export function Paragraphs({ text, className = "" }: { text: string; className?:
 
 export function CodeBlock({ code }: { code: CodeSample }) {
   return (
-    <figure className="overflow-hidden rounded-lg border border-line bg-black/40">
-      <figcaption className="border-b border-line px-3 py-1.5 font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+    <figure className="code-surface overflow-hidden rounded-xl border border-line">
+      <figcaption className="border-b border-white/10 px-3 py-1.5 font-mono text-[0.7rem] text-white/55">
         {code.language}
       </figcaption>
       <pre className="overflow-x-auto p-4 text-[0.8rem] leading-relaxed">
-        <code className="font-mono text-text/90">{code.content}</code>
+        <code className="font-mono">{code.content}</code>
       </pre>
     </figure>
   );

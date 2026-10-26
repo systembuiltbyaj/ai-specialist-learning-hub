@@ -43,8 +43,13 @@ Dead stores were content-diffed and deleted on 2026-10-26: `seed/terms.ts`,
 `seed/glossary.ts` and `seed/claude.ts` (never imported). Do not recreate them.
 
 ### Precedence, in one line
-`data/dictionary.ts` is the source of truth for terms. `tailwind.config.ts` is
-the source of truth for colour. Everything else points at those.
+`data/dictionary.ts` is the source of truth for terms. The `--c-*` CSS variables in
+`app/globals.css` are the source of truth for colour — a light ("lavender glass",
+default) and a dark ("midnight glass") set; `tailwind.config.ts` only maps class
+names onto them. Never hardcode a hex or `text-white` in a component: it breaks one
+of the two themes. For inline-style colours use `TOKEN` / `tint()` from
+`app/lib/color.ts`. Brand name, tagline and logo live in `BRAND` (`app/lib/constants.ts`)
+and `public/systemlab-mark.png` / `app/icon.png`.
 
 ---
 

@@ -23,7 +23,7 @@ export function LessonDone({ lessonId }: { lessonId: string }) {
     <span
       aria-label={done ? "Completed" : "Not completed"}
       className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-bold ${
-        done ? "border-[#34d399] bg-[#34d399]/15 text-[#34d399]" : "border-line text-transparent"
+        done ? "border-success bg-success/15 text-success" : "border-line text-transparent"
       }`}
     >
       ✓
@@ -44,7 +44,7 @@ export function PathProgress({ lessonIds }: { lessonIds: string[] }) {
         </span>
         <span>{pct}%</span>
       </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+      <div className="h-1.5 overflow-hidden rounded-full bg-text/10" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
         <div className="h-full rounded-full bg-gradient-to-r from-gold to-violet-soft transition-all" style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -119,7 +119,7 @@ export function LessonActions({
         </Link>
       </div>
       {done && next && (
-        <Link href={next.href} className="flex items-center justify-between rounded-lg border border-gold/40 bg-gold/5 p-3 text-sm">
+        <Link href={next.href} className="flex items-center justify-between rounded-lg border border-violet-soft/30 bg-violet-soft/[0.08] p-3 text-sm">
           <span>
             <span className="eyebrow block">Up next</span>
             <span className="font-semibold text-text">{next.title}</span>

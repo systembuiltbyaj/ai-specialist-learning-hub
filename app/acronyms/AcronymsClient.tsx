@@ -9,8 +9,9 @@ import {
 import SearchBar from "@/app/components/SearchBar";
 import { highlight } from "@/app/lib/highlight";
 import { ACRONYM_TO_TERM, slugify } from "@/app/lib/reference";
+import { TOKEN, tint } from "@/app/lib/color";
 
-const GOLD = "#f6cb1f";
+const GOLD = TOKEN.gold;
 const COLOR_OF: Record<string, string> = Object.fromEntries(
   ACRONYM_CATEGORIES.map((c) => [c.key, c.color]),
 );
@@ -79,7 +80,7 @@ export default function AcronymsClient() {
                 <div className="flex items-start gap-3">
                   <span
                     className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-xl"
-                    style={{ backgroundColor: `${color}1a`, border: `1px solid ${color}44` }}
+                    style={{ backgroundColor: tint(color, 10), border: `1px solid ${tint(color, 27)}` }}
                   >
                     {a.icon}
                   </span>
@@ -98,7 +99,7 @@ export default function AcronymsClient() {
                     <div className="mt-2 flex flex-wrap items-center gap-3">
                       <span
                         className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-                        style={{ color, borderColor: `${color}55`, backgroundColor: `${color}10` }}
+                        style={{ color, borderColor: tint(color, 33), backgroundColor: tint(color, 6) }}
                       >
                         {ICON_OF[a.category]} {a.category}
                       </span>
@@ -147,8 +148,8 @@ function Chip({
       className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors"
       style={
         active
-          ? { color: "#08060e", backgroundColor: color, borderColor: color }
-          : { color: "#e8e8f0", borderColor: "#2a2250" }
+          ? { color, backgroundColor: tint(color, 14), borderColor: tint(color, 55) }
+          : { color: "rgb(var(--c-text) / 0.8)", borderColor: "rgb(var(--c-line))" }
       }
     >
       {icon && <span aria-hidden>{icon}</span>}
@@ -157,8 +158,8 @@ function Chip({
         className="rounded-full px-1.5 text-[0.6rem] font-semibold"
         style={
           active
-            ? { backgroundColor: "rgba(0,0,0,0.2)" }
-            : { backgroundColor: "rgba(255,255,255,0.06)", color }
+            ? { backgroundColor: tint(color, 22) }
+            : { backgroundColor: "rgb(var(--c-text) / 0.06)", color }
         }
       >
         {count}

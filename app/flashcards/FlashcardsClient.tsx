@@ -20,9 +20,9 @@ export interface CardFace {
 type Deck = "all" | "bookmarks" | DictCategory;
 
 const GRADES: { grade: CardGrade; key: string; label: string; hint: string; tone: string }[] = [
-  { grade: "again", key: "1", label: "Missed it", hint: "see it again today", tone: "border-[#ff6b6b]/60 hover:bg-[#ff6b6b]/10" },
+  { grade: "again", key: "1", label: "Missed it", hint: "see it again today", tone: "border-danger/60 hover:bg-danger/10" },
   { grade: "hard", key: "2", label: "Shaky", hint: "same gap as last time", tone: "border-gold/60 hover:bg-gold/10" },
-  { grade: "good", key: "3", label: "Knew it", hint: "wait longer next time", tone: "border-[#34d399]/60 hover:bg-[#34d399]/10" },
+  { grade: "good", key: "3", label: "Knew it", hint: "wait longer next time", tone: "border-success/60 hover:bg-success/10" },
 ];
 
 const NEW_CARDS_PER_SESSION = 10;
