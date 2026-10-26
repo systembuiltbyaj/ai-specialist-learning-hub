@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { DICTIONARY_BY_ID } from "@/data/dictionary";
 import { TERM_IDS } from "@/app/lib/reference";
 import { formatIsoDate } from "@/app/lib/content/format";
+import BookmarkButton from "@/app/components/BookmarkButton";
 
 // Every term is known at build time, so an unknown slug is a 404 rather than an
 // attempt to render something that cannot exist.
@@ -69,6 +70,12 @@ export default async function TermPage({ params }: Params) {
         {term.aliases.length > 0 && (
           <p className="entry-variants">also {term.aliases.join(" · ")}</p>
         )}
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <BookmarkButton kind="term" id={term.id} label={term.term} />
+          <Link href="/flashcards" className="rounded-md border border-line px-2 py-1 text-xs text-muted transition-colors hover:border-gold/50 hover:text-gold">
+            Practise with flashcards →
+          </Link>
+        </div>
       </header>
 
       {term.status === "deprecated" && (

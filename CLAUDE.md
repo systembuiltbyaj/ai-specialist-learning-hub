@@ -15,7 +15,7 @@ you will edit a file that no page reads.
 
 | Store | Holds | Read by |
 |---|---|---|
-| **`data/`** (repo root) | `dictionary.ts` · `acronyms.ts` · `models.ts` | `/dictionary`, `/dictionary/[slug]`, `/acronyms`, `/acronyms/[slug]`, `/quiz`, Term-of-the-Day, home stats, search index; `models.ts` feeds tools, dev tools, web guide and hub pages |
+| **`data/`** (repo root) | `dictionary.ts` · `acronyms.ts` · `models.ts` · `paths.ts` (+ `lessons/`) · `projects.ts` (+ `projects/`) | `/dictionary`, `/dictionary/[slug]`, `/acronyms`, `/acronyms/[slug]`, `/quiz`, Term-of-the-Day, home stats, search index; `models.ts` feeds tools, dev tools, web guide and hub pages |
 | **`app/lib/seed/`** | everything else — tools, hubs (Claude Hub renders `arsenal.ts` + `arsenal-skills.ts`), web guide, dev tools, interview, discovery, updates archive | the matching route |
 
 **`data/dictionary.ts` is the canonical dictionary**, exported as `DICTIONARY` /
@@ -149,7 +149,9 @@ are deleted. Do not reintroduce them without a reason.
   trust. Derive them (`DICTIONARY.length`) or omit them.
 - ES modules, `async/await`, 2-space indent, TypeScript strict.
 - Comment the *why*. Skip comments that restate the code.
-- Client components own their own localStorage key (`lh.<feature>.v<n>`).
+- **Learner progress lives in one store**: `app/lib/learner/state.ts` (pure, tested) + `store.ts` (`useLearner()`, key `lh.learner.v1`, zod-validated on load and on backup restore). Bookmarks, lessons, project steps, flashcards, quiz history/weak spots, interview ratings and streak all go there — don't add a parallel key for learning state. Interview *answers* stay in `lh.interview.v2` because they are the user's own writing, not progress.
+- Other client components own their own localStorage key (`lh.<feature>.v<n>`).
+- Lessons and projects reference dictionary terms by id (`termIds`) — never copy definitions. `tests/paths.test.ts` fails on an unknown id.
 - Every page is a server component that hands data to a `"use client"` child.
 - Reading `searchParams` in a server component makes the route dynamic. Read the
   query string in the client child behind `<Suspense>` instead — `/quiz` does this.

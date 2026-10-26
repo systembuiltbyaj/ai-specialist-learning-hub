@@ -86,7 +86,7 @@ export interface RefTable {
 // Deliberately minimal: the index is fetched by the browser, so it carries only
 // what ranking and rendering need — never the full source data.
 export interface SearchRecord {
-  type: "term" | "acronym" | "tool";
+  type: "term" | "acronym" | "tool" | "lesson" | "project";
   title: string;
   keywords: string[];
   snippet: string;

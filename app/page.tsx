@@ -8,6 +8,9 @@ import TermOfTheDay from "@/app/components/TermOfTheDay";
 import { getTools } from "@/app/lib/data";
 import { DICTIONARY } from "@/data/dictionary";
 import { ACRONYMS } from "@/data/acronyms";
+import { LESSON_ORDER, PATHS_BY_ID, lessonHref } from "@/data/paths";
+import { PROJECTS } from "@/data/projects";
+import HomeLearning from "@/app/components/HomeLearning";
 
 export default async function HomePage() {
   const tools = await getTools();
@@ -16,10 +19,20 @@ export default async function HomePage() {
   // hand, so no tile can quietly go stale.
   const stats = [
     { label: "Terms", value: DICTIONARY.length, icon: "📘", hint: "AI · agents · automation · GHL · web" },
+    { label: "Lessons", value: LESSON_ORDER.length, icon: "🎓", hint: "Beginner → advanced paths" },
+    { label: "Projects", value: PROJECTS.length, icon: "🛠", hint: "Hands-on builds, step by step" },
     { label: "Acronyms", value: ACRONYMS.length, icon: "🔤", hint: "Decoded in plain English" },
     { label: "Tools", value: tools.length, icon: "⚖️", hint: "Models, agents & platforms" },
-    { label: "Modules", value: NAV_ITEMS.length - 1, icon: "🧭", hint: "Guides & references" },
   ];
+
+  const lessons = LESSON_ORDER.map(({ pathId, lesson }) => ({
+    id: lesson.id,
+    title: lesson.title,
+    href: lessonHref(pathId, lesson.id),
+    pathTitle: PATHS_BY_ID[pathId].title,
+    minutes: lesson.minutes,
+  }));
+  const deck = DICTIONARY.filter((t) => t.status !== "deprecated").map((t) => t.id);
 
   const modules = NAV_ITEMS.filter((n) => n.href !== "/");
 
@@ -81,6 +94,15 @@ export default async function HomePage() {
             </p>
           </div>
         </div>
+      </section>
+
+      {/* ───────────── Your learning ───────────── */}
+      <section>
+        <div className="mb-5">
+          <p className="eyebrow">Pick up where you left off</p>
+          <h2 className="section-title">Your Learning</h2>
+        </div>
+        <HomeLearning lessons={lessons} deck={deck} />
       </section>
 
       {/* ───────────── Term of the Day ───────────── */}

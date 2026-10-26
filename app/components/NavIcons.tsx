@@ -39,6 +39,51 @@ const ICONS: Record<string, IconDef> = {
       </>
     ),
   },
+  "/learn": {
+    from: G,
+    to: VL,
+    body: (
+      <>
+        <path d="M3 9.5 12 5l9 4.5-9 4.5-9-4.5Z" />
+        <path d="M7 11.5V16c1.5 1.3 3.2 2 5 2s3.5-.7 5-2v-4.5" />
+        <path d="M21 9.5V15" />
+      </>
+    ),
+  },
+  "/projects": {
+    from: O,
+    to: V,
+    body: (
+      <>
+        <path d="m14.5 6.5 3-3 3 3-3 3" />
+        <path d="M17.5 3.5 9 12" />
+        <path d="M4 20l3.5-1 9-9-2.5-2.5-9 9L4 20Z" />
+      </>
+    ),
+  },
+  "/flashcards": {
+    from: Y,
+    to: P,
+    body: (
+      <>
+        <rect x="3.5" y="6.5" width="13" height="13" rx="2" />
+        <path d="M7.5 3.5h11a2 2 0 0 1 2 2v11" />
+      </>
+    ),
+  },
+  "/me": {
+    from: B,
+    to: G,
+    body: (
+      <>
+        <path d="M4 20V13" />
+        <path d="M10 20V8" />
+        <path d="M16 20v-5" />
+        <path d="M20 20H3" />
+        <path d="m4 9 6-5 6 6 4-3" />
+      </>
+    ),
+  },
   "/tools": {
     from: G,
     to: B,

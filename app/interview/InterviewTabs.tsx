@@ -33,10 +33,12 @@ export default function InterviewTabs({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-2" role="tablist" aria-label="Interview mode">
         {MODES.map((m) => (
           <button
             key={m.key}
+            role="tab"
+            aria-selected={mode === m.key}
             onClick={() => setMode(m.key)}
             className={`card flex items-start gap-3 p-4 text-left transition-colors ${
               mode === m.key ? "border-gold bg-gold/5" : "card-hover"

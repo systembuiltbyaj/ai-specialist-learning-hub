@@ -71,7 +71,7 @@ export function subjectCount(subject: QuizSubject, level: DictLevel | "All"): nu
   return poolFor(subject).filter((t) => level === "All" || t.level === level).length;
 }
 
-export type QuizKind = "def-to-term" | "term-to-def" | "analogy-to-term";
+export type QuizKind = "def-to-term" | "term-to-def" | "analogy-to-term" | "simple-to-term";
 
 export interface QuizQuestion {
   id: string;
@@ -82,6 +82,9 @@ export interface QuizQuestion {
   correctIndex: number;
   termId: string;
   term: string;
+  category: DictionaryTerm["category"];
+  // Shown straight after answering in practice mode, so a miss teaches something.
+  explanation: string;
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -97,6 +100,7 @@ const LABELS: Record<QuizKind, string> = {
   "def-to-term": "Which term matches this definition?",
   "term-to-def": "What does this term mean?",
   "analogy-to-term": "Which term fits this analogy?",
+  "simple-to-term": "Which term is this, in plain English?",
 };
 
 // Pick `n` distinct distractor strings, preferring the same subject pool,
@@ -134,6 +138,10 @@ function buildQuestion(term: DictionaryTerm, kind: QuizKind, pool: DictionaryTer
     prompt = term.aliases.length ? `${term.term} (${term.aliases.join(", ")})` : term.term;
     answer = term.definition;
     valueOf = (t) => t.definition;
+  } else if (effectiveKind === "simple-to-term") {
+    prompt = term.simple;
+    answer = term.term;
+    valueOf = (t) => t.term;
   } else if (effectiveKind === "analogy-to-term") {
     prompt = term.analogy as string;
     answer = term.term;
@@ -156,7 +164,16 @@ function buildQuestion(term: DictionaryTerm, kind: QuizKind, pool: DictionaryTer
     correctIndex: options.indexOf(answer),
     termId: term.id,
     term: term.term,
+    category: term.category,
+    explanation: term.simple,
   };
+}
+
+const KINDS: QuizKind[] = ["def-to-term", "simple-to-term", "term-to-def", "analogy-to-term"];
+
+function build(pool: DictionaryTerm[], count: number): QuizQuestion[] {
+  const chosen = shuffle(pool).slice(0, Math.min(count, pool.length));
+  return chosen.map((term, i) => buildQuestion(term, KINDS[i % KINDS.length], pool));
 }
 
 export function generateQuiz(
@@ -167,11 +184,14 @@ export function generateQuiz(
   let pool = poolFor(subject).filter((t) => level === "All" || t.level === level);
   // Need at least 4 terms to make 4 options; relax the level filter if too thin.
   if (pool.length < 4) pool = poolFor(subject);
+  return build(pool, count);
+}
 
-  const chosen = shuffle(pool).slice(0, Math.min(count, pool.length));
-  const kinds: QuizKind[] = ["def-to-term", "term-to-def", "analogy-to-term"];
-
-  return chosen.map((term, i) => buildQuestion(term, kinds[i % 3], pool));
+// A quiz over specific terms — retrying mistakes, or a learner's weak spots.
+// Distractors still come from the whole dictionary, so even one term works.
+export function generateQuizFromTerms(termIds: string[], count: number): QuizQuestion[] {
+  const wanted = new Set(termIds);
+  return build(QUIZZABLE.filter((t) => wanted.has(t.id)), count);
 }
 
 export function gradeLabel(pct: number): { label: string; color: string } {
