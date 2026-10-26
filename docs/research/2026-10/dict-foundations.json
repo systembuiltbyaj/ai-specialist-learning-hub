@@ -1,0 +1,401 @@
+{
+  "updates": {
+    "token": {
+      "simple": "AI models don't read whole words. They read small chunks of text called tokens, and you pay for and are limited by how many tokens you use.",
+      "sources": [
+        { "label": "Anthropic glossary: Tokens", "url": "https://platform.claude.com/docs/en/about-claude/glossary" },
+        { "label": "Anthropic docs: Token counting", "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "aliases": ["tokenization", "tokenizer"],
+        "definition": "A token is a chunk of text (a word, part of a word, a character, or bytes) that a language model reads and generates. Tokenization is the step that splits text into tokens, and each model family uses its own tokenizer, so the same text can produce different token counts on different models.",
+        "analogy": "Like breaking a sentence into LEGO bricks the model can snap together. Different models cut the bricks to different sizes, so the same sentence can take more bricks on one model than another.",
+        "whyItMatters": "Token counts set your API cost and how much text fits in a request. Because tokenizers change between model generations (Anthropic says its newer tokenizer produces about 30% more tokens for the same text), re-measure costs when you switch models instead of reusing old estimates.",
+        "example": "Before moving a lead-summary automation to a newer model, run a sample of real CRM notes through the provider's token-counting endpoint for that model and update your per-run cost estimate.",
+        "reason": "The old text gave a fixed characters-per-token figure and a fixed token count for a phrase. Both depend on the tokenizer: Anthropic documents about 3.5 English characters per token on earlier Claude models and about 30% more tokens for the same text on its newer tokenizer (https://platform.claude.com/docs/en/about-claude/glossary). Tokenization is also added as an alias rather than a separate term."
+      }
+    },
+    "context-window": {
+      "simple": "The context window is how much text an AI can look at in one go, counting both what you send it and what it writes back.",
+      "sources": [
+        { "label": "Anthropic docs: Context windows", "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows" },
+        { "label": "Anthropic models overview", "url": "https://platform.claude.com/docs/en/about-claude/models/overview" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "temperature": {
+      "simple": "Temperature is a setting that makes an AI's answers more predictable (low) or more varied (high). Many of the newest models no longer let you change it.",
+      "sources": [
+        { "label": "Anthropic API versions (2026-10-21 removes sampling params)", "url": "https://platform.claude.com/docs/en/api/versioning" },
+        { "label": "Anthropic glossary: Temperature", "url": "https://platform.claude.com/docs/en/about-claude/glossary" },
+        { "label": "Gemini API: Text generation (sampling parameters note)", "url": "https://ai.google.dev/gemini-api/docs/text-generation" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "Temperature is a sampling setting that controls randomness in a model's output. The allowed range depends on the provider (for example 0 to 2 on OpenAI's Responses API). Lower values favour the most likely tokens and higher values allow more varied choices, but even a temperature of 0 does not make API output fully deterministic.",
+        "whyItMatters": "On models that still accept it (many OpenAI models, older models, and self-hosted open-weight models), a low temperature keeps extraction and classification more consistent. Vendors are removing it from their newest models: Anthropic's API version 2026-10-21 returns a 400 error if temperature is sent at all, Google says its newest Gemini models ignore custom values, and OpenAI's current flagship does not accept a custom temperature. On those models, get consistency from clear instructions and structured outputs instead.",
+        "example": "When extracting a phone number with an open-weight model served on vLLM, set temperature near 0. When the same step runs on a current Claude model, drop the parameter and enforce the format with a JSON schema.",
+        "reason": "The old text gave a single 0-1 range, implied temperature 0 is deterministic, and told readers to set it on any model. OpenAI's range is 0-2 (https://developers.openai.com/api/docs/api-reference/responses/create); Anthropic says temperature 0 is not fully deterministic (https://platform.claude.com/docs/en/about-claude/glossary); Anthropic API version 2026-10-21 removes temperature, top_p and top_k with a 400 error (https://platform.claude.com/docs/en/api/versioning); Gemini's newest models ignore custom values (https://ai.google.dev/gemini-api/docs/text-generation); OpenAI's current flagship does not support custom temperature (https://developers.openai.com/api/docs/changelog)."
+      }
+    },
+    "top-p": {
+      "simple": "Top-p tells the AI to pick its next word only from the most likely options, ignoring long shots. Like temperature, it is disappearing from the newest hosted models.",
+      "sources": [
+        { "label": "Wikipedia: Top-p sampling", "url": "https://en.wikipedia.org/wiki/Top-p_sampling" },
+        { "label": "Anthropic API versions (2026-10-21 removes sampling params)", "url": "https://platform.claude.com/docs/en/api/versioning" },
+        { "label": "OpenAI API reference: Create a response (top_p)", "url": "https://developers.openai.com/api/docs/api-reference/responses/create" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "whyItMatters": "It is an alternative to temperature for tuning how predictable output is, and providers that still offer both (such as OpenAI's Responses API) recommend changing one, not both. Anthropic's API version 2026-10-21 removed top_p along with temperature and top_k (sending any of them returns a 400 error), and Google says its newest Gemini models ignore it, so on those models you steer output with prompting and structured outputs. It remains a standard setting when you self-host open-weight models.",
+        "example": "In a self-hosted vLLM deployment, a top-p of 0.9 makes the model sample only from the tokens that together cover 90% of the probability. The same setting sent to a current Claude model is rejected.",
+        "reason": "The old text presented top-p as a control available on any model. Anthropic API version 2026-10-21 removes it (https://platform.claude.com/docs/en/api/versioning), Gemini's newest models ignore it (https://ai.google.dev/gemini-api/docs/text-generation), and OpenAI recommends altering temperature or top_p but not both (https://developers.openai.com/api/docs/api-reference/responses/create)."
+      }
+    },
+    "inference": {
+      "simple": "Inference is the AI actually doing the work: you send it a question and it produces an answer, using what it already learned.",
+      "sources": [
+        { "label": "Google Cloud: What is AI inference?", "url": "https://cloud.google.com/discover/what-is-ai-inference" },
+        { "label": "Anthropic glossary: Pretraining", "url": "https://platform.claude.com/docs/en/about-claude/glossary" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "fine-tuning": {
+      "simple": "Fine-tuning is giving an existing AI model extra training on your own examples so it gets better at one specific job or style.",
+      "sources": [
+        { "label": "Anthropic glossary: Fine-tuning", "url": "https://platform.claude.com/docs/en/about-claude/glossary" },
+        { "label": "OpenAI deprecations: self-serve fine-tuning update", "url": "https://developers.openai.com/api/docs/deprecations" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "hallucination": {
+      "simple": "A hallucination is when an AI states something confidently that is false or made up.",
+      "sources": [
+        { "label": "Anthropic docs: Reduce hallucinations", "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "embedding": {
+      "simple": "An embedding turns a piece of text into a list of numbers that captures its meaning, so a computer can tell which texts mean similar things.",
+      "sources": [
+        { "label": "Anthropic docs: Embeddings", "url": "https://platform.claude.com/docs/en/build-with-claude/embeddings" },
+        { "label": "OpenAI docs: Vector embeddings", "url": "https://developers.openai.com/api/docs/guides/embeddings" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "vector-database": {
+      "simple": "A vector database stores text as meaning-numbers (embeddings) so you can quickly find the items most similar to a question.",
+      "sources": [
+        { "label": "Supabase docs: pgvector embeddings and vector similarity", "url": "https://supabase.com/docs/guides/database/extensions/pgvector" },
+        { "label": "Wikipedia: Vector database", "url": "https://en.wikipedia.org/wiki/Vector_database" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "semantic-search": {
+      "simple": "Semantic search finds what you mean, not just the exact words you typed.",
+      "sources": [
+        { "label": "Supabase docs: Semantic search", "url": "https://supabase.com/docs/guides/ai/semantic-search" },
+        { "label": "Anthropic docs: Embeddings", "url": "https://platform.claude.com/docs/en/build-with-claude/embeddings" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "foundation-model": {
+      "simple": "A foundation model is a big general-purpose AI, trained on huge amounts of data, that you can point at many different tasks.",
+      "sources": [
+        { "label": "Bommasani et al.: On the Opportunities and Risks of Foundation Models", "url": "https://arxiv.org/abs/2108.07258" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "multimodal": {
+      "simple": "A multimodal AI can work with more than just text, such as photos, screenshots, PDFs or audio.",
+      "sources": [
+        { "label": "Anthropic docs: Vision", "url": "https://platform.claude.com/docs/en/build-with-claude/vision" },
+        { "label": "Anthropic docs: PDF support", "url": "https://platform.claude.com/docs/en/build-with-claude/pdf-support" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "knowledge-cutoff": {
+      "simple": "An AI only knows about the world up to a certain date. Anything newer it won't know unless you give it the information.",
+      "sources": [
+        { "label": "Anthropic models overview (reliable knowledge cutoff vs training data cutoff)", "url": "https://platform.claude.com/docs/en/about-claude/models/overview" },
+        { "label": "OpenAI model page listing a knowledge cutoff", "url": "https://developers.openai.com/api/docs/models/gpt-6-astra" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "llm": {
+      "simple": "An LLM is the kind of AI behind chat assistants: a very large model trained on huge amounts of text so it can read and write like a person.",
+      "sources": [
+        { "label": "Anthropic glossary: LLM", "url": "https://platform.claude.com/docs/en/about-claude/glossary" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "open-source-model": {
+      "simple": "An open-weight model is an AI you can download and run on your own computers. You get the finished model, but usually not the data or code used to build it.",
+      "sources": [
+        { "label": "OSI: The Open Source AI Definition 1.0", "url": "https://opensource.org/ai/open-source-ai-definition" },
+        { "label": "OSI: Open Weights, not quite what you've been told", "url": "https://opensource.org/ai/open-weights" },
+        { "label": "Hugging Face: gpt-oss-120b model card (open-weight, Apache 2.0)", "url": "https://huggingface.co/openai/gpt-oss-120b" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "term": "Open-Weight Model",
+        "aliases": ["open weights", "open-weight", "open source model", "open model"],
+        "definition": "An open-weight model is one whose trained weights are published for anyone to download, run, fine-tune and self-host, under a license that varies by release. The training data and training code are usually not released, so most open-weight models do not meet the Open Source Initiative's Open Source AI Definition, which also requires data information and code.",
+        "analogy": "Like being handed a finished cake you can eat, slice and decorate however you like, without the recipe or the list of ingredients that produced it.",
+        "whyItMatters": "Open-weight models let you run AI on your own hardware for privacy, cost control at volume, or offline use. Read the license before shipping: some are Apache 2.0 or MIT, while others are custom licenses with conditions such as attribution or limits above a revenue or user threshold.",
+        "example": "A clinic that cannot send patient notes to a cloud API runs an open-weight model such as OpenAI's gpt-oss on its own server through Ollama, and checks the Apache 2.0 license before deploying it.",
+        "reason": "Releases like Llama, Qwen and DeepSeek publish weights, not training data or code, so the industry and OSI call them open-weight; OSI's definition of open-source AI requires data information, code and weights (https://opensource.org/ai/open-source-ai-definition, https://opensource.org/ai/open-weights). Licenses also vary (see docs/research/2026-10/google-open-weight.md)."
+      }
+    },
+    "closed-source-model": {
+      "simple": "A closed model is an AI you can use through a company's app or API, but you can't download it or see how it was built.",
+      "sources": [
+        { "label": "Anthropic models overview (API and cloud-platform access)", "url": "https://platform.claude.com/docs/en/about-claude/models/overview" },
+        { "label": "OSI: Open Weights, not quite what you've been told", "url": "https://opensource.org/ai/open-weights" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "swe-bench": {
+      "simple": "SWE-bench is a test that checks whether an AI can fix real bugs from real software projects. Scores are useful, but some versions of the test have known flaws.",
+      "sources": [
+        { "label": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues? (paper)", "url": "https://arxiv.org/abs/2310.06770" },
+        { "label": "SWE-bench leaderboards and variants", "url": "https://www.swebench.com/" },
+        { "label": "OpenAI: Why we no longer evaluate SWE-bench Verified", "url": "https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "A family of benchmarks (SWE-bench, Lite, Verified, Multilingual, Multimodal, and the separate SWE-bench Pro) that test whether an AI system can resolve real GitHub issues from open-source projects by producing a patch that passes the project's tests.",
+        "whyItMatters": "It is one of the most cited signals of coding ability, but treat any single score with care. OpenAI stopped reporting SWE-bench Verified, calling it increasingly contaminated and recommending SWE-bench Pro, and Epoch AI rates Verified as flawed. Compare models on the same variant and harness, and test them on your own codebase before choosing one.",
+        "example": "Two vendors each quote a high SWE-bench score, but one used Verified and the other used Pro, so the numbers can't be compared. A team runs both models against twenty of its own past bug tickets instead.",
+        "reason": "The old text called it the headline number for ranking coding models and implied a top score proves a model is strongest. OpenAI says SWE-bench Verified is increasingly contaminated and no longer measures frontier coding (https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/), and Epoch AI rates it flawed (https://epoch.ai/benchmarks/swe-bench-verified/review)."
+      }
+    },
+    "system-prompt": {
+      "simple": "A system prompt is the standing instructions you give an AI before the conversation starts: who it is, what it may do and how it should answer.",
+      "sources": [
+        { "label": "Anthropic prompting best practices: Give Claude a role", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "zero-shot": {
+      "simple": "Zero-shot means asking the AI to do a task with instructions only, without showing it any examples.",
+      "sources": [
+        { "label": "Gemini API: Prompt design strategies (zero-shot vs few-shot)", "url": "https://ai.google.dev/gemini-api/docs/prompting-strategies" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "few-shot": {
+      "simple": "Few-shot means showing the AI a few finished examples in your prompt so it copies the pattern.",
+      "sources": [
+        { "label": "Anthropic prompting best practices: Use examples effectively", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#use-examples-effectively" },
+        { "label": "Brown et al.: Language Models are Few-Shot Learners", "url": "https://arxiv.org/abs/2005.14165" },
+        { "label": "Gemini API: Prompt design strategies (zero-shot vs few-shot)", "url": "https://ai.google.dev/gemini-api/docs/prompting-strategies" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "chain-of-thought": {
+      "simple": "Chain-of-thought means getting the AI to work through a problem step by step before answering. Newer reasoning models do this on their own.",
+      "sources": [
+        { "label": "Wei et al.: Chain-of-Thought Prompting Elicits Reasoning in Large Language Models", "url": "https://arxiv.org/abs/2201.11903" },
+        { "label": "Anthropic prompting best practices: Leverage thinking", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#leverage-thinking-and-interleaved-thinking-capabilities" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "whyItMatters": "Step-by-step reasoning improves multi-step logic, such as qualifying a lead against several conditions. On reasoning models with thinking turned on, the model already reasons internally, so you control depth with settings like effort. Anthropic describes manual chain-of-thought prompting as a fallback for when thinking is off.",
+        "reason": "The old text presented prompting for step-by-step reasoning as the main way to get it. Current Claude guidance treats manual CoT as a fallback when thinking is off, because current models reason internally (https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)."
+      }
+    },
+    "prompt-chaining": {
+      "simple": "Prompt chaining splits a big AI job into a series of smaller prompts, where each one's answer feeds the next.",
+      "sources": [
+        { "label": "Anthropic: Building effective agents (prompt chaining workflow)", "url": "https://www.anthropic.com/engineering/building-effective-agents" },
+        { "label": "Anthropic prompting best practices: Chain complex prompts", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#chain-complex-prompts" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "prompt-injection": {
+      "simple": "Prompt injection is when someone hides instructions in text the AI reads, such as an email or web page, to make it ignore your rules.",
+      "sources": [
+        { "label": "OWASP Top 10 for LLM Applications: LLM01 Prompt Injection", "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "structured-output": {
+      "simple": "Structured output means the AI answers in a fixed, machine-readable format (usually JSON with set fields), so other software can use the answer directly.",
+      "sources": [
+        { "label": "Anthropic docs: Structured outputs", "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs" },
+        { "label": "OpenAI docs: Structured Outputs (vs JSON mode)", "url": "https://developers.openai.com/api/docs/guides/structured-outputs" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "aliases": ["structured outputs", "JSON mode"],
+        "definition": "Structured output is when a model returns data that matches a JSON schema you supply, enforced by the API rather than only requested in the prompt. Older JSON mode is a weaker form: it guarantees valid JSON but not that the required fields and types match your schema.",
+        "reason": "The old text listed JSON mode as a plain synonym. OpenAI documents that JSON mode only ensures valid JSON, while Structured Outputs ensures schema adherence (https://developers.openai.com/api/docs/guides/structured-outputs). The alias is kept so searches for 'JSON mode' still land here."
+      }
+    },
+    "grounding": {
+      "simple": "Grounding means giving the AI trusted information, like your own documents or a live search, and having it answer from that instead of from memory.",
+      "sources": [
+        { "label": "Anthropic docs: Citations", "url": "https://platform.claude.com/docs/en/build-with-claude/citations" },
+        { "label": "Gemini API: Grounding with Google Search", "url": "https://ai.google.dev/gemini-api/docs/google-search" },
+        { "label": "Anthropic docs: Reduce hallucinations", "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "context-engineering": {
+      "simple": "Context engineering is choosing exactly what information the AI sees at each step (instructions, data, tools and history) so it has what it needs and nothing that distracts it.",
+      "sources": [
+        { "label": "Anthropic: Effective context engineering for AI agents", "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" }
+      ],
+      "lastVerified": "2026-10-26"
+    }
+  },
+  "newTerms": [
+    {
+      "id": "reasoning-model",
+      "term": "Reasoning Model",
+      "aliases": ["thinking model", "extended thinking", "adaptive thinking"],
+      "category": "AI Foundations",
+      "level": "Intermediate",
+      "definition": "A reasoning model generates internal reasoning tokens (its 'thinking') before writing a final answer, which helps it plan, use tools and solve multi-step problems. Providers expose a setting, such as effort or reasoning effort, that trades answer quality against tokens and time.",
+      "simple": "A reasoning model thinks things through before it answers. It is slower and uses more tokens, but it handles harder problems better.",
+      "analogy": "Like an employee who drafts working notes before sending the final email, rather than replying off the top of their head.",
+      "whyItMatters": "Use reasoning for multi-step decisions, coding and agent work, and lower the effort (or pick a non-reasoning model) for simple, high-volume steps where speed and cost matter more. On Anthropic's current models thinking is adaptive, steered by effort; the older fixed-budget 'extended thinking' mode is legacy.",
+      "example": "An agent that reconciles failed Stripe payments against CRM records runs at high effort, while the step that tags inbound messages as Sales or Support runs at low effort to keep cost and latency down.",
+      "related": ["chain-of-thought", "inference", "latency", "token", "model-routing"],
+      "sources": [
+        { "label": "Anthropic docs: Building with thinking", "url": "https://platform.claude.com/docs/en/build-with-claude/thinking" },
+        { "label": "Anthropic docs: Effort", "url": "https://platform.claude.com/docs/en/build-with-claude/effort" },
+        { "label": "OpenAI docs: Reasoning models", "url": "https://developers.openai.com/api/docs/guides/reasoning" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "quantization",
+      "term": "Quantization",
+      "aliases": ["quantized model", "4-bit", "8-bit"],
+      "category": "AI Foundations",
+      "level": "Advanced",
+      "definition": "Quantization stores a model's weights (and sometimes activations) at lower numerical precision, such as 8-bit or 4-bit instead of 16- or 32-bit, to cut memory use and speed up inference while trying to preserve accuracy.",
+      "simple": "Quantization shrinks an AI model so it fits on smaller, cheaper hardware, at the cost of a little accuracy.",
+      "analogy": "Like saving a photo as a smaller JPEG: it takes far less space and still looks right, but some fine detail is lost.",
+      "whyItMatters": "It is what makes self-hosting open-weight models practical on a single GPU or a laptop. Test a quantized model on your own task before relying on it, because quality loss varies by method and task.",
+      "example": "A 30-billion-parameter model needs about 60 GB just for its weights at 16-bit, but roughly 15 GB at 4-bit, which fits on one consumer GPU for a private document-summary tool.",
+      "related": ["open-source-model", "inference", "distillation", "latency"],
+      "sources": [
+        { "label": "Hugging Face Transformers docs: Quantization overview", "url": "https://huggingface.co/docs/transformers/main/en/quantization/overview" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "distillation",
+      "term": "Distillation",
+      "aliases": ["knowledge distillation", "model distillation"],
+      "category": "AI Foundations",
+      "level": "Advanced",
+      "definition": "Distillation trains a smaller 'student' model to reproduce the outputs of a larger 'teacher' model, transferring much of the teacher's ability into a model that is cheaper and faster to run.",
+      "simple": "Distillation is teaching a small AI to copy a big AI, so you get much of the quality at a fraction of the cost.",
+      "analogy": "Like a senior expert training an apprentice on hundreds of worked cases until the apprentice can handle most of them alone.",
+      "whyItMatters": "Many small, fast models are built this way, and teams use it to turn an expensive model's outputs on one narrow task into a cheaper model for high-volume use. Check the teacher model's terms of service first, because some providers restrict using their outputs to train other models.",
+      "example": "Meta describes its open-weight Muse Glimmer model as distilled from its larger Muse Spark model and built to run on consumer hardware.",
+      "related": ["fine-tuning", "quantization", "foundation-model", "open-source-model"],
+      "sources": [
+        { "label": "Hinton et al.: Distilling the Knowledge in a Neural Network", "url": "https://arxiv.org/abs/1503.02531" },
+        { "label": "Hugging Face: Muse Glimmer model card (distilled from Muse Spark)", "url": "https://huggingface.co/meta-models/Muse-Glimmer-30B" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "mixture-of-experts",
+      "term": "Mixture of Experts",
+      "aliases": ["MoE", "sparse model"],
+      "category": "AI Foundations",
+      "level": "Advanced",
+      "definition": "A mixture-of-experts (MoE) model contains many expert sub-networks and a router (gate) that sends each token to only a few of them, so the model can have a very large total parameter count while using only a fraction of it per token.",
+      "simple": "An MoE model is a big AI made of many specialist parts, and only the few parts needed for each word switch on, which keeps it faster and cheaper to run.",
+      "analogy": "Like a large consultancy where each question goes to two or three relevant specialists instead of the whole firm.",
+      "whyItMatters": "Most large open-weight releases now use MoE, and their names often list both total and active parameters. Active parameters drive speed and cost per token, but you still need memory for all the weights, which matters when sizing self-hosted hardware.",
+      "example": "Moonshot says its Kimi K3 has 2.8 trillion parameters but activates 16 of its 896 experts for each token.",
+      "related": ["foundation-model", "open-source-model", "inference", "quantization"],
+      "sources": [
+        { "label": "Hugging Face: Mixture of Experts Explained", "url": "https://huggingface.co/blog/moe" },
+        { "label": "Shazeer et al.: The Sparsely-Gated Mixture-of-Experts Layer", "url": "https://arxiv.org/abs/1701.06538" },
+        { "label": "Moonshot AI: Kimi K3 announcement", "url": "https://www.kimi.com/blog/kimi-k3" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "latency",
+      "term": "Latency",
+      "aliases": ["time to first token", "TTFT", "response time"],
+      "category": "AI Foundations",
+      "level": "Beginner",
+      "definition": "Latency is the time a model takes to process a prompt and return output. It is usually measured as time to first token (TTFT), the delay before output starts, plus output speed in tokens per second.",
+      "simple": "Latency is how long you wait for the AI to reply, both before it starts and while it finishes.",
+      "analogy": "Like the wait at a restaurant: how long until the first dish arrives, and how quickly the rest of the meal follows.",
+      "whyItMatters": "In live chat, voice and SMS bots, slow replies lose people, so you pick faster models, trim prompts and output, use prompt caching, and stream the response. For overnight batch jobs latency barely matters and cost wins.",
+      "example": "A website chat widget streams the reply so the first words appear within about a second, while a nightly lead-scoring job uses a slower, cheaper batch mode.",
+      "related": ["inference", "token", "prompt-caching", "batch-processing", "reasoning-model"],
+      "sources": [
+        { "label": "Anthropic docs: Reducing latency", "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency" },
+        { "label": "Anthropic glossary: TTFT (time to first token)", "url": "https://platform.claude.com/docs/en/about-claude/glossary" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "model-routing",
+      "term": "Model Routing",
+      "aliases": ["LLM routing", "model router"],
+      "category": "AI Foundations",
+      "level": "Intermediate",
+      "definition": "Model routing sends each request to a different model based on its difficulty, type or cost, typically by classifying the input first, so easy requests go to a small, cheap model and hard ones go to a more capable model.",
+      "simple": "Model routing means using a cheap, fast AI for easy jobs and saving the expensive, smart AI for the hard ones.",
+      "analogy": "Like a front desk that answers simple questions itself and only passes complex cases to the senior specialist.",
+      "whyItMatters": "At volume, sending every request to the strongest model wastes money and time. A router cuts cost while keeping quality on hard cases, but it needs evals to confirm that misrouted requests aren't hurting results.",
+      "example": "A support automation classifies each incoming ticket. Password-reset and opening-hours questions go to a small model, and billing disputes go to a flagship model with access to the customer's payment history.",
+      "related": ["latency", "reasoning-model", "evals", "orchestration", "inference"],
+      "sources": [
+        { "label": "Anthropic: Building effective agents (routing workflow)", "url": "https://www.anthropic.com/engineering/building-effective-agents" },
+        { "label": "Ong et al.: RouteLLM, Learning to Route LLMs with Preference Data", "url": "https://arxiv.org/abs/2406.18665" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "prompt-engineering",
+      "term": "Prompt Engineering",
+      "aliases": ["prompt design", "prompting"],
+      "category": "Prompting",
+      "level": "Beginner",
+      "definition": "Prompt engineering is the practice of writing and iteratively testing a model's instructions, examples and output format so it consistently produces results that meet your requirements.",
+      "simple": "Prompt engineering is learning how to ask an AI clearly so you get the answer you need every time, not just once.",
+      "analogy": "Like writing a clear brief for a contractor: the better the brief, the less rework.",
+      "whyItMatters": "Model output varies between runs, so a prompt that worked once can fail on the next input. Define success criteria, test the prompt against real examples, and change one thing at a time. For agents, this widens into context engineering.",
+      "example": "A team rewrites the prompt behind its lead-qualification step, adding a role, three labelled examples and a JSON schema, then reruns 50 past leads to confirm accuracy went up before shipping it.",
+      "related": ["system-prompt", "few-shot", "zero-shot", "chain-of-thought", "context-engineering", "structured-output"],
+      "sources": [
+        { "label": "Anthropic docs: Prompt engineering overview", "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" },
+        { "label": "OpenAI docs: Prompt engineering", "url": "https://developers.openai.com/api/docs/guides/prompt-engineering" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    }
+  ],
+  "notes": [
+    "Every source URL was fetched on 2026-10-26 and checked for the term. Four Claude prompting URLs (multishot-prompting, chain-of-thought, chain-prompts, system-prompts) now redirect to claude-prompting-best-practices, so the canonical URL plus an anchor is used.",
+    "Sampling params are not deprecated as a concept, but the trend runs across all three vendors: Anthropic API 2026-10-21 rejects temperature/top_p/top_k on every model; Gemini 4 and 3.6+ ignore them and send deprecation-warning headers (https://ai.google.dev/gemini-api/docs/text-generation); GPT-6 Astra does not accept custom temperature/top_p (https://developers.openai.com/api/docs/changelog). OpenAI's Responses API still documents temperature (0-2) and top_p for other models, and vLLM still exposes both. Revisit status next cycle.",
+    "open-source-model: the fix includes a 'term' key (display name -> 'Open-Weight Model') along with definition and aliases. Drop it if the merge script only accepts the documented fix keys. The id is kept.",
+    "token: 'tokenization' and 'tokenizer' are added as aliases, not a new term. structured-output keeps 'JSON mode' as an alias for search, but the definition now separates the two.",
+    "foundation-model alias 'base model' is imprecise: 'base model' usually means a pretrained model before instruction tuning. I didn't change it because I had no clean primary source. The lead may want to drop it.",
+    "swe-bench: the existing text named no specific models or positions. The fix removes the 'headline number / strongest model' framing and adds OpenAI's contamination finding.",
+    "fine-tuning: OpenAI is closing self-serve fine-tuning (no new jobs for existing customers from 2027-01-06; see the deprecations page). The existing text doesn't contradict this, so I didn't fix it, but it's worth a line if the entry is rewritten.",
+    "model-routing differs from the existing 'router' term (a Make/automation branch step). Consider cross-linking them, but 'router' isn't in my categories, so I didn't touch it.",
+    "context-window example ('200K tokens is about 500 pages') depends on the tokenizer, and current flagship models default to 1M. It's not wrong enough to count as a fix, but it is stale-leaning."
+  ]
+}

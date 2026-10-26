@@ -78,9 +78,17 @@ export const GHL_CONCEPTS: RefCard[] = [
     name: "Conversation AI & Voice AI",
     pill: "AI",
     accent: "purple",
-    tagline: "AI that answers and books for you.",
-    desc: "Conversation AI handles first-touch SMS/chat with memory across sessions; Voice AI can answer calls, check the calendar, and book appointments live.",
-    tags: ["First response", "Books appts", "24/7"],
+    tagline: "AI that answers for you, by text and by phone.",
+    desc: "Conversation AI handles first-touch SMS and chat replies; Voice AI handles inbound calls, outbound calls, and a website voice widget. Both sit in the AI Employee plans, or run pay-per-use.",
+    tags: ["First response", "Inbound & outbound", "AI Employee"],
+  },
+  {
+    name: "Agent Studio vs AI Studio",
+    pill: "AI builders",
+    accent: "pink",
+    tagline: "Two products with similar names: one builds agents, one builds apps.",
+    desc: "Agent Studio is where you build custom AI agents; it's pay-per-use and excluded from every AI Employee plan. AI Studio is a prompt-to-app and website builder, out of Labs since Sep 2026, with sub-account access off until the agency grants it.",
+    tags: ["Agents = Agent Studio", "Apps = AI Studio", "Pay-per-use"],
   },
 ];
 
@@ -97,7 +105,7 @@ export const GHL_RECIPES: AutomationRecipe[] = [
       "Notify the rep (internal SMS/Slack) to call",
       "If no reply in 10 min → follow-up SMS; wait, then a 2nd touch",
     ],
-    outcome: "Leads get answered in minutes, not hours — the #1 driver of conversion.",
+    outcome: "Leads get answered in minutes, not hours, while they're still interested.",
   },
   {
     title: "Appointment Booking + No-Show Recovery",
@@ -132,7 +140,7 @@ export const GHL_RECIPES: AutomationRecipe[] = [
       "If trigger link clicked but no review → gentle reminder in 2 days",
       "Tag 'Reviewed' to stop the sequence",
     ],
-    outcome: "More 5-star reviews on autopilot, the cheapest marketing there is.",
+    outcome: "More 5-star reviews on autopilot, without anyone remembering to ask.",
   },
   {
     title: "Database Reactivation",
@@ -171,8 +179,8 @@ export const GHL_BEST_PRACTICES: Tip[] = [
 // ───────────── Learn path ─────────────
 export const GHL_LEARN: LearnStep[] = [
   { title: "1. Master the core objects", detail: "Get fluent with contacts, custom fields, pipelines, tags, and smart lists — automation is just moving these around.", resource: { label: "GHL Help Center", url: "https://help.gohighlevel.com/" } },
-  { title: "2. Build your first 3 workflows", detail: "Speed-to-lead, appointment reminders, and review request. These cover 80% of small-business needs." },
+  { title: "2. Build your first 3 workflows", detail: "Speed-to-lead, appointment reminders, and review request. The Build tab walks through each one." },
   { title: "3. Learn triggers & conditions deeply", detail: "Trigger links, if/else branches, and wait steps are where real value lives. Practice mapping every scenario." },
   { title: "4. Package it as a snapshot", detail: "Standardize a reusable system you can deploy to any niche client." },
-  { title: "5. Connect the outside world", detail: "Webhooks, the GHL API, and Zapier/Make/n8n to integrate tools GHL doesn't cover natively.", resource: { label: "GHL API Docs", url: "https://highlevel.stoplight.io/" } },
+  { title: "5. Connect the outside world", detail: "Webhooks, the GHL API (use v2; v1 is deprecated), the HighLevel MCP server (OAuth sign-in), and Zapier/Make/n8n to integrate tools GHL doesn't cover natively.", resource: { label: "HighLevel developer docs", url: "https://marketplace.gohighlevel.com/docs/other/mcp" } },
 ];

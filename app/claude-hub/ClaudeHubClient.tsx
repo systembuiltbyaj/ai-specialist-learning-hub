@@ -9,13 +9,14 @@ import {
   ARSENAL_BUNDLE_MB,
 } from "@/app/lib/seed/arsenal-skills";
 import { ARSENAL_MCPS, FRAMEWORK_STEPS, MOST_USED } from "@/app/lib/seed/arsenal";
+import { TOKEN, tint } from "@/app/lib/color";
 
 const TABS = ["Skills", "MCPs", "Framework"] as const;
 type Tab = (typeof TABS)[number];
 
 const PALETTE = [
-  "#A78BFA", "#10B981", "#3B82F6", "#F59E0B", "#EC4899",
-  "#F97316", "#06B6D4", "#8B5CF6", "#f43f5e", "#22d3ee",
+  TOKEN.violet, TOKEN.green, TOKEN.blue, TOKEN.amber, TOKEN.pink,
+  TOKEN.orange, TOKEN.purple, TOKEN.gold, TOKEN.red,
 ];
 const catColor = (name: string) => {
   const i = ARSENAL_CATEGORIES.findIndex((c) => c.name === name);
@@ -140,7 +141,7 @@ function SkillsTab() {
                     </h4>
                     <span
                       className="shrink-0 rounded-full px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-                      style={{ color, backgroundColor: `${color}1a` }}
+                      style={{ color, backgroundColor: tint(color, 10) }}
                     >
                       {s.category}
                     </span>
@@ -150,7 +151,7 @@ function SkillsTab() {
                     {s.why}
                   </p>
                   <div className="mt-2">
-                    <span className="rounded border border-line bg-black/30 px-2 py-0.5 font-mono text-[0.6rem] text-text/70">
+                    <span className="rounded border border-line bg-text/[0.06] px-2 py-0.5 font-mono text-[0.6rem] text-text/70">
                       ❯ {s.id}
                     </span>
                   </div>
@@ -186,7 +187,7 @@ function SkillsTab() {
                 >
                   <span
                     className="self-start rounded-full px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-                    style={{ color, backgroundColor: `${color}1a` }}
+                    style={{ color, backgroundColor: tint(color, 10) }}
                   >
                     {category}
                   </span>
@@ -195,7 +196,7 @@ function SkillsTab() {
                     {s.description}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <span className="rounded border border-line bg-black/30 px-2 py-0.5 font-mono text-[0.6rem] text-text/70">
+                    <span className="rounded border border-line bg-text/[0.06] px-2 py-0.5 font-mono text-[0.6rem] text-text/70">
                       ❯ {s.id}
                     </span>
                     {s.hasBundle && (
@@ -274,7 +275,7 @@ function McpCard({ mcp }: { mcp: ArsenalMcp }) {
         ))}
       </ul>
       <div className="mt-4 overflow-hidden rounded-lg border border-line">
-        <div className="flex items-center justify-between border-b border-line bg-white/[0.03] px-3 py-2">
+        <div className="flex items-center justify-between border-b border-line bg-text/[0.03] px-3 py-2">
           <span className="font-mono text-[0.6rem] uppercase tracking-wider text-violet-light">
             Install command
           </span>
@@ -282,7 +283,7 @@ function McpCard({ mcp }: { mcp: ArsenalMcp }) {
             {copied ? "✓ Copied" : "Copy config"}
           </button>
         </div>
-        <pre className="overflow-x-auto bg-black/40 px-3 py-2.5">
+        <pre className="code-surface overflow-x-auto px-3 py-2.5">
           <code className="font-mono text-[0.7rem] text-text/85">{mcp.cmd}</code>
         </pre>
       </div>
@@ -327,7 +328,7 @@ function StepCard({ step }: { step: FrameworkStep }) {
         <div className="min-w-0 flex-1">
           <span
             className="rounded-full px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-            style={{ color: step.accent, backgroundColor: `${step.accent}1a` }}
+            style={{ color: step.accent, backgroundColor: tint(step.accent, 10) }}
           >
             {step.kicker}
           </span>
@@ -370,7 +371,7 @@ function StepCard({ step }: { step: FrameworkStep }) {
               ))}
             </div>
           ))}
-          <div className="rounded-lg border border-line bg-white/[0.03] p-3">
+          <div className="rounded-lg border border-line bg-text/[0.03] p-3">
             <p className="font-mono text-[0.6rem] font-bold uppercase tracking-wider" style={{ color: step.accent }}>
               ✓ Outcome
             </p>
@@ -395,7 +396,7 @@ function CodeBox({ label, code, accent }: { label: string; code: string; accent:
   };
   return (
     <div className="mb-2 ml-7 overflow-hidden rounded-lg border border-line">
-      <div className="flex items-center justify-between border-b border-line bg-white/[0.03] px-3 py-2">
+      <div className="flex items-center justify-between border-b border-line bg-text/[0.03] px-3 py-2">
         <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: accent }}>
           {label}
         </span>
@@ -403,7 +404,7 @@ function CodeBox({ label, code, accent }: { label: string; code: string; accent:
           {copied ? "✓ Copied" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto bg-black/40 p-3">
+      <pre className="code-surface overflow-x-auto p-3">
         <code className="font-mono text-[0.7rem] leading-relaxed text-text/85">{code}</code>
       </pre>
     </div>

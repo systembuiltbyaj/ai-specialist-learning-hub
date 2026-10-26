@@ -1,0 +1,733 @@
+{
+  "updates": {
+    "webhook": {
+      "simple": "A webhook is an automatic message one app sends to another the moment something happens, so the second app doesn't have to keep asking for updates.",
+      "sources": [
+        { "label": "n8n Docs: Webhook node", "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook" },
+        { "label": "Make Help: Webhooks", "url": "https://help.make.com/webhooks" },
+        { "label": "HighLevel: How to use webhooks in HighLevel", "url": "https://help.gohighlevel.com/support/solutions/articles/155000001183-how-to-use-webhooks-in-highlevel-zapier-" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "rest-api": {
+      "simple": "A REST API is a standard way for apps to ask another service for data, or to change it, by sending web requests to specific addresses.",
+      "sources": [
+        { "label": "MDN Glossary: REST", "url": "https://developer.mozilla.org/en-US/docs/Glossary/REST" },
+        { "label": "MDN: HTTP request methods", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods" },
+        { "label": "n8n Docs: HTTP Request node", "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "polling-vs-push": {
+      "simple": "Polling means an automation keeps checking for new data on a timer. Push means the other app tells it right away when something new happens.",
+      "sources": [
+        { "label": "Zapier Help: Key concepts (polling interval, instant triggers)", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" },
+        { "label": "Make Help: Operations", "url": "https://help.make.com/operations" },
+        { "label": "Make Help: Webhooks", "url": "https://help.make.com/webhooks" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "whyItMatters": "Push triggers react instantly and only run when there is real data. Polling costs vary by platform: in Make every scheduled trigger check is an operation that uses credits even when nothing is new, while Zapier does not charge tasks for polls that find nothing.",
+        "reason": "The old text said polling consumes operations/tasks on every check. Zapier counts only successful actions as tasks; triggers and empty polls are free (help.zapier.com task usage article). Make bills in credits, and a trigger module check is 1 operation per check (help.make.com/operations)."
+      }
+    },
+    "payload": {
+      "simple": "The payload is the actual information inside a web request, such as the name and email a form just submitted.",
+      "sources": [
+        { "label": "MDN Glossary: Payload body", "url": "https://developer.mozilla.org/en-US/docs/Glossary/Payload_body" },
+        { "label": "RFC 9110: HTTP Semantics (Content)", "url": "https://www.rfc-editor.org/rfc/rfc9110.html#name-content" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "json": {
+      "simple": "JSON is a simple text format for writing data as labelled fields and lists, and it's the format most apps use to swap data.",
+      "sources": [
+        { "label": "RFC 8259: The JSON Data Interchange Format", "url": "https://www.rfc-editor.org/rfc/rfc8259" },
+        { "label": "MDN Glossary: JSON", "url": "https://developer.mozilla.org/en-US/docs/Glossary/JSON" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "trigger": {
+      "simple": "A trigger is the event that starts an automation, like a new form submission or a set time of day.",
+      "sources": [
+        { "label": "Zapier Help: Key concepts (Trigger)", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" },
+        { "label": "n8n Docs: Key concept glossary (trigger node)", "url": "https://docs.n8n.io/key-concept-glossary" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "action": {
+      "simple": "An action is a task the automation does after it starts, such as sending an email or creating a contact.",
+      "sources": [
+        { "label": "Zapier Help: Key concepts (Action)", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" },
+        { "label": "HighLevel: A list of workflow actions", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002294-what-are-workflow-actions-complete-list-" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "filter": {
+      "simple": "A filter is a rule that lets the automation continue only when the data matches, for example only for leads tagged 'hot'.",
+      "sources": [
+        { "label": "Zapier Help: Key concepts (Filter)", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" },
+        { "label": "n8n Docs: Filter node", "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.filter" },
+        { "label": "Make Help: Filtering", "url": "https://help.make.com/filtering" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "iterator": {
+      "simple": "An iterator takes a list and hands the items to the next steps one at a time, so each item gets handled on its own.",
+      "sources": [
+        { "label": "Make Help: Iterator", "url": "https://help.make.com/iterator" },
+        { "label": "n8n Docs: Understand n8n's data structure", "url": "https://docs.n8n.io/build/work-with-data/understand-n8ns-data-structure" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "aggregator": {
+      "simple": "An aggregator collects many separate items and combines them into one, like gathering line items into a single list.",
+      "sources": [
+        { "label": "Make Help: Aggregator", "url": "https://help.make.com/aggregator" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "router": {
+      "simple": "A router splits one automation into several paths, so different kinds of data can be handled in different ways.",
+      "sources": [
+        { "label": "Make Help: Router", "url": "https://help.make.com/router" },
+        { "label": "Zapier Help: Add branching logic with Paths", "url": "https://help.zapier.com/hc/en-us/articles/8496288555917-Add-branching-logic-to-Zap-workflows-with-Paths" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "rate-limit": {
+      "simple": "A rate limit is the maximum number of requests a service will accept from you in a set time. Go over it and your requests get refused.",
+      "sources": [
+        { "label": "RFC 6585: Additional HTTP Status Codes (429)", "url": "https://www.rfc-editor.org/rfc/rfc6585" },
+        { "label": "MDN: 429 Too Many Requests", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/429" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "oauth": {
+      "simple": "OAuth lets you give one app limited access to your account on another service without handing over your password.",
+      "sources": [
+        { "label": "RFC 6749: The OAuth 2.0 Authorization Framework", "url": "https://www.rfc-editor.org/rfc/rfc6749" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "api-key": {
+      "simple": "An API key is a secret code your app sends with each request to prove which app is calling. It should be kept private like a password.",
+      "sources": [
+        { "label": "Google Cloud: Manage API keys", "url": "https://cloud.google.com/docs/authentication/api-keys" },
+        { "label": "n8n Docs: Key concept glossary (credential)", "url": "https://docs.n8n.io/key-concept-glossary" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "idempotency": {
+      "simple": "Idempotency means sending the same request twice has the same effect as sending it once, so a retry can't create duplicates or double charges.",
+      "sources": [
+        { "label": "RFC 9110: HTTP Semantics (Idempotent Methods)", "url": "https://www.rfc-editor.org/rfc/rfc9110.html#name-idempotent-methods" },
+        { "label": "MDN Glossary: Idempotent", "url": "https://developer.mozilla.org/en-US/docs/Glossary/Idempotent" },
+        { "label": "Stripe API: Idempotent requests", "url": "https://docs.stripe.com/api/idempotent_requests" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "retry-error-handling": {
+      "simple": "Error handling is what an automation does when a step fails: try again, take a backup path, or stop and alert someone.",
+      "sources": [
+        { "label": "n8n Docs: Handle errors gracefully", "url": "https://docs.n8n.io/build/flow-logic/handle-errors-gracefully" },
+        { "label": "Make Help: Error handlers", "url": "https://help.make.com/error-handlers" },
+        { "label": "Zapier Help: Key concepts (Autoreplay)", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "zapier": {
+      "simple": "Zapier is an online tool that connects thousands of apps so one app's events can automatically trigger work in another, with no coding.",
+      "sources": [
+        { "label": "Zapier Help: Learn key concepts in Zap workflows", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "zapier-zap": {
+      "simple": "A Zap is one automation in Zapier: something happens in one app, and Zapier does one or more steps in other apps.",
+      "sources": [
+        { "label": "Zapier Help: Key concepts (Zap)", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "zapier-task": {
+      "simple": "A task is one successful step Zapier completes for you, and your Zapier plan is priced by how many tasks you use.",
+      "sources": [
+        { "label": "Zapier Help: How is task usage measured", "url": "https://help.zapier.com/hc/en-us/articles/8496196837261-How-is-task-usage-measured-in-Zapier" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "zapier-paths": {
+      "simple": "Paths let one Zap do different things depending on the data, like sending big deals to sales and small ones to a nurture list.",
+      "sources": [
+        { "label": "Zapier Help: Add branching logic with Paths", "url": "https://help.zapier.com/hc/en-us/articles/8496288555917-Add-branching-logic-to-Zap-workflows-with-Paths" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "zapier-code-step": {
+      "simple": "A Code step lets you add a short piece of JavaScript or Python to a Zap when the built-in steps can't do what you need.",
+      "sources": [
+        { "label": "Zapier Help: Use JavaScript code in Zap workflows", "url": "https://help.zapier.com/hc/en-us/articles/8496310939021-Use-JavaScript-code-in-Zap-workflows" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "make": {
+      "simple": "Make is a visual automation tool where you connect apps by dragging steps onto a canvas and linking them into a flow.",
+      "sources": [
+        { "label": "Make Help: Create your first scenario", "url": "https://help.make.com/create-your-first-scenario" },
+        { "label": "Make Help: Types of modules", "url": "https://help.make.com/types-of-modules" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "make-scenario": {
+      "simple": "A scenario is one complete automation in Make, made of connected steps that run on a schedule or when triggered.",
+      "sources": [
+        { "label": "Make Help: Create your first scenario", "url": "https://help.make.com/create-your-first-scenario" },
+        { "label": "Make Help: Schedule a scenario", "url": "https://help.make.com/schedule-a-scenario" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "make-module": {
+      "simple": "A module is one building block in a Make scenario that does a single job, such as watching for new rows or creating a record.",
+      "sources": [
+        { "label": "Make Help: Types of modules", "url": "https://help.make.com/types-of-modules" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "make-operation": {
+      "simple": "An operation is one run of one step in a Make scenario. Make now bills in credits, and a normal step uses one credit per operation.",
+      "sources": [
+        { "label": "Make Help: Operations", "url": "https://help.make.com/operations" },
+        { "label": "Make Help: Introducing credits, new billing unit", "url": "https://help.make.com/introducing-credits-new-billing-unit-live-in-make" },
+        { "label": "Make Help: Credits", "url": "https://help.make.com/credits" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "In Make, an operation is a single module run that processes or checks for data. Operations are no longer the billing unit: since 27 August 2025 Make bills in credits, and most non-AI modules use 1 credit per operation.",
+        "whyItMatters": "Operation counts still show you where a scenario does its work, and for standard modules they map 1:1 to the credits you pay for. Cutting unnecessary module runs keeps credit usage down. Make's built-in AI features can use more credits than operations, because they are billed on tokens.",
+        "example": "A Gmail 'Send an Email' module that sends 5 emails uses 5 operations (5 credits). A 'Watch New Rows' trigger uses 1 operation per check, however many rows it finds.",
+        "reason": "The old text called operations the unit Make bills against. Make replaced operations with credits as its billing unit (converted 1:1 on 2025-08-27); operations now describe module runs. Sources: help.make.com/introducing-credits-new-billing-unit-live-in-make and help.make.com/operations."
+      }
+    },
+    "make-bundle": {
+      "simple": "A bundle is one packet of data, like one email or one contact, passed from step to step in a Make scenario.",
+      "sources": [
+        { "label": "Make Help: Operations (bundles)", "url": "https://help.make.com/operations" },
+        { "label": "Make Help: Iterator", "url": "https://help.make.com/iterator" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "make-data-store": {
+      "simple": "A data store is a small built-in database in Make where scenarios can save information and read it back later.",
+      "sources": [
+        { "label": "Make Help: Data stores", "url": "https://help.make.com/l6du-data-stores" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "n8n": {
+      "simple": "n8n is a workflow automation tool you can use in the cloud or run on your own server, with strong support for code and AI agents.",
+      "sources": [
+        { "label": "n8n Docs: Get started", "url": "https://docs.n8n.io/" },
+        { "label": "n8n: License (Sustainable Use License)", "url": "https://github.com/n8n-io/n8n/blob/master/LICENSE.md" },
+        { "label": "n8n Docs: Release notes", "url": "https://docs.n8n.io/release-notes/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "n8n-node": {
+      "simple": "A node is one box in an n8n workflow that does a single job, such as calling an API, filtering data or sending a message.",
+      "sources": [
+        { "label": "n8n Docs: Work with nodes", "url": "https://docs.n8n.io/build/understand-workflows/workflow-components/work-with-nodes" },
+        { "label": "n8n Docs: Key concept glossary", "url": "https://docs.n8n.io/key-concept-glossary" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "n8n-expression": {
+      "simple": "An expression is a small formula inside an n8n field that fills it in from earlier data, like a spreadsheet formula.",
+      "sources": [
+        { "label": "n8n Docs: Expressions versus data nodes", "url": "https://docs.n8n.io/build/work-with-data/expressions-versus-data-nodes" },
+        { "label": "n8n Docs: Key concept glossary (expression)", "url": "https://docs.n8n.io/key-concept-glossary" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "n8n-sub-workflow": {
+      "simple": "A sub-workflow is a smaller n8n workflow that other workflows can call, so you build a common job once and reuse it.",
+      "sources": [
+        { "label": "n8n Docs: Break workflows into smaller parts", "url": "https://docs.n8n.io/build/flow-logic/break-workflows-into-smaller-parts" },
+        { "label": "n8n Docs: Key concept glossary (sub-workflow)", "url": "https://docs.n8n.io/key-concept-glossary" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "In n8n, a sub-workflow is a separate workflow that another workflow calls through the Execute Sub-workflow node. The sub-workflow starts with an Execute Sub-workflow Trigger and returns its last node's output to the caller, which makes logic modular and reusable.",
+        "reason": "The old text named the 'Execute Workflow' node. n8n's docs now call it the Execute Sub-workflow node, paired with the Execute Sub-workflow Trigger ('When executed by another node'). Source: docs.n8n.io/build/flow-logic/break-workflows-into-smaller-parts."
+      }
+    },
+    "n8n-credentials": {
+      "simple": "Credentials are saved logins and keys in n8n that steps reuse to connect to other services, so secrets aren't typed into each workflow.",
+      "sources": [
+        { "label": "n8n Docs: Key concept glossary (credential)", "url": "https://docs.n8n.io/key-concept-glossary" },
+        { "label": "n8n Docs: Credentials", "url": "https://docs.n8n.io/integrations/builtin/credentials" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "n8n-items": {
+      "simple": "Items are the individual records flowing through an n8n workflow. Most steps repeat their job once for every item they receive.",
+      "sources": [
+        { "label": "n8n Docs: Understand n8n's data structure", "url": "https://docs.n8n.io/build/work-with-data/understand-n8ns-data-structure" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "n8n-ai-agent-node": {
+      "simple": "The AI Agent node puts an AI assistant inside an n8n workflow that can decide which connected tools to use to finish a task.",
+      "sources": [
+        { "label": "n8n Docs: AI Agent node", "url": "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent" },
+        { "label": "n8n Docs: Key concept glossary (AI Agent node)", "url": "https://docs.n8n.io/key-concept-glossary" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "lead-connector": {
+      "simple": "LeadConnector is the name behind HighLevel's built-in phone and email services, so texts, calls and emails work without signing up with a separate provider.",
+      "sources": [
+        { "label": "HighLevel: What is the LC (LeadConnector) Phone System?", "url": "https://help.gohighlevel.com/support/solutions/articles/48001223546-what-is-lc-lead-connector-phone-system-" },
+        { "label": "HighLevel: What is LC Email?", "url": "https://help.gohighlevel.com/support/solutions/articles/48001220605-leadconnector-email" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "lc-phone": {
+      "simple": "LC Phone is HighLevel's own phone service. You buy numbers and send texts or make calls inside your account without setting up Twilio.",
+      "sources": [
+        { "label": "HighLevel: What is the LC (LeadConnector) Phone System?", "url": "https://help.gohighlevel.com/support/solutions/articles/48001223546-what-is-lc-lead-connector-phone-system-" },
+        { "label": "HighLevel: LC Phone pricing and billing guide", "url": "https://help.gohighlevel.com/support/solutions/articles/48001223556-phone-system-pricing-billing-guide" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "HighLevel's native telephony service (LeadConnector Phone) that lets a sub-account buy numbers, send and receive SMS, and make calls inside the CRM with no separate Twilio account. HighLevel says its pricing matches Twilio's rates, and Twilio remains available as an alternative.",
+        "analogy": "Like a phone line that comes built into your CRM, so you never have to open an account with a carrier yourself.",
+        "reason": "The old text called LC Phone 'a managed Twilio integration'. HighLevel describes it as its own proprietary telephony service that removes the need to integrate Twilio, with pricing that matches Twilio's (help.gohighlevel.com articles 48001223546 and 48001223556)."
+      }
+    },
+    "a2p-10dlc": {
+      "simple": "A2P 10DLC is the US registration process a business must complete before texting customers from a normal local number. It tells carriers who you are and what you'll send.",
+      "sources": [
+        { "label": "Twilio Docs: What is A2P 10DLC?", "url": "https://www.twilio.com/docs/messaging/compliance/a2p-10dlc" },
+        { "label": "The Campaign Registry", "url": "https://www.campaignregistry.com/" },
+        { "label": "HighLevel: A2P 10DLC brand and campaign registration", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002380-what-is-a2p-10-dlc-brand-and-campaign-registration" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "spf-dkim-dmarc": {
+      "simple": "SPF, DKIM and DMARC are DNS settings that prove your emails really come from your domain, which keeps them out of spam.",
+      "sources": [
+        { "label": "RFC 7208: Sender Policy Framework (SPF)", "url": "https://www.rfc-editor.org/rfc/rfc7208" },
+        { "label": "RFC 6376: DomainKeys Identified Mail (DKIM)", "url": "https://www.rfc-editor.org/rfc/rfc6376" },
+        { "label": "RFC 9989: DMARC", "url": "https://www.rfc-editor.org/rfc/rfc9989" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "saas-mode": {
+      "simple": "SaaS Mode lets an agency sell HighLevel to its clients as its own branded software, with monthly plans the agency sets and bills.",
+      "sources": [
+        { "label": "HighLevel: Guide from zero to SaaS Mode sales", "url": "https://help.gohighlevel.com/support/solutions/articles/155000004185-guide-from-zero-to-saas-mode-sales-troubleshooting" },
+        { "label": "HighLevel: Getting started with the SaaS Configurator", "url": "https://help.gohighlevel.com/support/solutions/articles/155000008015-getting-started-with-the-saas-configurator" },
+        { "label": "HighLevel changelog: Set a fixed price for your AI products", "url": "https://ideas.gohighlevel.com/changelog/set-a-fixed-price-for-your-ai-products" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "A GoHighLevel agency feature for reselling the platform under your own brand. You package plans in the SaaS Configurator, clients get their own sub-accounts, and you bill them through Stripe (SaaS V1) or through an agency sub-account as the billing system of record (SaaS V2), with optional usage-based or fixed-rate pricing for services like AI.",
+        "reason": "The old text said clients are billed via Stripe. HighLevel now runs two billing architectures: SaaS V1 (Stripe-based) and SaaS V2 (an Agency Sub-Account as billing system of record). Since 2026-08-07, Conversation AI and Voice AI can also be rebilled at a fixed price. Sources: help article 155000008015 and the HighLevel changelog entry 'Set a Fixed Price for Your AI Products'."
+      }
+    },
+    "rebilling": {
+      "simple": "Rebilling, now called Usage-based Reselling, is when an agency passes the cost of texts, calls, email and AI on to clients, often with a markup.",
+      "sources": [
+        { "label": "HighLevel: Unified Reselling Experience", "url": "https://help.gohighlevel.com/support/solutions/articles/155000008356-unified-reselling-experience-in-highlevel-wallet" },
+        { "label": "HighLevel: Rebilling, reselling and wallets explained", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002095-rebilling-reselling-and-wallets-explained" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "Charging sub-accounts for usage-based services such as SMS, calls, email and AI, either at cost or at a marked-up rate. HighLevel charges the agency wallet first, then the agency bills each sub-account for what it used. HighLevel has renamed the feature 'Usage-based Reselling' and manages it on a single Reselling page.",
+        "aliases": ["usage rebilling", "reselling", "Usage-based Reselling"],
+        "reason": "HighLevel renamed 'Rebilling' to 'Usage-based Reselling' (terminology only, billing behaviour unchanged) in its unified Reselling page (help article 155000008356). The old definition also omitted the agency-wallet-first flow described in help article 155000002095."
+      }
+    },
+    "agency-vs-sub-account": {
+      "simple": "In HighLevel, the agency account is the head office that manages everything. Each client gets their own sub-account, a separate CRM workspace.",
+      "sources": [
+        { "label": "HighLevel: Glossary (Agency View, Sub-Account)", "url": "https://help.gohighlevel.com/support/solutions/articles/48001231169-glossary" },
+        { "label": "HighLevel: Admin vs user roles and permission scopes", "url": "https://help.gohighlevel.com/support/solutions/articles/48001078296-admin-vs-user-roles-and-permission-scopes" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "conversation-ai": {
+      "simple": "Conversation AI is HighLevel's chatbot that replies to leads by text, chat, email and social messages, answering questions and booking appointments.",
+      "sources": [
+        { "label": "HighLevel: Guide to Conversation AI bot", "url": "https://help.gohighlevel.com/support/solutions/articles/155000001335-conversation-ai-bot-explained" },
+        { "label": "HighLevel: Managed Agents, Conversation AI and Ask AI compared", "url": "https://help.gohighlevel.com/support/solutions/articles/155000008362-managed-agents-conversation-ai-ask-ai-what-s-the-difference-" },
+        { "label": "HighLevel: AI product pricing", "url": "https://help.gohighlevel.com/support/solutions/articles/155000006652-ai-product-pricing" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "voice-ai": {
+      "simple": "Voice AI is HighLevel's AI phone agent. It answers or places calls, talks naturally, answers questions and books appointments.",
+      "sources": [
+        { "label": "HighLevel: Voice AI agents overview", "url": "https://help.gohighlevel.com/support/solutions/articles/155000003911-ai-voice-agents-overview" },
+        { "label": "HighLevel: AI tools in HighLevel", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002166-ai-tools-in-highlevel" },
+        { "label": "HighLevel: AI product pricing", "url": "https://help.gohighlevel.com/support/solutions/articles/155000006652-ai-product-pricing" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "GoHighLevel's AI voice agents that answer inbound calls, place supported outbound calls and run voice-widget conversations. They qualify callers, answer from a knowledge base, book appointments and trigger follow-up actions. Voice AI works only with LC Phone or Twilio numbers.",
+        "reason": "The old text described inbound calls only. HighLevel's Voice AI now covers inbound, outbound and widget conversations and requires LC Phone or Twilio numbers (help articles 155000003911 and 155000006652)."
+      }
+    },
+    "content-ai": {
+      "simple": "Content AI is HighLevel's built-in writing and image tool for drafting emails, social posts, blog posts and page copy.",
+      "sources": [
+        { "label": "HighLevel: AI tools in HighLevel", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002166-ai-tools-in-highlevel" },
+        { "label": "HighLevel: AI product pricing", "url": "https://help.gohighlevel.com/support/solutions/articles/155000006652-ai-product-pricing" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "workflow-ai": {
+      "simple": "Workflow AI lets you describe an automation in plain English and HighLevel builds or edits the workflow. It also adds AI steps such as summarising or sorting messages.",
+      "sources": [
+        { "label": "HighLevel: AI tools in HighLevel", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002166-ai-tools-in-highlevel" },
+        { "label": "HighLevel: Workflow AI Builder", "url": "https://help.gohighlevel.com/support/solutions/articles/155000006100-workflow-ai-builder" },
+        { "label": "HighLevel: AI product pricing", "url": "https://help.gohighlevel.com/support/solutions/articles/155000006652-ai-product-pricing" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "GoHighLevel's AI layer for workflows. It has two parts: the Workflow AI Builder, which generates, explains and edits workflows from a natural-language prompt, and Workflow AI actions such as Decision Maker, Intent Detection, Summarize Text and Translate, which run model steps inside a workflow.",
+        "whyItMatters": "The builder speeds up producing standard GHL automations, and the AI actions let a workflow classify, summarise or route contacts without sending data out to n8n or Make. HighLevel prices the premium AI actions per execution, so budget for them at volume.",
+        "example": "You prompt the Workflow AI Builder for 'tag new form leads and text them within 5 minutes', then add an Intent Detection action that routes replies to a positive or negative branch.",
+        "reason": "The old text described only AI actions inside workflows. HighLevel's current lineup defines Workflow AI primarily as the tool that generates, explains and edits workflows from natural language, with premium AI actions alongside it (help articles 155000002166 and 155000006652)."
+      }
+    },
+    "agent-studio": {
+      "simple": "Agent Studio is HighLevel's visual canvas for flow-based AI agents. HighLevel now points new agents to Managed Agents and keeps Agent Studio for editing existing ones.",
+      "sources": [
+        { "label": "HighLevel: AI tools in HighLevel", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002166-ai-tools-in-highlevel" },
+        { "label": "HighLevel: Agent Studio overview", "url": "https://help.gohighlevel.com/support/solutions/articles/155000007393-agent-studio-overview" },
+        { "label": "HighLevel: AI product pricing", "url": "https://help.gohighlevel.com/support/solutions/articles/155000006652-ai-product-pricing" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "GoHighLevel's visual, node-based environment for flow-based AI agents, with knowledge-base and web-search tools, API and MCP tools, conditional routing, variables, testing and version control. HighLevel now recommends Managed Agents (formerly Super Agents) for creating new agents and positions Agent Studio for maintaining existing ones. It is pay-per-use and excluded from every AI Employee plan.",
+        "whyItMatters": "If you inherit or maintain a flow-based agent, Agent Studio is where you edit its nodes, tools and versions. For a new build, check Managed Agents first, and budget Agent Studio on token cost, because no AI Employee plan covers it.",
+        "example": "You open a client's existing lead-qualification agent in Agent Studio, add a web-search tool node and a routing condition, test it, and publish a new version.",
+        "reason": "The old text presented Agent Studio as the main place to build custom agents. HighLevel's AI tools guide (updated 2026-10-05) says Managed Agents is the recommended experience for new agents and Agent Studio remains for existing flow-based agents. The pricing article (updated 2026-10-20) says Agent Studio is excluded from all plans and stays pay-per-use."
+      }
+    },
+    "conditional-branch": {
+      "simple": "An If/Else step in a HighLevel workflow sends each contact down a different path depending on their details, like tags or form answers.",
+      "sources": [
+        { "label": "HighLevel: If/Else workflow action", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002471-workflow-action-if-else" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "wait-step": {
+      "simple": "A Wait step pauses a contact in a HighLevel workflow for a set time, until a date, or until they reply or take an action.",
+      "sources": [
+        { "label": "HighLevel: Wait workflow action", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002470-workflow-action-wait" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "goal-event": {
+      "simple": "A Goal Event moves a contact to a chosen step, or out of the sequence, as soon as they do the thing you wanted, like booking or paying.",
+      "sources": [
+        { "label": "HighLevel: Goal Event workflow action", "url": "https://help.gohighlevel.com/support/solutions/articles/155000003328-workflow-action-goal-event" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "custom-webhook": {
+      "simple": "Custom Webhook is the HighLevel workflow step that sends contact data to another app's URL. Inbound Webhook is the matching trigger for receiving data.",
+      "sources": [
+        { "label": "HighLevel: Custom Webhook workflow action", "url": "https://help.gohighlevel.com/support/solutions/articles/155000003305-workflow-action-custom-webhook" },
+        { "label": "HighLevel: Inbound Webhook premium trigger", "url": "https://help.gohighlevel.com/support/solutions/articles/48001237383-how-to-use-the-inbound-webhook-workflow-premium-trigger" }
+      ],
+      "lastVerified": "2026-10-26"
+    }
+  },
+  "newTerms": [
+    {
+      "id": "workflow-automation",
+      "term": "Workflow Automation",
+      "aliases": ["workflow"],
+      "category": "Automation Platforms",
+      "level": "Beginner",
+      "definition": "Workflow automation is software that runs a repeatable business process for you: a trigger event starts it, and a defined sequence of actions, conditions and waits runs without manual work.",
+      "simple": "Workflow automation means letting software do a routine process for you, step by step, every time a certain event happens.",
+      "analogy": "Like a recipe the kitchen follows automatically every time an order comes in.",
+      "whyItMatters": "It is the core job of Zapier, Make, n8n and GoHighLevel workflows. Mapping a manual process into trigger, conditions and actions is how you remove repetitive work and response-time delays.",
+      "example": "When a lead submits a website form, a workflow creates the contact, tags it by source, texts a confirmation, and alerts the sales rep, with no one touching it.",
+      "related": ["trigger", "action", "filter", "zapier-zap", "make-scenario", "ghl-workflow"],
+      "sources": [
+        { "label": "Zapier Help: Learn key concepts in Zap workflows", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" },
+        { "label": "n8n Docs: Key concept glossary (workflow)", "url": "https://docs.n8n.io/key-concept-glossary" },
+        { "label": "HighLevel: Getting started with workflows", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002288-getting-started-with-workflows" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "api-integration",
+      "term": "API Integration",
+      "aliases": ["integration"],
+      "category": "Automation Platforms",
+      "level": "Intermediate",
+      "definition": "An API integration connects two software systems through one or both of their APIs, so data and actions move between them automatically. It can use a platform's prebuilt connector or a direct HTTP request.",
+      "simple": "An API integration is a connection that lets two apps share data and trigger each other automatically, instead of someone copying information by hand.",
+      "analogy": "Like a dedicated phone line between two departments so they can pass requests without walking paperwork across the building.",
+      "whyItMatters": "When no prebuilt connector exists, or it lacks the action you need, a direct API integration (an HTTP request with the right auth and payload) is how you connect the systems anyway.",
+      "example": "An n8n HTTP Request node calls a billing system's REST API to fetch an invoice status, then updates the matching GoHighLevel opportunity.",
+      "related": ["api", "rest-api", "api-key", "oauth", "webhook", "custom-webhook"],
+      "sources": [
+        { "label": "MDN Glossary: API", "url": "https://developer.mozilla.org/en-US/docs/Glossary/API" },
+        { "label": "n8n Docs: HTTP Request node", "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "cron-job",
+      "term": "Cron Job",
+      "aliases": ["cron", "schedule trigger"],
+      "category": "Automation Platforms",
+      "level": "Intermediate",
+      "definition": "A cron job is a task scheduled to run automatically at fixed times or intervals, written as a cron expression with five time fields (minute, hour, day of month, month, day of week). Automation tools offer the same idea as schedule triggers.",
+      "simple": "A cron job is a task set to run on a timer, such as every morning at 9 or every 15 minutes, without anyone starting it.",
+      "analogy": "Like an alarm clock for software: it goes off at the time you set and starts the job.",
+      "whyItMatters": "Scheduled runs handle work with no natural trigger event, such as nightly syncs, daily reports and periodic cleanups. Each scheduled run can cost executions or credits, so the interval matters.",
+      "example": "An n8n Schedule Trigger with the cron expression 0 9 * * 1 runs every Monday at 09:00 and posts last week's new-lead count to Slack.",
+      "related": ["trigger", "polling-vs-push", "make-scenario", "n8n-node"],
+      "sources": [
+        { "label": "POSIX (The Open Group): crontab", "url": "https://pubs.opengroup.org/onlinepubs/9799919799/utilities/crontab.html" },
+        { "label": "n8n Docs: Schedule Trigger node", "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger" },
+        { "label": "Make Help: Schedule a scenario", "url": "https://help.make.com/schedule-a-scenario" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "no-code-low-code",
+      "term": "No-Code / Low-Code",
+      "aliases": ["no-code", "low-code"],
+      "category": "Automation Platforms",
+      "level": "Beginner",
+      "definition": "No-code platforms let people build software or automations through a visual interface and configuration with no programming. Low-code platforms are mostly visual too, but allow or require some code for cases the visual tools can't handle.",
+      "simple": "No-code means building apps or automations by clicking and dragging instead of writing code. Low-code is the same idea, with the option to add a little code when needed.",
+      "analogy": "No-code is building with LEGO kits. Low-code is LEGO plus a few custom-cut pieces when the kit doesn't have the shape you need.",
+      "whyItMatters": "It helps you pick the right tool and set client expectations: Zapier and GHL workflows suit no-code maintainers, while n8n and Make code steps suit builds that need custom logic someone must maintain.",
+      "example": "A clinic owner maintains a no-code Zap that logs bookings to a sheet, while a developer adds a low-code n8n Code node to reformat messy phone numbers.",
+      "related": ["zapier", "make", "n8n", "zapier-code-step", "workflow-automation"],
+      "sources": [
+        { "label": "Wikipedia: No-code development platform", "url": "https://en.wikipedia.org/wiki/No-code_development_platform" },
+        { "label": "Wikipedia: Low-code development platform", "url": "https://en.wikipedia.org/wiki/Low-code_development_platform" },
+        { "label": "Zapier Help: Learn key concepts in Zap workflows", "url": "https://help.zapier.com/hc/en-us/articles/8496181725453-Learn-key-concepts-in-Zap-workflows" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "make-credit",
+      "term": "Credit (Make)",
+      "aliases": ["Make credits"],
+      "category": "Automation Platforms",
+      "level": "Intermediate",
+      "definition": "In Make, a credit is the billing unit, which replaced operations on 27 August 2025. Non-AI modules and third-party AI apps use 1 credit per operation. Make's built-in AI features can use more, because they are billed on tokens and other usage factors.",
+      "simple": "Credits are what you buy and spend in Make. Most steps cost one credit each time they run, and Make's own AI features can cost more.",
+      "analogy": "Like arcade tokens: most games take one token per play, and a few premium games take more.",
+      "whyItMatters": "Credit usage decides your Make bill and when scenarios stop for lack of balance, so you estimate it from module runs and watch AI-heavy steps closely.",
+      "example": "A scenario that watches a sheet and sends 20 emails uses about 21 credits per run: 1 for the trigger check and 20 for the email module.",
+      "related": ["make-operation", "make-module", "make-scenario", "zapier-task"],
+      "sources": [
+        { "label": "Make Help: Credits", "url": "https://help.make.com/credits" },
+        { "label": "Make Help: Introducing credits, new billing unit", "url": "https://help.make.com/introducing-credits-new-billing-unit-live-in-make" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "ghl-workflow",
+      "term": "Workflow (GHL)",
+      "aliases": ["GHL workflow", "HighLevel workflow"],
+      "category": "GoHighLevel",
+      "level": "Beginner",
+      "definition": "A GoHighLevel workflow is the platform's automation builder. One or more triggers start it, and it then runs a sequence of actions such as messages, tags, If/Else branches, waits, goal events and webhooks. Workflows replaced the legacy Campaigns and Triggers.",
+      "simple": "A workflow in HighLevel is an automation you build once that follows up with contacts for you, such as texting, emailing, tagging or booking, whenever something happens.",
+      "analogy": "Like a playbook your CRM runs for every contact who walks through a particular door.",
+      "whyItMatters": "Almost every GHL automation you deliver lives in a workflow, so structuring triggers, filters and branches well decides whether a client's follow-up is reliable and easy to troubleshoot.",
+      "example": "A 'New Lead' workflow triggers on form submission, sends an instant SMS, waits one day, and uses If/Else to send booked contacts a reminder and everyone else a nudge.",
+      "related": ["conditional-branch", "wait-step", "goal-event", "custom-webhook", "workflow-ai", "ghl-campaigns"],
+      "sources": [
+        { "label": "HighLevel: Getting started with workflows", "url": "https://help.gohighlevel.com/support/solutions/articles/155000002288-getting-started-with-workflows" },
+        { "label": "HighLevel: Workflows vs Campaigns/Triggers (deprecated)", "url": "https://help.gohighlevel.com/support/solutions/articles/48001229927-workflows-vs-campaigns-triggers-deprecated-features-" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "ghl-campaigns",
+      "term": "Campaigns (GHL, legacy)",
+      "aliases": ["GHL campaigns", "Campaigns and Triggers"],
+      "category": "GoHighLevel",
+      "level": "Beginner",
+      "definition": "Campaigns were GoHighLevel's original automation sequences, paired with separate Triggers. Both are deprecated and replaced by Workflows, which combine triggers and actions in one builder. They appear only in sub-accounts created from snapshots of older accounts that still contain them.",
+      "simple": "Campaigns were HighLevel's old way of sending automated follow-up sequences. They've been retired, and Workflows do the same job and more.",
+      "analogy": "Like an old flip phone that still works if you have one, but nobody is issued one anymore.",
+      "whyItMatters": "Old tutorials, snapshots and client accounts may still reference Campaigns. Rebuild them as Workflows, which add If/Else logic, an execution log and easier testing.",
+      "example": "You audit a client's older sub-account, find a five-step nurture Campaign, import it into a Workflow, and add the trigger there.",
+      "related": ["ghl-workflow", "ghl-snapshot", "agency-vs-sub-account"],
+      "sources": [
+        { "label": "HighLevel: Workflows vs Campaigns/Triggers (deprecated)", "url": "https://help.gohighlevel.com/support/solutions/articles/48001229927-workflows-vs-campaigns-triggers-deprecated-features-" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "deprecated",
+      "supersededBy": "ghl-workflow",
+      "deprecationNote": "HighLevel deprecated Campaigns and Triggers in favour of Workflows. They are visible only in sub-accounts built from snapshots of older accounts that still contain them."
+    },
+    {
+      "id": "ghl-custom-fields-values",
+      "term": "Custom Fields & Custom Values (GHL)",
+      "aliases": ["custom fields", "custom values", "merge fields"],
+      "category": "GoHighLevel",
+      "level": "Beginner",
+      "definition": "In GoHighLevel, custom fields store record-specific data on contacts, opportunities and other records. Custom values are account-level key:value pairs, created once and reused anywhere through merge fields. Changing a custom value updates every place that uses it.",
+      "simple": "Custom fields hold extra details about each contact, like their budget. Custom values are reusable placeholders for things that are the same everywhere, like the business phone number.",
+      "analogy": "A custom field is a blank on each customer's file card. A custom value is a rubber stamp you use on every letter.",
+      "whyItMatters": "Custom fields drive personalisation, smart lists and If/Else logic per contact. Custom values make snapshots reusable, because you change a client's details once instead of editing every email and page.",
+      "example": "A snapshot's emails reference a 'booking link' custom value. You set it per client after loading the snapshot, while each lead's 'service interested in' is a custom field filled by the form.",
+      "related": ["ghl-snapshot", "smart-list", "conditional-branch", "trigger-link"],
+      "sources": [
+        { "label": "HighLevel: Overview of merge fields and custom variables", "url": "https://help.gohighlevel.com/support/solutions/articles/155000004390-overview-of-merge-fields-custom-variables" },
+        { "label": "HighLevel: Create and configure custom values", "url": "https://help.gohighlevel.com/support/solutions/articles/155000004705" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "smart-list",
+      "term": "Smart List (GHL)",
+      "aliases": ["SmartList", "smart lists"],
+      "category": "GoHighLevel",
+      "level": "Beginner",
+      "definition": "A Smart List is a saved, dynamic contact list in GoHighLevel defined by filters such as tags, custom fields, activity or opportunity stage. Contacts join or leave automatically as their data changes.",
+      "simple": "A Smart List is a saved contact list that keeps itself up to date: anyone who matches your rules is in it, and anyone who stops matching drops out.",
+      "analogy": "Like a playlist set to 'songs I played this month' that refreshes itself instead of you adding tracks by hand.",
+      "whyItMatters": "Smart Lists give you live segments for bulk actions, broadcasts and adding contacts to workflows, without manually maintaining lists.",
+      "example": "A Smart List of contacts tagged 'webinar-registered' who haven't booked a call is used every Friday to add them to a follow-up workflow.",
+      "related": ["ghl-custom-fields-values", "ghl-workflow", "ghl-pipeline"],
+      "sources": [
+        { "label": "HighLevel: Getting started with Smart Lists", "url": "https://help.gohighlevel.com/support/solutions/articles/48001062094-how-to-create-manage-smart-lists" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "ghl-pipeline",
+      "term": "Pipelines & Opportunities (GHL)",
+      "aliases": ["pipeline", "opportunity", "opportunities"],
+      "category": "GoHighLevel",
+      "level": "Beginner",
+      "definition": "In GoHighLevel, a pipeline is a sequence of stages that models a sales or service process, and an opportunity is a record of one potential deal moving through those stages. Each opportunity is linked to a contact, carries a deal value, and has a status of Open, Won, Lost or Abandoned.",
+      "simple": "A pipeline is the board that shows the steps of your sales process. Each opportunity is one deal card that moves across it until it's won or lost.",
+      "analogy": "Like a kanban board where every card is a potential sale moving left to right.",
+      "whyItMatters": "Pipelines give a business visibility into where deals stall, and workflows can create opportunities and move them between stages automatically, which feeds reporting.",
+      "example": "A 'New Leads' pipeline has stages Lead Capture, Qualified, Appointment Scheduled and Proposal Sent. A workflow moves the opportunity to Appointment Scheduled when the contact books.",
+      "related": ["ghl-workflow", "smart-list", "agency-vs-sub-account"],
+      "sources": [
+        { "label": "HighLevel: Pipelines in HighLevel", "url": "https://help.gohighlevel.com/support/solutions/articles/155000001982-understanding-pipelines" },
+        { "label": "HighLevel: Understanding opportunities", "url": "https://help.gohighlevel.com/support/solutions/articles/155000001983-understanding-opportunities-in-highlevel" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "trigger-link",
+      "term": "Trigger Link (GHL)",
+      "aliases": ["trigger links"],
+      "category": "GoHighLevel",
+      "level": "Intermediate",
+      "definition": "A trigger link is a tracked GoHighLevel link used in SMS, email, Google Business Profile messages and Facebook, Instagram or WhatsApp DMs. A click redirects the contact, records the click on their activity timeline, and can start a workflow through the Trigger Link Clicked trigger.",
+      "simple": "A trigger link is a special link you send to contacts. When someone clicks it, HighLevel knows who clicked and can start an automation for them.",
+      "analogy": "Like a door with a sensor: walking through takes you to the room and also turns on the lights.",
+      "whyItMatters": "Clicks are a strong buying signal. Trigger links let you tag, notify or move contacts automatically based on that intent, which a plain URL can't do.",
+      "example": "A nurture email includes a 'See pricing' trigger link. Clicking it tags the contact 'pricing-interest' and creates a call task for the sales rep.",
+      "related": ["ghl-workflow", "trigger", "ghl-custom-fields-values"],
+      "sources": [
+        { "label": "HighLevel: Trigger links overview", "url": "https://help.gohighlevel.com/support/solutions/articles/48000981404-trigger-links-overview" },
+        { "label": "HighLevel: Overview of merge fields and custom variables", "url": "https://help.gohighlevel.com/support/solutions/articles/155000004390-overview-of-merge-fields-custom-variables" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "ghl-snapshot",
+      "term": "Snapshot (GHL)",
+      "aliases": ["snapshot", "account snapshot"],
+      "category": "GoHighLevel",
+      "level": "Intermediate",
+      "definition": "A GoHighLevel snapshot is a reusable template that captures selected configuration assets from one sub-account, such as workflows, funnels, calendars, forms, custom fields and dashboards, so they can be loaded into new or existing sub-accounts. Live data such as contacts and appointments does not transfer.",
+      "simple": "A snapshot is a copy of a fully set-up client account (automations, pages, calendars) that you can stamp into a new client's account in a few clicks.",
+      "analogy": "Like a franchise starter kit: every new location opens with the same proven setup.",
+      "whyItMatters": "Snapshots are how agencies standardise, productise and resell builds. You build once, load the same proven system for every client in a niche, then adjust custom values per client.",
+      "example": "An agency builds a dental lead-gen system in a template sub-account, saves it as a snapshot, and loads it into each new dental client's sub-account during onboarding.",
+      "related": ["agency-vs-sub-account", "ghl-custom-fields-values", "saas-mode", "ghl-workflow"],
+      "sources": [
+        { "label": "HighLevel: Snapshots overview", "url": "https://help.gohighlevel.com/support/solutions/articles/48000982511-snapshots-overview" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "funnel",
+      "term": "Funnel",
+      "aliases": ["sales funnel", "GHL funnel"],
+      "category": "GoHighLevel",
+      "level": "Beginner",
+      "definition": "A sales funnel is the staged path a prospect takes from first awareness to purchase. In GoHighLevel, a funnel is an ordered set of pages, such as opt-in, sales and thank-you, built in the funnel builder to move visitors through that path and capture them as contacts.",
+      "simple": "A funnel is a short series of web pages that guides a visitor step by step, from first interest to signing up or buying.",
+      "analogy": "Like a guided store layout that walks shoppers from the entrance display straight to the checkout.",
+      "whyItMatters": "Funnels are where leads enter the CRM. Each form submission can start workflows, create opportunities and trigger follow-up, so the funnel and the automation behind it are designed together.",
+      "example": "A three-step GHL funnel: an opt-in page offering a free guide, a sales page for a paid consultation, and a thank-you page with a booking calendar.",
+      "related": ["lead-magnet", "ghl-workflow", "ghl-pipeline", "trigger"],
+      "sources": [
+        { "label": "HighLevel: Getting started, launch a funnel", "url": "https://help.gohighlevel.com/support/solutions/articles/155000005057-getting-started-launch-a-funnel" },
+        { "label": "Wikipedia: Purchase funnel", "url": "https://en.wikipedia.org/wiki/Purchase_funnel" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "lead-magnet",
+      "term": "Lead Magnet",
+      "aliases": ["opt-in offer", "freebie"],
+      "category": "GoHighLevel",
+      "level": "Beginner",
+      "definition": "A lead magnet is a free, useful asset, such as a guide, checklist, ebook, template or quiz result, offered in exchange for a prospect's contact details, usually through an opt-in funnel.",
+      "simple": "A lead magnet is a free resource, like a PDF guide or checklist, that people get when they sign up with their email or phone number.",
+      "analogy": "Like a free sample at the market stall that also gets you onto the shop's mailing list.",
+      "whyItMatters": "It is the usual top of a lead-gen funnel. It turns cold traffic into contacts you can nurture with workflows, and its topic tells you what each lead cares about.",
+      "example": "A chiropractor offers a free 'Posture Fix' PDF. The opt-in form creates the contact, a Download File button delivers the guide, and a workflow starts a three-email nurture.",
+      "related": ["funnel", "ghl-workflow", "smart-list"],
+      "sources": [
+        { "label": "HighLevel: Download File action for buttons (lead magnets)", "url": "https://help.gohighlevel.com/support/solutions/articles/155000005540-how-to-use-the-download-file-action-for-buttons" },
+        { "label": "HighLevel: Funnel Creation Agent in Ask AI (Lead Magnet Funnel)", "url": "https://help.gohighlevel.com/support/solutions/articles/155000005521-funnel-creation-agent-in-ask-ai" },
+        { "label": "HighLevel: How chiropractors attract, capture and convert patients", "url": "https://help.gohighlevel.com/support/solutions/articles/155000005256-how-chiropractors-can-attract-capture-and-convert-more-patients-online" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    }
+  ],
+  "notes": [
+    "Fixes (9): polling-vs-push (whyItMatters), make-operation (no longer the billing unit; credits since 2025-08-27), n8n-sub-workflow (node renamed Execute Sub-workflow), lc-phone (HighLevel's own telephony, not 'a managed Twilio integration'), saas-mode (SaaS V1 Stripe vs V2 agency sub-account billing; fixed-rate AI pricing), rebilling (renamed 'Usage-based Reselling'; alias added via fix.aliases), voice-ai (adds outbound and widget; LC Phone/Twilio only), workflow-ai (now mainly the natural-language Workflow AI Builder plus premium AI actions), agent-studio (Managed Agents recommended for new agents; pay-per-use, excluded from AI Employee plans).",
+    "make-operation is NOT deprecated: operations still exist as module runs in Make. I fixed it and added a separate new term make-credit (not on the requested list, but it is a distinct concept). Lead: add make-credit to zapier-task/make-operation related lists if you want the cross-link both ways.",
+    "ghl-campaigns refers to legacy automation Campaigns (with Triggers), deprecated in favour of Workflows. It is superseded by the new ghl-workflow term. Don't confuse it with GHL's current email/SMS marketing campaigns, which I did not source and did not cover.",
+    "Agent Studio: HighLevel now recommends Managed Agents (formerly Super Agents) for new agents. Consider a ghl-managed-agents term in a later batch. Source: https://help.gohighlevel.com/support/solutions/articles/155000002166-ai-tools-in-highlevel. HighLevel's AI Studio is an app/website builder and is a different product from Agent Studio.",
+    "Product-name check, 2026-10-26: Conversation AI, Voice AI, Content AI, Workflow AI and Agent Studio all still exist under those names. 'AI Employee' is now a plan family (Growth $50, Unlimited $97 per location) rather than a single bundle. The n8n current major is 2.x (2.45). The AI Agent node is Tools Agent only since 1.82.0, and its v1 node will be removed in 3.0. Zapier Tasks and Paths are current. Zapier Agents became 'AI by Zapier' on 2026-10-06 (see automation-governance.md). Zapier now calls Zaps 'Zap workflows' in its help center; I left zapier-zap unchanged.",
+    "DMARC: RFC 7489 is obsoleted by RFC 9989 (with RFC 9990/9991 for reporting), so spf-dkim-dmarc cites RFC 9989. The existing text needed no fix.",
+    "Not fixed but worth a look: filter.whyItMatters says filters save 'operations and tasks'. That is still true (operations still drive Make credits), so I didn't count it as a fix. lc-phone related could add voice-ai.",
+    "The lead-magnet definition rests on HighLevel help articles (Download File action 'ideal for lead magnets', Ask AI 'Lead Magnet Funnel', and a 'Downloadable Guide... builds email list' example). No standards-body source exists, and Wikipedia has no Lead magnet article.",
+    "no-code-low-code uses Wikipedia (labelled), because no primary standard defines these terms.",
+    "Rebilling fix includes an 'aliases' field, per the brief's alias-via-fix rule."
+  ]
+}

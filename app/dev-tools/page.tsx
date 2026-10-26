@@ -42,7 +42,7 @@ export default function DevToolsPage() {
     <div className="container-hub py-8">
       {/* Hero */}
       <header className="mb-6">
-        <p className="eyebrow">Reference · compiled June 2026</p>
+        <p className="eyebrow">Reference · verified 26 Oct 2026</p>
         <h1 className="mt-3 bg-gradient-to-r from-gold via-gold-soft to-violet-light bg-clip-text font-display text-3xl font-extrabold uppercase tracking-tight text-transparent sm:text-5xl">
           Dev Tools Universe
         </h1>
@@ -62,9 +62,9 @@ export default function DevToolsPage() {
       {/* 01 — AI Code Editors */}
       <SectionLabel num="01" title="AI Code Editors" id="editors" />
       <p className="mb-5 mt-3 text-[0.78rem] leading-relaxed text-muted">
-        The most-used AI editors right now (June 2026). Most pros run 2–3
-        together — Cursor for daily editing, Claude Code for complex tasks, and
-        open-source agents for background automation.
+        The main AI editors and coding agents as of October 2026. A common setup
+        pairs a full AI editor for daily work with a terminal agent such as Claude
+        Code or Codex for larger, multi-step tasks.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {AI_EDITORS.map((c) => (
@@ -79,7 +79,7 @@ export default function DevToolsPage() {
         <p className="font-display text-sm font-bold text-gold">🏆 The verdict (2026)</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           {EDITOR_WINNERS.map((w) => (
-            <div key={w.label} className="rounded-lg border border-line bg-white/5 p-3">
+            <div key={w.label} className="rounded-lg border border-line bg-text/5 p-3">
               <p className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">
                 {w.label}
               </p>
@@ -93,8 +93,8 @@ export default function DevToolsPage() {
       {/* 02 — LLMs */}
       <SectionLabel num="02" title="AI Language Models (LLMs)" id="llms" />
       <p className="mb-5 mt-3 text-[0.78rem] leading-relaxed text-muted">
-        The most-used models right now (June 2026) — closed source (API) vs open
-        source (run it yourself).
+        The main models as of October 2026 — closed models (API only) vs
+        open-weight models (download the weights and run them yourself).
       </p>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {LLMS.map((c) => (
@@ -126,7 +126,7 @@ export default function DevToolsPage() {
             className="card card-hover flex items-start gap-4 p-4"
           >
             <div
-              className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/5 text-lg`}
+              className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-text/5 text-lg`}
             >
               {item.icon}
             </div>
@@ -164,7 +164,7 @@ export default function DevToolsPage() {
           {T3_STACK.map((s) => (
             <span
               key={s.name}
-              className="rounded-full border border-line bg-white/5 px-3 py-1.5 text-xs"
+              className="rounded-full border border-line bg-text/5 px-3 py-1.5 text-xs"
             >
               <span className="font-semibold text-text">{s.name}</span>
               <span className="ml-1.5 font-mono text-[0.6rem] uppercase tracking-wide text-muted">
@@ -191,7 +191,7 @@ export default function DevToolsPage() {
             {STACK_FLOW.map((step, i) => (
               <li key={step.name}>
                 <div className="flex items-center gap-3">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line bg-white/5 text-lg">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line bg-text/5 text-lg">
                     {step.icon}
                   </span>
                   <div className="min-w-0">
@@ -224,7 +224,7 @@ export default function DevToolsPage() {
       </div>
 
       <p className="mt-10 text-center font-mono text-[0.65rem] tracking-wide text-muted">
-        Compiled June 2026 · comparisons are approximate · pricing changes
+        Verified 26 Oct 2026 · comparisons are approximate · pricing changes
         frequently
       </p>
     </div>

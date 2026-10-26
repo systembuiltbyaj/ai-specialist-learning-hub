@@ -1,4 +1,5 @@
 import type { RefCard } from "@/app/lib/types";
+import { model } from "@/data/models";
 
 // ───────────── Chapter 01 · The Web Basics ─────────────
 export const WEB_BASICS: RefCard[] = [
@@ -169,13 +170,13 @@ export const CLAUDE_FLOW = [
     n: 2,
     title: "Anthropic SDK (Node / Python)",
     badge: "npm / pip",
-    desc: "The official library that makes the API easy. `npm install @anthropic-ai/sdk`, then talk to Claude in a few lines. Supports streaming so responses appear word by word.",
+    desc: "The official library that makes the API easy. `npm install @anthropic-ai/sdk`, then talk to Claude in a few lines. Supports streaming so responses appear word by word. Version 1.0 (October 2026) has breaking changes, so check older tutorials against the current docs.",
   },
   {
     n: 3,
     title: "Claude models — Haiku · Sonnet · Opus · Fable",
     badge: "choose model",
-    desc: "Haiku 4.5 = cheapest & fastest, for simple tasks. Sonnet 5 = best balance, recommended for most apps. Opus 5.5 and flagship Fable 5.1 = most powerful, for complex reasoning and long-running agents (pricier).",
+    desc: `${model("claude-haiku-5-5").name} = cheapest & fastest, for simple high-volume steps. ${model("claude-sonnet-5-5").name} = balanced price and quality for production apps. ${model("claude-opus-5-5").name} = the model Anthropic's docs recommend starting with for most work. ${model("claude-fable-5-1").name} = the flagship, for the hardest reasoning and long-running agents (pricier).`,
   },
   {
     n: 4,
@@ -187,12 +188,12 @@ export const CLAUDE_FLOW = [
     n: 5,
     title: "MCP — Model Context Protocol",
     badge: "open standard",
-    desc: "Anthropic's open standard to connect Claude to external tools — GoHighLevel, GitHub, Supabase, Slack. Gives Claude live data, not just text. The future of AI agents.",
+    desc: "An open standard, created by Anthropic and now hosted by the Linux Foundation's Agentic AI Foundation, for connecting AI apps to external tools — GoHighLevel, GitHub, Supabase, Slack. Gives Claude live data and actions, not just text.",
   },
   {
     n: 6,
     title: "Prompt engineering",
-    badge: "docs.anthropic.com",
+    badge: "platform.claude.com/docs",
     desc: "The craft of writing instructions for Claude — system prompt, user message, history. Better prompt = better output. A skill worth learning.",
   },
 ];
@@ -202,8 +203,9 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+// No temperature / top_p: API version 2026-10-21 rejects them. Steer with the prompt.
 const message = await client.messages.create({
-  model: "claude-sonnet-4-6",
+  model: "${model("claude-sonnet-5-5").apiId}",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Explain React in simple terms" }],
 });
@@ -301,7 +303,7 @@ export const STACK_MAP: StackMapGroup[] = [
       { name: "Context Window", icon: "🧠", meaning: "How much the AI can remember in one conversation.", like: "Short-term memory." },
       { name: "Token", icon: "🪙", meaning: "Small pieces of words the AI reads.", like: "LEGO blocks that make sentences." },
       { name: "Closed Source", icon: "🔒", meaning: "You can use it, but can't see how it's built (Claude, ChatGPT, Gemini).", like: "A dish you order but never get the recipe for." },
-      { name: "Open Source", icon: "🌍", meaning: "Anyone can download and run it (Llama, Qwen, DeepSeek).", like: "A recipe published in full." },
+      { name: "Open Weights", icon: "🌍", meaning: "Anyone can download the model and run it themselves (Gemma, Qwen, DeepSeek); licences vary.", like: "Taking the finished cake home — though not always the full recipe." },
       { name: "SWE-Bench", icon: "🏆", meaning: "A coding exam for AI models.", like: "A report card for AI programmers." },
     ],
   },
@@ -404,10 +406,10 @@ export const TOOL_GROUPS: ToolGroup[] = [
     label: "AI APIs",
     icon: "🤖",
     tools: [
-      { name: "Anthropic", note: "Claude — best for coding" },
-      { name: "OpenAI", note: "GPT-6 Astra — most popular" },
-      { name: "Google AI", note: "Gemini 3.1 Pro — cheap at scale" },
-      { name: "Groq", note: "Fastest inference · free tier" },
+      { name: "Anthropic", note: "Claude — strong at coding & agents" },
+      { name: "OpenAI", note: `${model("gpt-6-astra").name} (flagship) · ${model("gpt-6-1-sol").name} / ${model("gpt-6-luna").name} for cost` },
+      { name: "Google AI", note: `${model("gemini-3-8-flash").name} — cheap at scale, free tier` },
+      { name: "Groq", note: "Fast open-model inference" },
       { name: "Replicate", note: "Run open models via API" },
       { name: "Together AI", note: "Cheap open-model API" },
     ],

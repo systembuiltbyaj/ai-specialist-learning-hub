@@ -2,6 +2,7 @@
 // Pure data logic — no React. Runs client-side, so Math.random is fine here.
 
 import { DICTIONARY, type DictionaryTerm, type DictLevel } from "@/data/dictionary";
+import { TOKEN } from "@/app/lib/color";
 
 export type QuizSubject =
   | "Tech Dictionary"
@@ -21,45 +22,49 @@ export const QUIZ_SUBJECTS: {
     label: "Tech Dictionary",
     blurb: "Everything — all 7 categories.",
     icon: "📘",
-    color: "#f6cb1f",
+    color: TOKEN.violet,
   },
   {
     key: "Claude",
     label: "Claude",
     blurb: "Models, MCP, Claude Code, Skills.",
     icon: "✦",
-    color: "#ff8a3d",
+    color: TOKEN.orange,
   },
   {
     key: "GoHighLevel",
     label: "GoHighLevel",
     blurb: "LC Phone, A2P, AI Employee, workflows.",
     icon: "📶",
-    color: "#34d399",
+    color: TOKEN.green,
   },
   {
     key: "Automation Hub",
     label: "Automation Hub",
     blurb: "n8n · Make · Zapier + agentic AI.",
     icon: "⚙",
-    color: "#38bdf8",
+    color: TOKEN.blue,
   },
 ];
+
+// Deprecated terms stay in the dictionary for people searching old names, but
+// nobody should be examined on something they're told not to use.
+const QUIZZABLE = DICTIONARY.filter((t) => t.status !== "deprecated");
 
 // Map each exam subject onto dictionary categories.
 function poolFor(subject: QuizSubject): DictionaryTerm[] {
   switch (subject) {
     case "Claude":
-      return DICTIONARY.filter((t) => t.category === "Claude");
+      return QUIZZABLE.filter((t) => t.category === "Claude");
     case "GoHighLevel":
-      return DICTIONARY.filter((t) => t.category === "GoHighLevel");
+      return QUIZZABLE.filter((t) => t.category === "GoHighLevel");
     case "Automation Hub":
-      return DICTIONARY.filter(
+      return QUIZZABLE.filter(
         (t) => t.category === "Automation Platforms" || t.category === "Agentic AI",
       );
     case "Tech Dictionary":
     default:
-      return DICTIONARY;
+      return QUIZZABLE;
   }
 }
 
@@ -67,7 +72,7 @@ export function subjectCount(subject: QuizSubject, level: DictLevel | "All"): nu
   return poolFor(subject).filter((t) => level === "All" || t.level === level).length;
 }
 
-export type QuizKind = "def-to-term" | "term-to-def" | "analogy-to-term";
+export type QuizKind = "def-to-term" | "term-to-def" | "analogy-to-term" | "simple-to-term";
 
 export interface QuizQuestion {
   id: string;
@@ -78,6 +83,9 @@ export interface QuizQuestion {
   correctIndex: number;
   termId: string;
   term: string;
+  category: DictionaryTerm["category"];
+  // Shown straight after answering in practice mode, so a miss teaches something.
+  explanation: string;
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -93,6 +101,7 @@ const LABELS: Record<QuizKind, string> = {
   "def-to-term": "Which term matches this definition?",
   "term-to-def": "What does this term mean?",
   "analogy-to-term": "Which term fits this analogy?",
+  "simple-to-term": "Which term is this, in plain English?",
 };
 
 // Pick `n` distinct distractor strings, preferring the same subject pool,
@@ -106,7 +115,7 @@ function pickDistractors(
 ): string[] {
   const seen = new Set([answer.trim()]);
   const out: string[] = [];
-  for (const t of shuffle([...pool, ...DICTIONARY])) {
+  for (const t of shuffle([...pool, ...QUIZZABLE])) {
     if (t.id === answerId) continue;
     const v = valueOf(t).trim();
     if (!v || seen.has(v)) continue;
@@ -130,6 +139,10 @@ function buildQuestion(term: DictionaryTerm, kind: QuizKind, pool: DictionaryTer
     prompt = term.aliases.length ? `${term.term} (${term.aliases.join(", ")})` : term.term;
     answer = term.definition;
     valueOf = (t) => t.definition;
+  } else if (effectiveKind === "simple-to-term") {
+    prompt = term.simple;
+    answer = term.term;
+    valueOf = (t) => t.term;
   } else if (effectiveKind === "analogy-to-term") {
     prompt = term.analogy as string;
     answer = term.term;
@@ -152,7 +165,16 @@ function buildQuestion(term: DictionaryTerm, kind: QuizKind, pool: DictionaryTer
     correctIndex: options.indexOf(answer),
     termId: term.id,
     term: term.term,
+    category: term.category,
+    explanation: term.simple,
   };
+}
+
+const KINDS: QuizKind[] = ["def-to-term", "simple-to-term", "term-to-def", "analogy-to-term"];
+
+function build(pool: DictionaryTerm[], count: number): QuizQuestion[] {
+  const chosen = shuffle(pool).slice(0, Math.min(count, pool.length));
+  return chosen.map((term, i) => buildQuestion(term, KINDS[i % KINDS.length], pool));
 }
 
 export function generateQuiz(
@@ -163,16 +185,19 @@ export function generateQuiz(
   let pool = poolFor(subject).filter((t) => level === "All" || t.level === level);
   // Need at least 4 terms to make 4 options; relax the level filter if too thin.
   if (pool.length < 4) pool = poolFor(subject);
+  return build(pool, count);
+}
 
-  const chosen = shuffle(pool).slice(0, Math.min(count, pool.length));
-  const kinds: QuizKind[] = ["def-to-term", "term-to-def", "analogy-to-term"];
-
-  return chosen.map((term, i) => buildQuestion(term, kinds[i % 3], pool));
+// A quiz over specific terms — retrying mistakes, or a learner's weak spots.
+// Distractors still come from the whole dictionary, so even one term works.
+export function generateQuizFromTerms(termIds: string[], count: number): QuizQuestion[] {
+  const wanted = new Set(termIds);
+  return build(QUIZZABLE.filter((t) => wanted.has(t.id)), count);
 }
 
 export function gradeLabel(pct: number): { label: string; color: string } {
-  if (pct >= 90) return { label: "Expert 🏆", color: "#34d399" };
-  if (pct >= 75) return { label: "Sharp 🔥", color: "#f6cb1f" };
-  if (pct >= 50) return { label: "Getting there 💪", color: "#ff8a3d" };
-  return { label: "Keep studying 📚", color: "#ff6b6b" };
+  if (pct >= 90) return { label: "Expert 🏆", color: TOKEN.green };
+  if (pct >= 75) return { label: "Sharp 🔥", color: TOKEN.gold };
+  if (pct >= 50) return { label: "Getting there 💪", color: TOKEN.orange };
+  return { label: "Keep studying 📚", color: TOKEN.red };
 }

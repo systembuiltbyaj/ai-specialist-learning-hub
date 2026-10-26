@@ -8,6 +8,9 @@ import TermOfTheDay from "@/app/components/TermOfTheDay";
 import { getTools } from "@/app/lib/data";
 import { DICTIONARY } from "@/data/dictionary";
 import { ACRONYMS } from "@/data/acronyms";
+import { LESSON_ORDER, PATHS_BY_ID, lessonHref } from "@/data/paths";
+import { PROJECTS } from "@/data/projects";
+import HomeLearning from "@/app/components/HomeLearning";
 
 export default async function HomePage() {
   const tools = await getTools();
@@ -16,10 +19,20 @@ export default async function HomePage() {
   // hand, so no tile can quietly go stale.
   const stats = [
     { label: "Terms", value: DICTIONARY.length, icon: "📘", hint: "AI · agents · automation · GHL · web" },
+    { label: "Lessons", value: LESSON_ORDER.length, icon: "🎓", hint: "Beginner → advanced paths" },
+    { label: "Projects", value: PROJECTS.length, icon: "🛠", hint: "Hands-on builds, step by step" },
     { label: "Acronyms", value: ACRONYMS.length, icon: "🔤", hint: "Decoded in plain English" },
     { label: "Tools", value: tools.length, icon: "⚖️", hint: "Models, agents & platforms" },
-    { label: "Modules", value: NAV_ITEMS.length - 1, icon: "🧭", hint: "Guides & references" },
   ];
+
+  const lessons = LESSON_ORDER.map(({ pathId, lesson }) => ({
+    id: lesson.id,
+    title: lesson.title,
+    href: lessonHref(pathId, lesson.id),
+    pathTitle: PATHS_BY_ID[pathId].title,
+    minutes: lesson.minutes,
+  }));
+  const deck = DICTIONARY.filter((t) => t.status !== "deprecated").map((t) => t.id);
 
   const modules = NAV_ITEMS.filter((n) => n.href !== "/");
 
@@ -38,7 +51,7 @@ export default async function HomePage() {
             <p className="eyebrow">{BRAND.handle}</p>
             <h1 className="mt-3 text-balance font-display text-2xl font-extrabold leading-[1.15] tracking-[-0.03em] text-text sm:text-[2rem]">
               Hello! — Welcome to the{" "}
-              <span className="text-gold">AJ Learning Hub</span>
+              <span className="text-gold">{BRAND.name}</span>
             </h1>
             <div className="mt-3 max-w-md space-y-2.5 text-[0.9375rem] leading-relaxed text-muted">
               <p>
@@ -83,6 +96,15 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ───────────── Your learning ───────────── */}
+      <section>
+        <div className="mb-5">
+          <p className="eyebrow">Pick up where you left off</p>
+          <h2 className="section-title">Your Learning</h2>
+        </div>
+        <HomeLearning lessons={lessons} deck={deck} />
+      </section>
+
       {/* ───────────── Term of the Day ───────────── */}
       <section>
         <div className="mb-5">
@@ -118,7 +140,7 @@ export default async function HomePage() {
                 <NavIcon href={m.href} className="h-6 w-6" />
               </span>
               <div>
-                <h3 className="font-bold text-white group-hover:text-gold">{m.label}</h3>
+                <h3 className="font-bold text-text group-hover:text-violet-light">{m.label}</h3>
                 <p className="mt-1 text-sm text-muted">{m.description}</p>
               </div>
               <span className="ml-auto text-muted transition-transform group-hover:translate-x-1 group-hover:text-gold">
@@ -131,7 +153,7 @@ export default async function HomePage() {
 
       {/* ───────────── CTA ───────────── */}
       <section className="relative overflow-hidden rounded-2xl border border-violet-soft/30 bg-gradient-to-br from-violet/25 via-surface to-surface px-6 py-12 text-center shadow-glow">
-        <h2 className="font-display text-2xl font-extrabold uppercase tracking-tight text-white sm:text-3xl">
+        <h2 className="font-display text-2xl font-extrabold tracking-[-0.025em] text-text sm:text-3xl">
           Everything here is free to use.
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-muted">

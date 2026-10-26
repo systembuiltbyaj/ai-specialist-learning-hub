@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, IBM_Plex_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { BRAND } from "@/app/lib/constants";
+import { BRAND, THEME_STORAGE_KEY } from "@/app/lib/constants";
 import { siteUrl } from "@/app/lib/siteUrl";
 import Sidebar from "@/app/components/Sidebar";
 import Footer from "@/app/components/Footer";
 import IntroOverlay from "@/app/components/IntroOverlay";
 
-// Two voices, not three. Inter carries headwords, definitions, and chrome —
-// hierarchy comes from weight and tracking rather than a second family. IBM Plex
-// Mono is the contrast voice, reserved for metadata and annotation.
-const sans = Inter({
+// One voice for everything: Plus Jakarta Sans's rounded geometry suits the
+// soft glass theme, and hierarchy comes from weight and size. IBM Plex Mono is
+// kept for code samples only.
+const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -42,16 +42,23 @@ export const metadata: Metadata = {
   authors: [{ name: BRAND.owner }],
   openGraph: {
     title: BRAND.name,
-    description: BRAND.statement,
+    description: BRAND.tagline,
     type: "website",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: BRAND.colors.bg,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: BRAND.colors.bg },
+    { media: "(prefers-color-scheme: dark)", color: BRAND.colors.bgDark },
+  ],
   width: "device-width",
   initialScale: 1,
 };
+
+// Runs before first paint so a saved dark preference never flashes light first.
+// Static string, no user input — safe to inline (the CSP allows inline scripts).
+const THEME_SCRIPT = `try{if(localStorage.getItem("${THEME_STORAGE_KEY}")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -59,12 +66,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    // suppressHydrationWarning: the theme script below sets data-theme before React hydrates.
+    <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-screen font-sans">
         <IntroOverlay />
         <Sidebar />
         {/* Content shell — offset by the fixed sidebar on desktop */}
-        <div className="flex min-h-screen flex-col lg:pl-64">
+        <div className="flex min-h-screen flex-col lg:pl-[17rem]">
           <main className="flex-1 pb-16 pt-4">{children}</main>
           <Footer />
         </div>

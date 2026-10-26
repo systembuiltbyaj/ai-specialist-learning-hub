@@ -3,15 +3,16 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { DICTIONARY, type DictCategory } from "@/data/dictionary";
+import { TOKEN, tint } from "@/app/lib/color";
 
 const CAT_COLOR: Record<DictCategory, string> = {
-  "AI Foundations": "#7c5cfc",
-  Prompting: "#f6cb1f",
-  "Agentic AI": "#ac4bff",
-  Claude: "#ff8a3d",
-  "Automation Platforms": "#38bdf8",
-  GoHighLevel: "#34d399",
-  "Web/Dev": "#f472b6",
+  "AI Foundations": TOKEN.violet,
+  Prompting: TOKEN.gold,
+  "Agentic AI": TOKEN.purple,
+  Claude: TOKEN.orange,
+  "Automation Platforms": TOKEN.blue,
+  GoHighLevel: TOKEN.green,
+  "Web/Dev": TOKEN.pink,
 };
 
 // Map a term's category onto a Quiz Mode subject so "Quiz me" preselects it.
@@ -64,11 +65,11 @@ export default function TermOfTheDay() {
         <div className="mt-2 flex flex-wrap gap-1.5">
           <span
             className="rounded-full border px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-            style={{ color, borderColor: `${color}66`, backgroundColor: `${color}14` }}
+            style={{ color, borderColor: tint(color, 40), backgroundColor: tint(color, 8) }}
           >
             {term.category}
           </span>
-          <span className="rounded-full border border-line bg-white/[0.03] px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide text-muted">
+          <span className="rounded-full border border-line bg-text/[0.03] px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide text-muted">
             {term.level}
           </span>
         </div>

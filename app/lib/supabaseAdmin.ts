@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 // Server-only admin client (service-role key). NEVER import this into client code.
-// Used by gated API routes and the weekly cron endpoint to write Updates.
+// Bypasses RLS, so every caller must confirm isAdmin() first (see /api/resources).
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 

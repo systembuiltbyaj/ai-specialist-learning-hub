@@ -1,35 +1,6 @@
 // Shared domain types for the Learning Hub.
 // These mirror the Supabase table columns so seed data and live data are interchangeable.
-
-export type TermCategory = "Concepts" | "Tools" | "GHL-Specific" | "Automation";
-
-// ── Glossary (BrewedOps-style) ──
-export interface GlossaryTerm {
-  term: string;
-  fullName?: string;
-  category: string;
-  tagline: string; // one-line short definition
-  eli5: string; // plain-English explanation
-  analogy?: string;
-  example?: string; // "in practice"
-}
-
-export interface GlossaryCategory {
-  key: string;
-  color: string; // hex
-}
-
-export interface Term {
-  id: string;
-  name: string;
-  category: TermCategory;
-  definition: string;
-  use_cases: string[];
-  explanation: string; // beginner explanation
-  related_terms: string[];
-  examples: string[];
-  created_at?: string;
-}
+import type { Source } from "@/app/lib/content/types";
 
 export type ToolCategory =
   | "AI Models"
@@ -48,8 +19,13 @@ export interface Tool {
   use_cases: string[];
   pricing: string;
   when_to_use: string;
-  // 1–5 ratings used by the comparison matrix; keys vary per category
+  // 1–5 editorial ratings used by the comparison matrix; keys vary per category.
+  // These are judgement calls, not measurements — the UI labels them as such.
   ratings: Record<string, number>;
+  // Provenance for the factual claims (pricing, ownership, features). Optional
+  // because Supabase-backed rows predate it.
+  sources?: Source[];
+  lastVerified?: string;
   created_at?: string;
 }
 
@@ -77,53 +53,6 @@ export interface Update {
   content: string;
   ts?: number; // client-side ordering
   created_at?: string;
-}
-
-export interface McpEntry {
-  id: string;
-  name: string;
-  creator: string;
-  status: "Active" | "Testing" | "Archived";
-  use_cases: string[];
-  setup: string;
-  notes: string;
-}
-
-export interface AgentEntry {
-  id: string;
-  name: string;
-  role: string;
-  tools: string;
-  description: string;
-}
-
-export interface Skill {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-}
-
-export interface Recommendation {
-  id: string;
-  name: string;
-  kind: "MCP" | "Skill" | "Agent";
-  tag: "Most-used" | "Trending" | "Essential";
-  description: string;
-}
-
-export interface Snippet {
-  id: string;
-  title: string;
-  language: string;
-  description: string;
-  code: string;
-}
-
-export interface BestPractice {
-  id: string;
-  title: string;
-  detail: string;
 }
 
 // ── Reference guide (Dev Tools + Web Guide) ──
@@ -157,7 +86,7 @@ export interface RefTable {
 // Deliberately minimal: the index is fetched by the browser, so it carries only
 // what ranking and rendering need — never the full source data.
 export interface SearchRecord {
-  type: "term" | "acronym" | "tool";
+  type: "term" | "acronym" | "tool" | "lesson" | "project";
   title: string;
   keywords: string[];
   snippet: string;

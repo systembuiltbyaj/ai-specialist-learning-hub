@@ -16,9 +16,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// Private route (middleware-gated). This data is imported HERE, in a server
-// component, so it travels only in the gated RSC payload — never in a static
-// /_next/static chunk, which is served without authentication.
+// Public but noindex. The seed is imported here in the server component rather
+// than in the client child, so it stays out of /_next/static chunks — keep that
+// pattern if any of this content is ever made private again (CLAUDE.md Rule 1).
 export default function InterviewPage() {
   const discovery = {
     flow: DISCOVERY_FLOW,

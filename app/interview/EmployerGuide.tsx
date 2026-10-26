@@ -9,6 +9,14 @@ const ACCENT_TEXT: Record<AccentKey, string> = {
   orange: "text-neon-orange",
 };
 
+// In-page jump links — the playbook is long and is often used mid-call.
+const SECTIONS = [
+  ["flow", "1 · Flow"],
+  ["rules", "2 · Do / Don't"],
+  ["diagnose", "3 · Questions to ask"],
+  ["prescribe", "4 · What to explain"],
+] as const;
+
 // Data arrives as props from the gated server component — never imported here,
 // which would bake it into a publicly-fetchable client chunk.
 export default function EmployerGuide({ discovery }: { discovery: DiscoveryData }) {
@@ -22,6 +30,17 @@ export default function EmployerGuide({ discovery }: { discovery: DiscoveryData 
 
   return (
     <div className="space-y-8">
+      <nav
+        aria-label="Playbook sections"
+        className="sticky top-0 z-10 -mx-1 flex gap-2 overflow-x-auto bg-bg/70 px-1 py-2 backdrop-blur-md"
+      >
+        {SECTIONS.map(([id, label]) => (
+          <a key={id} href={`#${id}`} className="chip shrink-0 hover:border-gold/60">
+            {label}
+          </a>
+        ))}
+      </nav>
+
       <div className="rounded-lg border border-violet-soft/30 bg-violet/[0.06] p-4 text-sm text-text/80">
         <span className="font-semibold text-violet-light">You drive this call.</span>{" "}
         The client may not know what GHL is — your job is to ask the right
@@ -30,13 +49,13 @@ export default function EmployerGuide({ discovery }: { discovery: DiscoveryData 
       </div>
 
       {/* Conversation flow */}
-      <section>
+      <section id="flow" className="scroll-mt-16">
         <p className="eyebrow mb-1">The flow</p>
         <h2 className="section-title mb-4 normal-case">How to drive the conversation</h2>
         <ol className="space-y-2">
           {DISCOVERY_FLOW.map((s) => (
             <li key={s.n} className="card flex items-start gap-4 p-4">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold font-mono text-xs font-bold text-bg">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-violet font-mono text-xs font-bold text-white">
                 {s.n}
               </span>
               <div>
@@ -49,7 +68,7 @@ export default function EmployerGuide({ discovery }: { discovery: DiscoveryData 
       </section>
 
       {/* Do / Don't */}
-      <section className="grid gap-3 md:grid-cols-2">
+      <section id="rules" className="grid scroll-mt-16 gap-3 md:grid-cols-2">
         <div className="card accent-bar accent-teal p-5">
           <h3 className="font-bold text-gold">✓ Do</h3>
           <ul className="mt-2 space-y-1.5">
@@ -75,7 +94,7 @@ export default function EmployerGuide({ discovery }: { discovery: DiscoveryData 
       </section>
 
       {/* Questions to ask */}
-      <section>
+      <section id="diagnose" className="scroll-mt-16">
         <p className="eyebrow mb-1">Diagnose</p>
         <h2 className="section-title mb-4 normal-case">Questions to ask the client</h2>
         <div className="grid gap-3 md:grid-cols-2">
@@ -97,7 +116,7 @@ export default function EmployerGuide({ discovery }: { discovery: DiscoveryData 
       </section>
 
       {/* What to explain */}
-      <section>
+      <section id="prescribe" className="scroll-mt-16">
         <p className="eyebrow mb-1">Prescribe</p>
         <h2 className="section-title mb-1 normal-case">What to explain (GHL → outcomes)</h2>
         <p className="mb-4 text-sm text-muted">

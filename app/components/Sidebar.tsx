@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { BRAND, NAV_GROUPS } from "@/app/lib/constants";
 import NavIcon from "@/app/components/NavIcons";
 import SiteSearch from "@/app/components/SiteSearch";
+import ThemeToggle from "@/app/components/ThemeToggle";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -28,35 +29,34 @@ export default function Sidebar() {
       {/* Brand */}
       <Link
         href="/"
-        className="flex items-center gap-3 border-b border-line px-5 py-5"
+        className="flex items-center gap-3 px-5 pb-4 pt-5"
       >
-        <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-lg bg-black ring-1 ring-line">
+        <span className="h-10 w-10 shrink-0 overflow-hidden rounded-xl shadow-glow">
           <Image
-            src="/logo.png"
-            alt="AJ Learning Hub logo"
+            src="/aj-mark.png"
+            alt=""
             width={256}
             height={256}
             priority
             className="h-full w-full object-cover"
           />
         </span>
-        <span className="font-display text-base font-bold uppercase leading-tight tracking-wide text-text">
-          AJ
-          <br />
-          <span className="text-gold">Learning Hub</span>
+        <span className="font-display text-[0.95rem] font-extrabold leading-tight tracking-[-0.01em] text-text">
+          {BRAND.name}
+          <span className="block text-[0.7rem] font-medium leading-snug text-muted">{BRAND.tagline}</span>
         </span>
       </Link>
 
       {/* Search follows the reader across every page. */}
-      <div className="border-b border-line px-4 py-3">
+      <div className="px-4 pb-3">
         <SiteSearch variant="compact" />
       </div>
 
       {/* Groups */}
-      <div className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+      <div className="flex-1 space-y-5 overflow-y-auto px-3 py-3">
         {NAV_GROUPS.map((group) => (
           <div key={group.title}>
-            <p className="px-3 pb-2 font-mono text-[0.6rem] uppercase tracking-[0.25em] text-muted">
+            <p className="px-3 pb-1.5 text-xs font-semibold text-muted">
               {group.title}
             </p>
             <ul className="space-y-0.5">
@@ -66,10 +66,11 @@ export default function Sidebar() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 border-l-2 px-3 py-2 text-sm transition-colors ${
+                      aria-current={active ? "page" : undefined}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors ${
                         active
-                          ? "border-gold text-gold"
-                          : "border-transparent text-muted hover:border-line hover:text-text"
+                          ? "bg-violet/10 font-semibold text-violet-light"
+                          : "text-text/70 hover:bg-violet-soft/[0.07] hover:text-text"
                       }`}
                     >
                       <NavIcon href={item.href} className="h-[1.05rem] w-[1.05rem] shrink-0" />
@@ -84,12 +85,13 @@ export default function Sidebar() {
       </div>
 
       {/* Footer tag */}
-      <div className="border-t border-line px-5 py-4">
-        <p className="font-mono text-[0.6rem] leading-relaxed text-muted">
+      <div className="flex items-center justify-between gap-3 border-t border-line/70 px-5 py-4">
+        <p className="text-xs leading-relaxed text-muted">
           {BRAND.handle}
           <br />
           <span className="text-text/50">{BRAND.owner}</span>
         </p>
+        <ThemeToggle />
       </div>
     </nav>
   );
@@ -97,20 +99,18 @@ export default function Sidebar() {
   return (
     <>
       {/* ── Mobile top bar ── */}
-      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-line bg-bg/90 px-4 backdrop-blur-md lg:hidden">
+      <header className="glass-pane sticky top-0 z-40 flex h-14 items-center justify-between rounded-none border-x-0 border-t-0 px-4 lg:hidden">
         <Link href="/" className="flex items-center gap-2">
-          <span className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-md bg-black ring-1 ring-line">
+          <span className="h-9 w-9 shrink-0 overflow-hidden rounded-lg">
             <Image
-              src="/logo.png"
-              alt="AJ Learning Hub logo"
+              src="/aj-mark.png"
+              alt=""
               width={256}
               height={256}
               className="h-full w-full object-cover"
             />
           </span>
-          <span className="font-display text-base font-bold uppercase tracking-wide text-text">
-            AJ Learning <span className="text-gold">Hub</span>
-          </span>
+          <span className="font-display text-base font-extrabold tracking-[-0.01em] text-text">{BRAND.name}</span>
         </Link>
         <button
           aria-label="Toggle menu"
@@ -126,17 +126,17 @@ export default function Sidebar() {
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-text/30 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
-          <aside className="absolute inset-y-0 left-0 w-72 border-r border-line bg-surface">
+          <aside className="glass-pane absolute inset-y-2 left-2 w-72 rounded-3xl">
             {NavBody}
           </aside>
         </div>
       )}
 
       {/* ── Desktop fixed sidebar ── */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-line bg-surface lg:block">
+      <aside className="glass-pane fixed inset-y-3 left-3 z-30 hidden w-64 overflow-hidden rounded-3xl lg:block">
         {NavBody}
       </aside>
     </>

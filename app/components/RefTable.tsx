@@ -39,7 +39,7 @@ export default function RefTable({ table }: { table: RefTableType }) {
           {table.rows.map((row, ri) => (
             <tr
               key={ri}
-              className="border-b border-line/60 transition-colors last:border-0 hover:bg-white/[0.02]"
+              className="border-b border-line/60 transition-colors last:border-0 hover:bg-text/[0.02]"
             >
               {row.map((cell, ci) => (
                 <Cell key={ci} value={cell} isFirst={ci === 0} />

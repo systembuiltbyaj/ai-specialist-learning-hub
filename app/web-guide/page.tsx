@@ -83,7 +83,7 @@ export default function WebGuidePage() {
                   <p className="mt-1 text-[0.78rem] leading-relaxed text-text/80">{it.meaning}</p>
                   <p className="mt-0.5 text-[0.72rem] italic text-muted">🟰 Like: {it.like}</p>
                   {it.remember && (
-                    <p className="mt-1.5 inline-block rounded-md border border-line bg-white/[0.03] px-2 py-0.5 font-mono text-[0.62rem] text-text/80">
+                    <p className="mt-1.5 inline-block rounded-md border border-line bg-text/[0.03] px-2 py-0.5 font-mono text-[0.62rem] text-text/80">
                       💡 {it.remember}
                     </p>
                   )}
@@ -101,7 +101,7 @@ export default function WebGuidePage() {
           {STACK_FLOW.map((step, i) => (
             <li key={step.name}>
               <div className="flex items-center gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line bg-white/5 text-lg">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-line bg-text/5 text-lg">
                   {step.icon}
                 </span>
                 <div className="min-w-0">
@@ -192,7 +192,7 @@ export default function WebGuidePage() {
           {MIN_AI_STACK.map((s) => (
             <span
               key={s.name}
-              className="rounded-full border border-line bg-white/5 px-3 py-1.5 text-xs"
+              className="rounded-full border border-line bg-text/5 px-3 py-1.5 text-xs"
             >
               <span className="font-semibold text-text">{s.name}</span>
               <span className="ml-1.5 font-mono text-[0.6rem] uppercase tracking-wide text-muted">
@@ -207,7 +207,7 @@ export default function WebGuidePage() {
       <ol className="mt-4 space-y-2">
         {CLAUDE_FLOW.map((step) => (
           <li key={step.n} className="card flex items-start gap-4 p-4">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gold font-mono text-xs font-bold text-bg">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-violet font-mono text-xs font-bold text-white">
               {step.n}
             </span>
             <div className="min-w-0 flex-1">
@@ -258,7 +258,7 @@ export default function WebGuidePage() {
 
 function CodeBlock({ filename, code }: { filename: string; code: string }) {
   return (
-    <div className="mt-4 overflow-hidden rounded-xl border border-line bg-black/40">
+    <div className="mt-4 overflow-hidden rounded-xl code-surface border border-line">
       <div className="flex items-center gap-2 border-b border-line px-4 py-2.5">
         <span className="h-2.5 w-2.5 rounded-full bg-neon-pink" />
         <span className="h-2.5 w-2.5 rounded-full bg-gold" />

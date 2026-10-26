@@ -6,7 +6,7 @@ import QuizClient from "./QuizClient";
 export const metadata: Metadata = {
   title: "Quiz Mode",
   description:
-    "Auto-generated multiple-choice exams drawn from the Tech Dictionary — pick a subject, set difficulty and length, then get a score and a full review.",
+    "Practice or exam quizzes built from the AI & automation dictionary — instant explanations, weak-spot drills and a full review.",
 };
 
 export default function QuizPage() {
@@ -16,10 +16,10 @@ export default function QuizPage() {
         <p className="eyebrow">Check what you know</p>
         <h1 className="section-title">🧪 Quiz Mode</h1>
         <p className="mt-2 max-w-2xl text-muted">
-          Auto-generated multiple-choice exams built live from the{" "}
-          {DICTIONARY.length}-term dictionary. Pick a subject, choose difficulty and
-          length, then answer in <span className="text-gold">exam mode</span> — score
-          and a full study-review at the end.
+          Multiple-choice questions built live from the {DICTIONARY.length}-term dictionary.{" "}
+          <span className="text-gold">Practice</span> explains every answer as you go;{" "}
+          <span className="text-gold">Exam</span> saves the feedback for the end and counts toward your best score.
+          Terms you miss become your weak spots — one click to drill them.
         </p>
       </header>
 

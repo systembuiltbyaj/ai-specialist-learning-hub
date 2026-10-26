@@ -1,0 +1,646 @@
+{
+  "updates": {
+    "frontend-backend": {
+      "simple": "The frontend is the part of a website you see and click; the backend is the hidden server side that stores data and does the work.",
+      "sources": [
+        { "label": "MDN: How the web works (clients and servers)", "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works" },
+        { "label": "MDN Glossary: Server", "url": "https://developer.mozilla.org/en-US/docs/Glossary/Server" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "api-endpoint": {
+      "simple": "One specific web address an app can call to get data or make something happen, like a single service window at an office.",
+      "sources": [
+        { "label": "GitHub Docs: Getting started with the REST API", "url": "https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api" },
+        { "label": "MDN Glossary: API", "url": "https://developer.mozilla.org/en-US/docs/Glossary/API" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "http-methods": {
+      "simple": "The verb attached to every web request that tells the server what you want: read something, create it, change it, or delete it.",
+      "sources": [
+        { "label": "MDN: HTTP request methods", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods" },
+        { "label": "RFC 9110: HTTP Semantics", "url": "https://www.rfc-editor.org/rfc/rfc9110.html" },
+        { "label": "RFC 5789: PATCH Method for HTTP", "url": "https://www.rfc-editor.org/rfc/rfc5789.html" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "status-codes": {
+      "simple": "A three-digit number every web server sends back to say how a request went: worked, moved, you made a mistake, or the server broke.",
+      "sources": [
+        { "label": "MDN: HTTP response status codes", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status" },
+        { "label": "RFC 9110: HTTP Semantics (Status Codes)", "url": "https://www.rfc-editor.org/rfc/rfc9110.html" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "Three-digit numbers a server returns to indicate a request's outcome, grouped into five classes: 1xx informational, 2xx success, 3xx redirection, 4xx client error, and 5xx server error.",
+        "reason": "The old definition listed only four classes and omitted 1xx (informational). RFC 9110 section 15 and MDN both define five classes."
+      }
+    },
+    "environment-variables": {
+      "simple": "Settings and passwords kept outside your code, so the app reads them when it runs instead of having them written into the files.",
+      "sources": [
+        { "label": "Next.js: How to use environment variables", "url": "https://nextjs.org/docs/app/guides/environment-variables" },
+        { "label": "Node.js docs: process.env", "url": "https://nodejs.org/api/process.html" },
+        { "label": "Vercel Docs: Environment variables", "url": "https://vercel.com/docs/environment-variables" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "git": {
+      "simple": "A tool that keeps the full history of every change to your project's files, so you can undo mistakes and work with others safely.",
+      "sources": [
+        { "label": "Pro Git: About Version Control", "url": "https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control" },
+        { "label": "Git (official site)", "url": "https://git-scm.com/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "deployment": {
+      "simple": "Putting a finished version of your app or site online so real people can use it.",
+      "sources": [
+        { "label": "Vercel Docs: Deploying to Vercel", "url": "https://vercel.com/docs/deployments" },
+        { "label": "GitHub Docs: Continuous deployment", "url": "https://docs.github.com/en/actions/get-started/continuous-deployment" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "ci-cd": {
+      "simple": "An automatic assembly line that checks every code change and, if it passes, ships it live without anyone doing it by hand.",
+      "sources": [
+        { "label": "GitHub Docs: Continuous integration", "url": "https://docs.github.com/en/actions/get-started/continuous-integration" },
+        { "label": "GitHub Docs: Continuous deployment", "url": "https://docs.github.com/en/actions/get-started/continuous-deployment" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "nextjs": {
+      "simple": "A popular toolkit built on React for making complete websites and web apps, including the pages and the server code behind them.",
+      "sources": [
+        { "label": "Next.js Docs: What is Next.js?", "url": "https://nextjs.org/docs" },
+        { "label": "Next.js Docs: Route Handlers", "url": "https://nextjs.org/docs/app/getting-started/route-handlers" },
+        { "label": "Next.js blog: Next.js 16", "url": "https://nextjs.org/blog/next-16" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "A React framework for building full-stack web apps, with server rendering, file-based routing, and Route Handlers for server-side endpoints.",
+        "example": "You build a custom lead-capture page with a Next.js Route Handler (app/api/lead/route.ts) that posts submissions to a GHL webhook.",
+        "reason": "\"API Routes\" is the Pages Router feature. In the App Router (the default, and what Next.js 16 docs teach) server endpoints are Route Handlers in route.ts files; the Next.js docs call them \"the equivalent of API Routes inside the pages directory\"."
+      }
+    },
+    "vercel": {
+      "simple": "A hosting service that puts your website online and republishes it automatically every time you save new code to GitHub.",
+      "sources": [
+        { "label": "Vercel Docs: Deploying Git Repositories", "url": "https://vercel.com/docs/git" },
+        { "label": "Vercel Docs: Vercel Functions", "url": "https://vercel.com/docs/functions" },
+        { "label": "Vercel Docs: Vercel CDN overview", "url": "https://vercel.com/docs/cdn" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "A cloud hosting platform built around frontend frameworks like Next.js, providing automatic Git-based deployments, a global CDN, and Vercel Functions for server-side code.",
+        "reason": "Vercel's docs no longer use \"Serverless Functions\" as the product name: server code runs as Vercel Functions on Fluid compute (vercel.com/docs/functions), and the network is documented as the Vercel CDN (vercel.com/docs/cdn)."
+      }
+    },
+    "dns": {
+      "simple": "The internet's address book: it turns a name like example.com into the number of the server that hosts it.",
+      "sources": [
+        { "label": "MDN Glossary: DNS", "url": "https://developer.mozilla.org/en-US/docs/Glossary/DNS" },
+        { "label": "RFC 1034: Domain Names - Concepts and Facilities", "url": "https://www.rfc-editor.org/rfc/rfc1034.html" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "cdn": {
+      "simple": "A network of servers around the world that keeps copies of your site close to each visitor so pages load faster.",
+      "sources": [
+        { "label": "MDN Glossary: CDN", "url": "https://developer.mozilla.org/en-US/docs/Glossary/CDN" },
+        { "label": "Vercel Docs: Vercel CDN overview", "url": "https://vercel.com/docs/cdn" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "cors": {
+      "simple": "A browser safety rule: a web page can only read data from another website if that website says it's allowed.",
+      "sources": [
+        { "label": "MDN: Cross-Origin Resource Sharing (CORS)", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS" },
+        { "label": "WHATWG Fetch Standard (CORS protocol)", "url": "https://fetch.spec.whatwg.org/" },
+        { "label": "MDN Glossary: Origin", "url": "https://developer.mozilla.org/en-US/docs/Glossary/Origin" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "html": {
+      "simple": "The basic code that says what is on a web page: the headings, text, pictures, links and buttons.",
+      "sources": [
+        { "label": "MDN: HTML", "url": "https://developer.mozilla.org/en-US/docs/Web/HTML" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "css": {
+      "simple": "The code that controls how a web page looks: colours, fonts, spacing and layout.",
+      "sources": [
+        { "label": "MDN: CSS", "url": "https://developer.mozilla.org/en-US/docs/Web/CSS" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "javascript": {
+      "simple": "The programming language that makes web pages interactive, and with Node.js it also runs on servers.",
+      "sources": [
+        { "label": "MDN: JavaScript", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "tailwind-css": {
+      "simple": "A styling toolkit where you design a page by adding short ready-made class names to elements instead of writing your own style rules.",
+      "sources": [
+        { "label": "Tailwind CSS: Styling with utility classes", "url": "https://tailwindcss.com/docs/styling-with-utility-classes" },
+        { "label": "Tailwind CSS v4.0 release post", "url": "https://tailwindcss.com/blog/tailwindcss-v4" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "react": {
+      "simple": "A popular tool for building app screens out of reusable pieces, so the screen updates by itself when the data changes.",
+      "sources": [
+        { "label": "React (official site)", "url": "https://react.dev/" },
+        { "label": "React blog: The React Foundation (Feb 2026)", "url": "https://react.dev/blog/2026/02/24/the-react-foundation" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "definition": "A JavaScript library for building user interfaces out of reusable components that update automatically when data changes. Created at Meta, it is now owned by the React Foundation, hosted by the Linux Foundation.",
+        "reason": "\"by Meta\" is outdated. The React blog (2026-02-24) states that React, React Native and JSX are no longer owned by Meta and are now owned by the React Foundation, an independent foundation hosted by the Linux Foundation."
+      }
+    },
+    "nodejs": {
+      "simple": "A program that lets JavaScript run on a server or your own computer, not just inside a web browser.",
+      "sources": [
+        { "label": "Node.js Learn: Introduction to Node.js", "url": "https://nodejs.org/learn/getting-started/introduction-to-nodejs" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "api": {
+      "simple": "A set of rules that lets one piece of software ask another for data or to do something, without a person in between.",
+      "sources": [
+        { "label": "MDN Glossary: API", "url": "https://developer.mozilla.org/en-US/docs/Glossary/API" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "graphql": {
+      "simple": "A way of asking an API for exactly the pieces of data you want, in one request, instead of taking whatever a fixed address sends back.",
+      "sources": [
+        { "label": "GraphQL: Introduction to GraphQL", "url": "https://graphql.org/learn/introduction/" },
+        { "label": "GraphQL Specification", "url": "https://spec.graphql.org/" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "supabase": {
+      "simple": "A ready-made backend for your app: a database, user logins and file storage you can set up from one dashboard.",
+      "sources": [
+        { "label": "Supabase Docs", "url": "https://supabase.com/docs" },
+        { "label": "Supabase Docs: Database", "url": "https://supabase.com/docs/guides/database/overview" },
+        { "label": "Supabase Features", "url": "https://supabase.com/features" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "whyItMatters": "It's a fast way to add a real database and logins to a Next.js app (this hub stores its Resources in it).",
+        "reason": "The old text said this hub stores Updates in Supabase. The Updates feed is retired: /updates is now a read-only archive rendered from seed data into per-browser localStorage (repo CLAUDE.md, Rule 4), and only /api/resources reads and writes Supabase (app/api/resources/route.ts)."
+      }
+    },
+    "prisma": {
+      "simple": "A tool that lets a TypeScript app read and save database records with checked, auto-completed code instead of hand-written SQL.",
+      "sources": [
+        { "label": "Prisma Docs: Prisma ORM", "url": "https://www.prisma.io/docs/orm" },
+        { "label": "Prisma Docs: Introduction to Prisma Client (ORM 7)", "url": "https://www.prisma.io/docs/orm/v7/prisma-client/setup-and-configuration/introduction" }
+      ],
+      "lastVerified": "2026-10-26",
+      "fix": {
+        "example": "In Prisma ORM 7, prisma.user.findMany() fetches all users without hand-written SQL. Prisma ORM 8 (a release candidate, and what npm install prisma installs today) uses a new query shape such as db.orm.public.User.all().",
+        "reason": "The old example shows only the Prisma ORM 7 client API. Prisma's docs now default to Prisma ORM 8, which replaces schema.prisma with a contract file and changes the query shape (prisma.io/docs/orm and the 'Coming from Prisma ORM 7' page). Prisma ORM 7 remains fully supported."
+      }
+    },
+    "orm": {
+      "simple": "A translator between your app's code and the database, so you can work with data in your own programming language instead of SQL.",
+      "sources": [
+        { "label": "Prisma Data Guide: What is an ORM?", "url": "https://www.prisma.io/dataguide/types/relational/what-is-an-orm" },
+        { "label": "Prisma Docs: Prisma ORM", "url": "https://www.prisma.io/docs/orm" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "docker": {
+      "simple": "A tool that packs an app and everything it needs into a sealed box (a container) that runs the same way on any computer.",
+      "sources": [
+        { "label": "Docker Docs: What is Docker?", "url": "https://docs.docker.com/get-started/docker-overview/" },
+        { "label": "n8n Docs: Install with Docker", "url": "https://docs.n8n.io/deploy/host-n8n/install-options/install-with-docker" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "github": {
+      "simple": "A website that stores your project's code and its full history online, where teams review changes and trigger deployments.",
+      "sources": [
+        { "label": "GitHub Docs: What is GitHub?", "url": "https://docs.github.com/en/get-started/start-your-journey/what-is-github" },
+        { "label": "GitHub Docs: About repositories", "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "cloud-providers": {
+      "simple": "Amazon, Google and Microsoft rent out computers, storage and services over the internet, so you pay for what you use instead of buying servers.",
+      "sources": [
+        { "label": "AWS: What is cloud computing?", "url": "https://aws.amazon.com/what-is-cloud-computing/" },
+        { "label": "Google Cloud: What is cloud computing?", "url": "https://cloud.google.com/learn/what-is-cloud-computing" },
+        { "label": "Microsoft Azure: What is cloud computing?", "url": "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-cloud-computing" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "cli": {
+      "simple": "A text window where you type commands to control your computer or a tool, instead of clicking buttons.",
+      "sources": [
+        { "label": "MDN: Command line crash course", "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Command_line" },
+        { "label": "Vercel CLI: vercel deploy", "url": "https://vercel.com/docs/cli/deploy" }
+      ],
+      "lastVerified": "2026-10-26"
+    },
+    "ide-extension": {
+      "simple": "An add-on you install into a code editor like VS Code to give it new abilities, such as an AI assistant.",
+      "sources": [
+        { "label": "VS Code Docs: Extension Marketplace", "url": "https://code.visualstudio.com/docs/configure/extensions/extension-marketplace" },
+        { "label": "GitHub: cline/cline", "url": "https://github.com/cline/cline" },
+        { "label": "Continue Docs: What is Continue?", "url": "https://docs.continue.dev/" }
+      ],
+      "lastVerified": "2026-10-26"
+    }
+  },
+  "newTerms": [
+    {
+      "id": "git-repository",
+      "term": "Git Repository",
+      "aliases": ["repo", "repository"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A project folder tracked by Git, holding the files plus the full history of commits and branches; it can live on your machine and be mirrored to a host like GitHub.",
+      "simple": "Your project's folder plus its complete change history, kept by Git so nothing is ever lost.",
+      "analogy": "Like a filing cabinet that keeps every past draft of every document, labelled and dated.",
+      "whyItMatters": "Hosting platforms like Vercel deploy from a repository, so the repo is where your app's code, history and deploy trigger all live.",
+      "example": "You run git init in your Next.js project, push it to a private GitHub repo, and connect that repo to Vercel so each push deploys.",
+      "related": ["git", "github", "git-commit", "pull-request"],
+      "sources": [
+        { "label": "Pro Git: Getting a Git Repository", "url": "https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository" },
+        { "label": "GitHub Docs: About repositories", "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories" },
+        { "label": "MDN Glossary: Repo", "url": "https://developer.mozilla.org/en-US/docs/Glossary/Repo" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "git-commit",
+      "term": "Git Commit",
+      "aliases": ["commit"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A saved snapshot of the staged changes in a Git repository, recorded with a message, an author and a pointer to its parent commit.",
+      "simple": "A save point for your code, with a short note saying what changed and why.",
+      "analogy": "Like a dated, signed entry in a logbook that records exactly what changed.",
+      "whyItMatters": "Small, well-described commits let you find which change broke something and roll back to a known-good version.",
+      "example": "After fixing a webhook handler, you run git add and git commit -m \"Retry GHL webhook on 429\" before pushing.",
+      "related": ["git", "git-repository", "pull-request"],
+      "sources": [
+        { "label": "Git docs: git-commit", "url": "https://git-scm.com/docs/git-commit" },
+        { "label": "Pro Git: Recording Changes to the Repository", "url": "https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "pull-request",
+      "term": "Pull Request",
+      "aliases": ["PR"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A proposal to merge changes from one branch into another, used on GitHub to review, discuss and run checks on code before it is merged.",
+      "simple": "A request that says \"here are my changes, please check them before they go into the main project.\"",
+      "analogy": "Like submitting a draft to an editor, who comments and approves it before it's printed.",
+      "whyItMatters": "Pull requests are where code review and automated tests happen, so mistakes are caught before they reach production.",
+      "example": "You open a PR for a new pricing page; GitHub Actions runs the tests and Vercel posts a preview URL so the client can approve it before merge.",
+      "related": ["github", "git-commit", "ci-cd", "vercel"],
+      "sources": [
+        { "label": "GitHub Docs: Pull requests", "url": "https://docs.github.com/en/pull-requests/reference/pull-requests" },
+        { "label": "Vercel Docs: Environments (preview)", "url": "https://vercel.com/docs/deployments/environments" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "localhost",
+      "term": "Localhost",
+      "aliases": ["127.0.0.1"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "The reserved hostname for your own computer; requests to localhost resolve to the loopback address (127.0.0.1 or ::1) and never leave the machine.",
+      "simple": "The web address for your own computer, used to try an app privately before it goes online.",
+      "analogy": "Like rehearsing a speech in your living room before giving it on stage.",
+      "whyItMatters": "You develop and test locally first; but outside services such as webhooks from GHL or Stripe cannot reach localhost without a tunnel.",
+      "example": "Running npm run dev starts your Next.js app at http://localhost:3000, where only you can see it.",
+      "related": ["deployment", "nextjs", "domain-name"],
+      "sources": [
+        { "label": "RFC 6761: Special-Use Domain Names (localhost)", "url": "https://www.rfc-editor.org/rfc/rfc6761.html" },
+        { "label": "Next.js Docs: Installation", "url": "https://nextjs.org/docs/app/getting-started/installation" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "framework",
+      "term": "Framework",
+      "aliases": ["software framework"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A library that also imposes a structure: it decides how an app is organised and calls your code at defined points, rather than you calling it.",
+      "simple": "A ready-made structure for building an app, with the rules and plumbing already decided so you fill in your parts.",
+      "analogy": "Like a house frame already standing; you choose the rooms and finishes, not where the walls carry weight.",
+      "whyItMatters": "Picking a framework like Next.js decides routing, rendering and project layout for you, which speeds up building and makes projects easier to hand over.",
+      "example": "Next.js is a framework: you put a file at app/pricing/page.tsx and it becomes the /pricing page because the framework's rules say so.",
+      "related": ["library", "nextjs", "react"],
+      "sources": [
+        { "label": "MDN: Introduction to client-side frameworks", "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Frameworks_libraries/Introduction" },
+        { "label": "Next.js Docs: What is Next.js?", "url": "https://nextjs.org/docs" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "library",
+      "term": "Library",
+      "aliases": ["software library", "package"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A collection of reusable code you call from your own program to do a specific job, while your code stays in control of the overall structure.",
+      "simple": "Pre-written code you borrow for a specific job, so you don't have to write it yourself.",
+      "analogy": "Like a toolbox you reach into when you need a tool, versus a framework, which is the workshop layout itself.",
+      "whyItMatters": "Using a well-maintained library (for validation, dates, API clients) saves time and avoids bugs, but each one is a dependency you must keep updated.",
+      "example": "React describes itself as \"the library for web and native user interfaces\"; you call it to render components, and Next.js is the framework around it.",
+      "related": ["framework", "react", "nodejs"],
+      "sources": [
+        { "label": "MDN: Introduction to client-side frameworks", "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Frameworks_libraries/Introduction" },
+        { "label": "React (official site)", "url": "https://react.dev/" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "ui-component",
+      "term": "UI Component",
+      "aliases": ["component"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A self-contained, reusable piece of user interface (markup, styling and behaviour) that can be composed with others to build screens, such as a React component or a Web Component.",
+      "simple": "A reusable building block of a screen, like a button or a pricing card, made once and used everywhere.",
+      "analogy": "Like a LEGO brick: one design, snapped into many builds.",
+      "whyItMatters": "Components keep a UI consistent and let you fix or restyle something once instead of on every page.",
+      "example": "A <LeadForm /> React component is reused on three funnel pages, each passing a different GHL webhook target as a prop.",
+      "related": ["react", "html", "css", "library"],
+      "sources": [
+        { "label": "React: Your First Component", "url": "https://react.dev/learn/your-first-component" },
+        { "label": "MDN: Web Components", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_components" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "typescript",
+      "term": "TypeScript",
+      "aliases": ["TS"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "A superset of JavaScript that adds static types, checked before the code runs; the type annotations are removed so the output is plain JavaScript.",
+      "simple": "JavaScript with labels that say what kind of data each thing holds, so many mistakes are caught before the app runs.",
+      "analogy": "Like a spell-checker for code that flags a wrong kind of value before you hit send.",
+      "whyItMatters": "Types catch bugs like passing a string where a number is expected, which matters most when your code handles API payloads and database records.",
+      "example": "You type a Contact interface for GHL webhook payloads; the editor warns you when your code reads contact.phoneNumber but the field is actually phone.",
+      "related": ["javascript", "nodejs", "nextjs"],
+      "sources": [
+        { "label": "TypeScript Handbook: TypeScript for the New Programmer", "url": "https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html" },
+        { "label": "MDN Glossary: TypeScript", "url": "https://developer.mozilla.org/en-US/docs/Glossary/TypeScript" },
+        { "label": "Node.js docs: Modules: TypeScript", "url": "https://nodejs.org/api/typescript.html" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "http-https",
+      "term": "HTTP vs HTTPS",
+      "aliases": ["HTTP", "HTTPS", "TLS", "SSL"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "HTTP is the protocol browsers and servers use to exchange requests and responses; HTTPS is HTTP sent over an encrypted TLS connection, which also proves the server's identity with a certificate.",
+      "simple": "HTTP is how websites send data; HTTPS is the same thing in a locked envelope so nobody in between can read or change it.",
+      "analogy": "Like a postcard (HTTP) versus a sealed, tamper-evident letter (HTTPS).",
+      "whyItMatters": "Forms, logins, payments and webhooks must use HTTPS; browsers flag plain HTTP pages and many APIs refuse non-HTTPS webhook URLs.",
+      "example": "When you connect a custom domain to a Vercel or GHL funnel, the platform issues a TLS certificate so the page loads over https://.",
+      "related": ["http-methods", "status-codes", "domain-name", "http-cookie"],
+      "sources": [
+        { "label": "MDN: Overview of HTTP", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview" },
+        { "label": "MDN Glossary: HTTPS", "url": "https://developer.mozilla.org/en-US/docs/Glossary/HTTPS" },
+        { "label": "RFC 9846: TLS Protocol Version 1.3", "url": "https://www.rfc-editor.org/rfc/rfc9846.html" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "domain-name",
+      "term": "Domain Name",
+      "aliases": ["domain"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A human-readable address on the internet made of labels separated by dots (such as app.example.com), registered through a registrar and mapped to servers through DNS.",
+      "simple": "The name people type to reach your website, like example.com, instead of a string of numbers.",
+      "analogy": "Like a business name on a sign, while DNS is the directory that says where the building actually is.",
+      "whyItMatters": "Clients want funnels, apps and email on their own branded domain, and every one of those needs DNS records pointing the domain at the right service.",
+      "example": "You point book.clientco.com at a GHL calendar page and app.clientco.com at a Vercel project, each with its own DNS record.",
+      "related": ["dns", "http-https", "deployment"],
+      "sources": [
+        { "label": "MDN Glossary: Domain name", "url": "https://developer.mozilla.org/en-US/docs/Glossary/Domain_name" },
+        { "label": "Vercel Docs: Domains overview", "url": "https://vercel.com/docs/domains" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "vps",
+      "term": "VPS (Virtual Private Server)",
+      "aliases": ["virtual private server"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "A virtual machine rented from a hosting provider: it shares physical hardware with other customers but gives you your own operating system, resources and full administrative control.",
+      "simple": "Your own private computer in a data centre that you rent by the month and control fully, without buying hardware.",
+      "analogy": "Like renting an apartment in a building: your own locked space and keys, but shared walls and plumbing.",
+      "whyItMatters": "A VPS is the usual home for self-hosted tools such as n8n, where you need an always-on server but also become responsible for updates, backups and security.",
+      "example": "You run self-hosted n8n in Docker on a small VPS, behind HTTPS on a subdomain, so GHL webhooks can reach it around the clock.",
+      "related": ["docker", "cloud-providers", "deployment"],
+      "sources": [
+        { "label": "AWS: What is a VPS?", "url": "https://aws.amazon.com/what-is/vps/" },
+        { "label": "Wikipedia: Virtual private server", "url": "https://en.wikipedia.org/wiki/Virtual_private_server" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "http-cookie",
+      "term": "HTTP Cookie",
+      "aliases": ["cookie", "browser cookie"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "A small piece of data a server asks the browser to store (via the Set-Cookie header) and send back on later requests, commonly used for sessions, preferences and tracking.",
+      "simple": "A small note a website leaves in your browser so it remembers you, for example that you're logged in.",
+      "analogy": "Like a coat-check ticket: the server hands it over, and you show it again to get recognised.",
+      "whyItMatters": "Logins usually live in cookies, so attributes like HttpOnly, Secure and SameSite decide whether a session can be stolen or misused.",
+      "example": "After a passcode check, a Next.js Route Handler sets an HttpOnly session cookie, and server code reads it later with await cookies().",
+      "related": ["authentication-vs-authorization", "jwt", "http-https"],
+      "sources": [
+        { "label": "MDN: Using HTTP cookies", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies" },
+        { "label": "RFC 6265: HTTP State Management Mechanism", "url": "https://www.rfc-editor.org/rfc/rfc6265.html" },
+        { "label": "Next.js Docs: cookies", "url": "https://nextjs.org/docs/app/api-reference/functions/cookies" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "authentication-vs-authorization",
+      "term": "Authentication vs Authorization",
+      "aliases": ["auth", "authn", "authz"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "Authentication verifies who a user or system is; authorization decides what that verified identity is allowed to do or access.",
+      "simple": "Authentication checks who you are; authorization checks what you're allowed to do.",
+      "analogy": "Showing ID at the hotel desk is authentication; your key card opening only your room is authorization.",
+      "whyItMatters": "Most data leaks in apps are authorization gaps: a user is logged in correctly but can still read another customer's records.",
+      "example": "Supabase Auth signs a client in (authentication), and a Row Level Security policy lets them read only rows where client_id matches their own (authorization).",
+      "related": ["oauth", "api-key", "jwt", "http-cookie"],
+      "sources": [
+        { "label": "OWASP Authentication Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" },
+        { "label": "OWASP Authorization Cheat Sheet", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html" },
+        { "label": "Supabase Docs: Auth", "url": "https://supabase.com/docs/guides/auth" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "jwt",
+      "term": "JWT (JSON Web Token)",
+      "aliases": ["JSON Web Token"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "A compact, URL-safe string that carries claims (such as user id and expiry) as JSON, signed so the receiver can check it hasn't been altered; it has a header, a payload and a signature.",
+      "simple": "A signed digital pass that says who you are and when it expires, which servers can check without looking you up.",
+      "analogy": "Like a wristband at an event: staff can see it's genuine and still valid without calling the box office.",
+      "whyItMatters": "Many auth systems, including Supabase, issue JWTs as access tokens; the payload is only encoded, not encrypted, so never put secrets in it.",
+      "example": "Your Next.js app sends the signed-in user's Supabase access token (a JWT) with each request, and Postgres policies read the user id from it.",
+      "related": ["authentication-vs-authorization", "json", "oauth"],
+      "sources": [
+        { "label": "RFC 7519: JSON Web Token (JWT)", "url": "https://www.rfc-editor.org/rfc/rfc7519.html" },
+        { "label": "Supabase Docs: JSON Web Token (JWT)", "url": "https://supabase.com/docs/guides/auth/jwts" },
+        { "label": "jwt.io: Introduction to JSON Web Tokens", "url": "https://www.jwt.io/introduction" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "caching",
+      "term": "Caching",
+      "aliases": ["cache"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "Storing a copy of a response or computed result so later requests can reuse it instead of fetching or recomputing it, for as long as the copy is considered fresh.",
+      "simple": "Keeping a ready copy of something so the next person gets it instantly instead of waiting for it to be made again.",
+      "analogy": "Like keeping popular items on the counter instead of fetching them from the stockroom every time.",
+      "whyItMatters": "Caching makes pages fast and cuts API and database costs, but stale caches are a common cause of \"I updated it and nothing changed\" bugs.",
+      "example": "A Next.js page caches a pricing list fetched from Supabase and revalidates it when an admin edits a price, rather than querying on every visit.",
+      "related": ["cdn", "nextjs", "rate-limit"],
+      "sources": [
+        { "label": "MDN: HTTP caching", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching" },
+        { "label": "RFC 9111: HTTP Caching", "url": "https://www.rfc-editor.org/rfc/rfc9111.html" },
+        { "label": "Next.js Docs: Caching", "url": "https://nextjs.org/docs/app/getting-started/caching" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "database",
+      "term": "Database",
+      "aliases": ["DB", "DBMS"],
+      "category": "Web/Dev",
+      "level": "Beginner",
+      "definition": "An organised store of data managed by a database management system that lets applications save, query and update records reliably, often by many users at once.",
+      "simple": "An organised digital filing system where an app keeps its information, like customers, orders and bookings.",
+      "analogy": "Like a well-indexed filing cabinet that many staff can use at once without losing pages.",
+      "whyItMatters": "A database is the source of truth for an app; deciding what lives there versus in the CRM shapes every integration you build.",
+      "example": "A client portal stores each onboarding submission in a Supabase Postgres table and syncs only the status back to GHL.",
+      "related": ["sql-vs-nosql", "database-schema", "supabase", "orm"],
+      "sources": [
+        { "label": "MDN Glossary: Database", "url": "https://developer.mozilla.org/en-US/docs/Glossary/Database" },
+        { "label": "PostgreSQL Docs: What Is PostgreSQL?", "url": "https://www.postgresql.org/docs/current/intro-whatis.html" },
+        { "label": "Supabase Docs: Database", "url": "https://supabase.com/docs/guides/database/overview" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "sql-vs-nosql",
+      "term": "SQL vs NoSQL",
+      "aliases": ["SQL", "NoSQL", "relational database"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "SQL (relational) databases store data in tables with fixed columns and relationships, queried with the SQL language; NoSQL databases use other models such as documents, key-value pairs, wide columns or graphs, usually with more flexible schemas.",
+      "simple": "SQL databases are like strict spreadsheets with linked tabs; NoSQL databases store data more freely, like folders of documents.",
+      "analogy": "Like a ledger with ruled columns (SQL) versus a box of labelled index cards that can each hold different details (NoSQL).",
+      "whyItMatters": "Most business apps with customers, orders and permissions fit a relational database like Postgres; NoSQL suits very flexible or very high-volume data shapes.",
+      "example": "You keep clients, invoices and payments in Postgres tables joined by client_id, and use a key-value store only for short-lived session data.",
+      "related": ["database", "database-schema", "supabase"],
+      "sources": [
+        { "label": "MDN Glossary: SQL", "url": "https://developer.mozilla.org/en-US/docs/Glossary/SQL" },
+        { "label": "MongoDB: NoSQL databases explained", "url": "https://www.mongodb.com/resources/basics/databases/nosql-explained" },
+        { "label": "AWS: What is a NoSQL database?", "url": "https://aws.amazon.com/nosql/" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "database-schema",
+      "term": "Database Schema",
+      "aliases": ["schema", "data model"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "The defined structure of a database: its tables, columns, data types, keys and relationships. In PostgreSQL, \"schema\" also names a namespace that groups tables, such as public.",
+      "simple": "The blueprint of a database: which tables exist, what each column holds, and how they connect.",
+      "analogy": "Like the column headings and rules of a form, decided before anyone fills it in.",
+      "whyItMatters": "A clear schema with constraints stops bad data at the door, and every API, automation and report depends on it staying predictable.",
+      "example": "Your schema has a leads table with a unique email column and a foreign key to campaigns, so a duplicate form submission is rejected by the database.",
+      "related": ["database", "database-migration", "orm", "prisma"],
+      "sources": [
+        { "label": "PostgreSQL Docs: Schemas", "url": "https://www.postgresql.org/docs/current/ddl-schemas.html" },
+        { "label": "Prisma Docs: Prisma schema (ORM 7)", "url": "https://www.prisma.io/docs/orm/v7/prisma-schema/overview" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    },
+    {
+      "id": "database-migration",
+      "term": "Database Migration",
+      "aliases": ["migration", "schema migration"],
+      "category": "Web/Dev",
+      "level": "Intermediate",
+      "definition": "A versioned script that changes a database schema (for example adding a table or column), kept in source control and applied in order so every environment ends up with the same structure.",
+      "simple": "A saved, step-by-step instruction for changing the database's structure, so the change can be repeated safely everywhere.",
+      "analogy": "Like numbered renovation work orders: each one is applied once, in order, on every copy of the building.",
+      "whyItMatters": "Migrations let you change a live database without hand-editing production, and give you a reviewable history of every structural change.",
+      "example": "You run supabase migration new add_lead_source, write the ALTER TABLE in the generated SQL file, test it locally, then apply it to production from CI.",
+      "related": ["database-schema", "database", "supabase", "prisma", "ci-cd"],
+      "sources": [
+        { "label": "Supabase Docs: Database migrations", "url": "https://supabase.com/docs/guides/deployment/database-migrations" },
+        { "label": "Prisma Docs: Getting started with Prisma Migrate (ORM 7)", "url": "https://www.prisma.io/docs/orm/v7/prisma-migrate/getting-started" }
+      ],
+      "lastVerified": "2026-10-26",
+      "status": "current"
+    }
+  ],
+  "notes": [
+    "All 29 Web/Dev terms backfilled; all 19 requested new terms written. No duplicates found: none of the new ids or aliases collide with existing ids/aliases (frontend-backend left alone as instructed).",
+    "Fixes (6): status-codes (missing 1xx class), nextjs (API Routes -> Route Handlers in the App Router), vercel (Serverless Functions -> Vercel Functions / Vercel CDN naming), react (now owned by the React Foundation, not Meta, since 2026-02-24), supabase (hub no longer stores Updates in Supabase; only Resources), prisma (example shows only the Prisma ORM 7 API).",
+    "Prisma: docs now default to Prisma ORM 8, labelled a release candidate yet installed by default via npm install prisma. It replaces schema.prisma with contract.prisma and changes the query API. Prisma ORM 7 is still fully supported, so database-schema and database-migration cite the v7 pages. Re-check once v8 goes final.",
+    "Extra aliases on new terms beyond the brief: repository, 127.0.0.1, software framework, software library, package, TS, HTTP, HTTPS, TLS, SSL, domain, browser cookie, DB, DBMS, relational database, data model, schema migration. Drop any you don't want. Note: 'schema' alias on database-schema could be confused with JSON Schema (structured-output); consider whether search should rank it there.",
+    "http-https cites RFC 9846 (TLS 1.3), not RFC 8446: the RFC Editor lists 8446 as obsoleted by 9846. RFC 7519 (JWT) is current but updated by RFC 8725 (JWT Best Current Practices).",
+    "vps has no standards or vendor-neutral primary source; it cites AWS's explainer plus Wikipedia (labelled).",
+    "The hub itself runs Tailwind 3.4 and React 18 (package.json), while the tailwind-css sources cover v4. The existing entry text holds for both versions, so no fix.",
+    "MDN has no glossary pages for Front-end, Back-end, Endpoint, Framework, Library, Localhost or NoSQL (all 404). Other MDN or vendor pages were used instead."
+  ]
+}

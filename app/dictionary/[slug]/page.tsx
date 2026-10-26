@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DICTIONARY_BY_ID } from "@/data/dictionary";
 import { TERM_IDS } from "@/app/lib/reference";
+import { formatIsoDate } from "@/app/lib/content/format";
+import BookmarkButton from "@/app/components/BookmarkButton";
+import { BRAND } from "@/app/lib/constants";
 
 // Every term is known at build time, so an unknown slug is a 404 rather than an
 // attempt to render something that cannot exist.
@@ -26,7 +29,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description,
     keywords: [term.term, ...term.aliases, term.category],
     openGraph: {
-      title: `${term.term} — AJ Learning Hub`,
+      title: `${term.term} — ${BRAND.name}`,
       description,
       type: "article",
     },
@@ -40,6 +43,7 @@ export default async function TermPage({ params }: Params) {
   if (!term) notFound();
 
   const related = term.related.map((id) => DICTIONARY_BY_ID[id]).filter(Boolean);
+  const successor = term.supersededBy ? DICTIONARY_BY_ID[term.supersededBy] : undefined;
 
   return (
     <article className="container-hub max-w-3xl py-10">
@@ -56,17 +60,54 @@ export default async function TermPage({ params }: Params) {
           <p className="entry-meta shrink-0">
             {term.category} <span className="text-line">·</span>{" "}
             <span className="entry-meta-strong">{term.level}</span>
+            {term.status === "emerging" && (
+              <>
+                {" "}
+                <span className="text-line">·</span> <span className="text-gold">Emerging</span>
+              </>
+            )}
           </p>
         </div>
         {term.aliases.length > 0 && (
           <p className="entry-variants">also {term.aliases.join(" · ")}</p>
         )}
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <BookmarkButton kind="term" id={term.id} label={term.term} />
+          <Link href="/flashcards" className="rounded-md border border-line px-2 py-1 text-xs text-muted transition-colors hover:border-gold/50 hover:text-gold">
+            Practise with flashcards →
+          </Link>
+        </div>
       </header>
+
+      {term.status === "deprecated" && (
+        <section className="entry-notice" role="note">
+          <h2 className="entry-note-label">Deprecated</h2>
+          <p className="entry-note-body">
+            {term.deprecationNote}
+            {successor && (
+              <>
+                {term.deprecationNote ? " " : ""}Use{" "}
+                <Link href={`/dictionary/${successor.id}`} className="entry-xref-link">
+                  {successor.term}
+                </Link>{" "}
+                instead.
+              </>
+            )}
+          </p>
+        </section>
+      )}
 
       {/* ── Definition ───────────────────────────────────── */}
       <p className="entry-body mt-6 text-[1.1875rem] sm:text-[1.25rem]">{term.definition}</p>
 
       {/* ── Annotation ───────────────────────────────────── */}
+      {term.simple && (
+        <section className="entry-note">
+          <h2 className="entry-note-label">In plain English</h2>
+          <p className="entry-note-body">{term.simple}</p>
+        </section>
+      )}
+
       {term.analogy && (
         <section className="entry-note">
           <h2 className="entry-note-label">Analogy</h2>
@@ -110,10 +151,31 @@ export default async function TermPage({ params }: Params) {
         </section>
       )}
 
-      <p className="entry-meta mt-12 border-t border-line/70 pt-5">
+      {/* ── Provenance ───────────────────────────────────── */}
+      {term.sources && term.sources.length > 0 && (
+        <section className="mt-10 border-t border-line pt-5">
+          <h2 className="entry-meta">Sources</h2>
+          <ul className="entry-xref flex-col items-start">
+            {term.sources.map((source) => (
+              <li key={source.url}>
+                <a href={source.url} target="_blank" rel="noopener noreferrer" className="entry-xref-link">
+                  {source.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <p className="entry-meta mt-12 flex flex-wrap justify-between gap-3 border-t border-line/70 pt-5">
         <Link href="/dictionary" className="transition-colors hover:text-gold">
           Browse all terms →
         </Link>
+        {term.lastVerified && (
+          <span>
+            Last verified <time dateTime={term.lastVerified}>{formatIsoDate(term.lastVerified)}</time>
+          </span>
+        )}
       </p>
     </article>
   );

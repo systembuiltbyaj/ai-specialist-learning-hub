@@ -9,6 +9,8 @@ const TYPE_LABEL: Record<SearchRecord["type"], string> = {
   term: "Term",
   acronym: "Acronym",
   tool: "Tool",
+  lesson: "Lesson",
+  project: "Project",
 };
 
 export default function SiteSearch({ variant = "hero" }: { variant?: "hero" | "compact" }) {

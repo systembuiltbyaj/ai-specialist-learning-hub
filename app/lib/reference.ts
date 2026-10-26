@@ -12,6 +12,11 @@ export function slugify(value: string): string {
 // either as a term id (RAG, LLM, OAuth) or as a registered alias (CoT, HITL).
 // Those acronyms get no page of their own; they redirect into the richer
 // dictionary entry so the two never compete for the same search query.
+// Same letters, unrelated concepts: these acronyms keep their own page even
+// though their slug matches a term id. ReAct (Reasoning + Acting, an agent
+// pattern) is not React (the UI library).
+export const HOMONYM_SLUGS = new Set(["react"]);
+
 function buildOverlapMap(): Record<string, string> {
   const aliasToId = new Map<string, string>();
   for (const term of DICTIONARY as DictionaryTerm[]) {
@@ -23,6 +28,7 @@ function buildOverlapMap(): Record<string, string> {
   const map: Record<string, string> = {};
   for (const entry of ACRONYMS as Acronym[]) {
     const slug = slugify(entry.acronym);
+    if (HOMONYM_SLUGS.has(slug)) continue;
     if (DICTIONARY_BY_ID[slug]) {
       map[slug] = slug;
       continue;

@@ -12,8 +12,8 @@ export default function Dashboard({ stats }: { stats: Stat[] }) {
         <div key={s.label} className="card card-hover p-5">
           <div className="mb-2 text-2xl">{s.icon}</div>
           <div className="text-3xl font-black text-gold">{s.value}</div>
-          <div className="mt-1 text-sm font-medium text-white">{s.label}</div>
-          {s.hint && <div className="mt-0.5 text-xs text-white/45">{s.hint}</div>}
+          <div className="mt-1 text-sm font-medium text-text">{s.label}</div>
+          {s.hint && <div className="mt-0.5 text-xs text-text/45">{s.hint}</div>}
         </div>
       ))}
     </div>

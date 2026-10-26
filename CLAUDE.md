@@ -15,25 +15,41 @@ you will edit a file that no page reads.
 
 | Store | Holds | Read by |
 |---|---|---|
-| **`data/`** (repo root) | `dictionary.ts` · `acronyms.ts` | `/dictionary`, `/dictionary/[slug]`, `/acronyms`, `/acronyms/[slug]`, `/quiz`, Term-of-the-Day, home stats, search index |
-| **`app/lib/seed/`** | everything else — tools, hubs, web guide, dev tools, interview, presentation, discovery, updates archive | the matching route |
+| **`data/`** (repo root) | `dictionary.ts` · `acronyms.ts` · `models.ts` · `paths.ts` (+ `lessons/`) · `projects.ts` (+ `projects/`) | `/dictionary`, `/dictionary/[slug]`, `/acronyms`, `/acronyms/[slug]`, `/quiz`, Term-of-the-Day, home stats, search index; `models.ts` feeds tools, dev tools, web guide and hub pages |
+| **`app/lib/seed/`** | everything else — tools, hubs (Claude Hub renders `arsenal.ts` + `arsenal-skills.ts`), web guide, dev tools, interview, discovery, updates archive | the matching route |
 
 **`data/dictionary.ts` is the canonical dictionary**, exported as `DICTIONARY` /
 `DICTIONARY_BY_ID`. (No count written here — see Conventions. The live count
 renders on the home page.)
 
-Two older stores still exist and are **unreachable** — nothing imports them.
-Their counts are given because they are frozen, and the gap is the point:
+Every entry is validated by `app/lib/content/schema.ts` (zod) in
+`tests/content.test.ts`. **A term ships only with provenance**: `simple`,
+`sources` (https, at least one) and `lastVerified` are required; a bad date, a
+broken `related` id, or a deprecated term with no successor or note fails the
+test run. `status` is `current` (omitted), `emerging` or `deprecated` —
+deprecated terms stay findable but are flagged in the list and search, and are
+excluded from quizzes.
 
-- `app/lib/seed/terms.ts` — 76 entries; reachable only via `getTerms()`, which has no callers
-- `app/lib/seed/glossary.ts` — 63 entries; reachable only via `GlossaryClient.tsx`, which nothing imports
+**`data/models.ts` is the model registry** — the one place a model name,
+version, price or lifecycle status is written. Seed files reference it via
+`model("<id>").name` / `.pricingNote` instead of hardcoding names; `model()`
+throws on an unknown id, so a removed model fails the build rather than
+rendering "undefined". Prices are dated notes with a source, never bare numbers.
 
-They are a stalled migration, pending a content diff before deletion. Until that
-happens: **do not edit them, and do not quote them as current.**
+Never write a fact from memory. Research registers with an official URL per
+claim live in `docs/research/<yyyy-mm>/`; reuse and extend them.
+
+Dead stores were content-diffed and deleted on 2026-10-26: `seed/terms.ts`,
+`seed/glossary.ts` and `seed/claude.ts` (never imported). Do not recreate them.
 
 ### Precedence, in one line
-`data/dictionary.ts` is the source of truth for terms. `tailwind.config.ts` is
-the source of truth for colour. Everything else points at those.
+`data/dictionary.ts` is the source of truth for terms. The `--c-*` CSS variables in
+`app/globals.css` are the source of truth for colour — a light ("lavender glass",
+default) and a dark ("midnight glass") set; `tailwind.config.ts` only maps class
+names onto them. Never hardcode a hex or `text-white` in a component: it breaks one
+of the two themes. For inline-style colours use `TOKEN` / `tint()` from
+`app/lib/color.ts`. Brand name, tagline and logo live in `BRAND` (`app/lib/constants.ts`)
+and `public/aj-mark.png` / `app/icon.png`.
 
 ---
 
@@ -80,16 +96,22 @@ do not hand-maintain anything it derives.
 
 - `TERM_IDS` — one page per dictionary term at `/dictionary/<id>`
 - `ACRONYM_SLUGS` — acronyms that get their **own** page at `/acronyms/<slug>`
-- `ACRONYM_TO_TERM` — the 22 acronyms the dictionary already covers, mapped to
-  their term id. These get **no page**; `/acronyms/<slug>` issues a 308 into
+- `ACRONYM_TO_TERM` — acronyms the dictionary already covers, mapped to their
+  term id. These get **no page**; `/acronyms/<slug>` issues a 308 into
   `/dictionary/<id>`.
 
-Why: 14 acronyms collide with a term id (`rag`, `llm`, `mcp`, `api`…) and 8 more
-are registered dictionary aliases (`CoT`, `HITL`, `SPF`…). Publishing both would
-put two pages about one concept on the same domain, competing in search.
+Why: some acronyms collide with a term id (`rag`, `llm`, `mcp`, `api`…) and
+others are registered dictionary aliases (`CoT`, `HITL`, `MoE`…). Publishing
+both would put two pages about one concept on the same domain, competing in search.
+
+**Adding a dictionary term or alias can silently create a new overlap.**
+`tests/reference.test.ts` pins the exact count so that happens on purpose: when
+it fails, check every new mapping points at the *same concept*, then bump it.
+- `HOMONYM_SLUGS` — same letters, different concept (ReAct the agent pattern vs
+  React the UI library). Homonyms keep their own acronym page and never redirect.
 
 `/dictionary/[slug]` sets `dynamicParams = false`. `/acronyms/[slug]` leaves it
-true so the 22 overlap slugs stay routable and can redirect.
+true so the overlap slugs stay routable and can redirect.
 
 ---
 
@@ -132,7 +154,9 @@ are deleted. Do not reintroduce them without a reason.
   trust. Derive them (`DICTIONARY.length`) or omit them.
 - ES modules, `async/await`, 2-space indent, TypeScript strict.
 - Comment the *why*. Skip comments that restate the code.
-- Client components own their own localStorage key (`lh.<feature>.v<n>`).
+- **Learner progress lives in one store**: `app/lib/learner/state.ts` (pure, tested) + `store.ts` (`useLearner()`, key `lh.learner.v1`, zod-validated on load and on backup restore). Bookmarks, lessons, project steps, flashcards, quiz history/weak spots, interview ratings and streak all go there — don't add a parallel key for learning state. Interview *answers* stay in `lh.interview.v2` because they are the user's own writing, not progress.
+- Other client components own their own localStorage key (`lh.<feature>.v<n>`).
+- Lessons and projects reference dictionary terms by id (`termIds`) — never copy definitions. `tests/paths.test.ts` fails on an unknown id.
 - Every page is a server component that hands data to a `"use client"` child.
 - Reading `searchParams` in a server component makes the route dynamic. Read the
   query string in the client child behind `<Suspense>` instead — `/quiz` does this.
@@ -147,11 +171,18 @@ are deleted. Do not reintroduce them without a reason.
 | `npm run dev` | dev server |
 | `npm run build` | production build — also the real typecheck |
 | `npm run start` | serve the build |
-| `npm test` | Vitest — slug/overlap resolution and search ranking |
+| `npm test` | Vitest — slug/overlap resolution, search ranking, content schema and freshness |
+| `npm run content:check` | read-only staleness report — dictionary terms and model registry rows not re-verified in 120 days; exits 1 only on integrity errors. `--max-age=<days>` overrides the threshold. Run it before any content refresh |
 | `npm run lint` | **broken** — ESLint is unconfigured and this drops into an interactive setup prompt |
 
+**Windows path quirk:** the `&` in this repo's path (`Apps & Systems`) breaks
+npm's `.cmd` shims, so `npm test` / `npm run build` fail locally with
+"'Systems\' is not recognized". Call the binaries through node instead:
+`node node_modules/vitest/vitest.mjs run`, `node node_modules/next/dist/bin/next build`.
+Vercel builds are unaffected.
+
 Tests cover the pure functions where a silent bug has wide blast radius. Anything
-added to `app/lib/reference.ts` or `app/lib/search.ts` should come with tests.
+added to `app/lib/reference.ts`, `app/lib/search.ts` or `app/lib/content/` should come with tests.
 
 ## Environment
 
@@ -164,11 +195,14 @@ and the sitemap, falling back to `VERCEL_URL` then localhost.
 - `audits/os-audit-2026-08-07.md` — drift audit: what was fixed, what is open.
 - `docs/superpowers/specs/` and `docs/superpowers/plans/` — the reframe design
   and its implementation plan.
-- Dependencies are clean: `npm audit --omit=dev` reports 0 vulnerabilities on
-  Next 16. The 21 high-severity advisories against 14.2.35 were the reason for
-  the upgrade; do not downgrade.
-- **Still open:** ESLint is unconfigured, and the two dead dictionary stores
-  (Rule 0) await a content diff before deletion.
+- `npm audit --omit=dev` reports 0 vulnerabilities (rechecked 2026-10-26, after
+  an in-range bump to Next 16.4.3 closed a critical RCE advisory). Never run
+  `npm audit fix --omit=dev` — it prunes devDependencies from `node_modules`.
+  Do not downgrade Next.
+- `docs/superpowers/plans/2026-10-26-hub-2.0-roadmap.md` — the Hub 2.0 milestones (M0–M5).
+- **Still open:** ESLint is unconfigured. Dev-only advisories (vitest, vite,
+  browserslist) remain because `npm audit fix` hits an npm arborist bug
+  (`reading 'edgesOut'`) on vitest's optional jsdom peer; none ship to production.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

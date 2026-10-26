@@ -1,5 +1,11 @@
 import type { Config } from "tailwindcss";
 
+// Every colour is a CSS variable (RGB channels) defined per theme in
+// app/globals.css, so one class name — `text-gold`, `bg-surface` — renders
+// correctly in both the light "lavender glass" and dark "midnight glass" themes.
+// Change a colour in globals.css, not here.
+const token = (name: string) => `rgb(var(--c-${name}) / <alpha-value>)`;
+
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,43 +14,46 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── Brand palette (from workwithaj.ajautomate.co) ──
-        bg: "#08060e",
+        bg: token("bg"),
         surface: {
-          DEFAULT: "#13102a",
-          2: "#1b1640",
+          DEFAULT: token("surface"),
+          2: token("surface-2"),
         },
-        line: "#2a2250",
-        muted: "#9b93be",
-        text: "#f3f1fb",
-        // Brand gold
+        line: token("line"),
+        muted: token("muted"),
+        text: token("text"),
+        // Highlight text. Deepened in the light theme so it stays readable on white.
         gold: {
-          DEFAULT: "#f6cb1f",
-          soft: "#ffe066",
-          dim: "#d4a800",
+          DEFAULT: token("gold"),
+          soft: token("gold-soft"),
+          dim: token("gold-dim"),
+          // Bright brand gold for fills (buttons, stars), always paired with `onaccent` text.
+          fill: token("gold-fill"),
         },
-        // Brand violet
         violet: {
-          DEFAULT: "#5e17eb",
-          soft: "#7c5cfc",
-          light: "#ac4bff",
+          DEFAULT: token("violet"),
+          soft: token("violet-soft"),
+          light: token("violet-light"),
         },
-        // Accent palette for reference cards (harmonized to brand).
         neon: {
-          teal: "#f6cb1f", // aliased to gold so primary chrome reads brand-gold
-          pink: "#ff6ba3",
-          yellow: "#ffd95e",
-          blue: "#4d9fff",
-          purple: "#7c5cfc",
-          orange: "#ff9c6e",
+          teal: token("gold"),
+          pink: token("pink"),
+          yellow: token("yellow"),
+          blue: token("blue"),
+          purple: token("violet-soft"),
+          orange: token("orange"),
         },
+        success: token("success"),
+        danger: token("danger"),
+        // Text that sits on a bright gold fill — dark ink in both themes.
+        onaccent: token("onaccent"),
         // Legacy surface aliases.
         navy: {
-          DEFAULT: "#08060e",
-          deep: "#08060e",
-          panel: "#13102a",
-          card: "#13102a",
-          border: "#2a2250",
+          DEFAULT: token("bg"),
+          deep: token("bg"),
+          panel: token("surface"),
+          card: token("surface"),
+          border: token("line"),
         },
       },
       fontFamily: {
@@ -53,9 +62,9 @@ const config: Config = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        glow: "0 0 40px rgba(94,23,235,0.20)",
-        "glow-gold": "0 0 36px rgba(246,203,31,0.18)",
-        card: "0 10px 40px rgba(0,0,0,0.5)",
+        glow: "var(--shadow-glow)",
+        "glow-gold": "var(--shadow-glow-gold)",
+        card: "var(--shadow-card)",
       },
       keyframes: {
         "fade-up": {

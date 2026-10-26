@@ -4,6 +4,8 @@ import { ACRONYMS } from "@/data/acronyms";
 import { SEED_TOOLS } from "@/app/lib/seed/tools";
 import { ACRONYM_TO_TERM, slugify } from "@/app/lib/reference";
 import type { SearchRecord } from "@/app/lib/types";
+import { LESSON_ORDER, PATHS_BY_ID, lessonHref } from "@/data/paths";
+import { PROJECTS } from "@/data/projects";
 
 // Prerendered to a static asset at build time. The home page ships none of this
 // until a visitor actually types, which keeps the landing page light.
@@ -22,7 +24,8 @@ export function GET() {
       type: "term",
       title: term.term,
       keywords: term.aliases,
-      snippet: clip(term.definition),
+      // Deprecated terms stay findable (people still search old names) but say so up front.
+      snippet: clip(term.status === "deprecated" ? `Deprecated — ${term.definition}` : term.definition),
       category: term.category,
       url: `/dictionary/${term.id}`,
     });
@@ -51,6 +54,28 @@ export function GET() {
       snippet: clip(tool.tagline || tool.when_to_use),
       category: tool.category,
       url: "/tools",
+    });
+  }
+
+  for (const { pathId, lesson } of LESSON_ORDER) {
+    records.push({
+      type: "lesson",
+      title: lesson.title,
+      keywords: [PATHS_BY_ID[pathId].level],
+      snippet: clip(lesson.summary),
+      category: PATHS_BY_ID[pathId].title,
+      url: lessonHref(pathId, lesson.id),
+    });
+  }
+
+  for (const project of PROJECTS) {
+    records.push({
+      type: "project",
+      title: project.title,
+      keywords: project.stack,
+      snippet: clip(project.summary),
+      category: project.level,
+      url: `/projects/${project.id}`,
     });
   }
 

@@ -1,4 +1,5 @@
 import type { ArsenalMcp, FrameworkStep } from "@/app/lib/types";
+import { TOKEN } from "@/app/lib/color";
 
 // Top 10 most-used skills today (curated — broad ecosystem usage, mid-2026).
 // IDs map to entries in ARSENAL_SKILLS.
@@ -92,14 +93,15 @@ export const ARSENAL_MCPS: ArsenalMcp[] = [
   {
     name: "GoHighLevel MCP (Official)",
     pkg: "services.leadconnectorhq.com/mcp",
-    cmd: "https://services.leadconnectorhq.com/mcp/",
+    // Claude's endpoint; OpenAI clients use /mcp/openai/v2/ and Cursor /mcp/cursor/v2.
+    cmd: "https://services.leadconnectorhq.com/mcp/anthropic/v2",
     remote: true,
     description:
-      "HighLevel's official MCP server. 36 tools across Contacts, Conversations, Opportunities, Calendars, Payments, Social, Blogs, and Emails. Auth via Private Integration Token scoped to a single sub-account.",
+      "HighLevel's official LeadConnector MCP server. Four meta-tools (find, describe and run an operation) front 550+ read/create/update/delete operations across 38 CRM domains. Connects via OAuth — you pick the sub-accounts and approve scopes.",
     features: [
-      "36 tools — contacts, conversations, opportunities, calendars, payments, social, blogs, emails",
-      "Private Integration Token auth (Settings → Private Integrations on the sub-account)",
-      "Remote HTTP MCP — no local install, always current with the GHL API",
+      "550+ CRM operations across 38 domains, scoped by the OAuth permissions you grant",
+      "OAuth consent flow — no tokens to copy; review or revoke access in LeadConnector",
+      "Per-client endpoints for Claude, ChatGPT/Codex and Cursor; agencies can work across sub-accounts",
     ],
   },
 ];
@@ -154,7 +156,7 @@ export const FRAMEWORK_STEPS: FrameworkStep[] = [
     n: "01",
     title: "Global CLAUDE.md Setup",
     kicker: "Identity layer",
-    accent: "#8B5CF6",
+    accent: TOKEN.violet,
     summary:
       "Teach Claude who you are, how you work, and the projects you run — once. Every session in every repo loads this file.",
     outcome:
@@ -194,7 +196,7 @@ export const FRAMEWORK_STEPS: FrameworkStep[] = [
     n: "02",
     title: "Governance",
     kicker: "Guardrails + memory",
-    accent: "#EC4899",
+    accent: TOKEN.pink,
     summary:
       "Configure what Claude may do without asking, what requires confirmation, and what to remember across sessions.",
     outcome:
@@ -222,7 +224,7 @@ export const FRAMEWORK_STEPS: FrameworkStep[] = [
     n: "03",
     title: "Caveman",
     kicker: "Token economy",
-    accent: "#F97316",
+    accent: TOKEN.orange,
     summary:
       "Install the Caveman skill — Claude writes telegraphically and compresses CLAUDE.md on disk. ~65% fewer output tokens, same technical accuracy.",
     outcome: "Sessions cost less, output is scannable, and your CLAUDE.md is smaller.",
@@ -245,7 +247,7 @@ export const FRAMEWORK_STEPS: FrameworkStep[] = [
     n: "04",
     title: "Obsidian Second Brain",
     kicker: "Knowledge layer",
-    accent: "#10B981",
+    accent: TOKEN.green,
     summary:
       "Wire Claude into an Obsidian vault so it can read, write, and search your notes. PARA + Zettelkasten structure, Local REST API, obsidian-mcp.",
     outcome:
@@ -266,7 +268,7 @@ export const FRAMEWORK_STEPS: FrameworkStep[] = [
     n: "05",
     title: "GSD (Get Shit Done)",
     kicker: "Spec-driven workflow",
-    accent: "#06B6D4",
+    accent: TOKEN.blue,
     summary:
       "A meta-prompting + context-engineering system that plans, executes, verifies, and ships whole phases. Solves context rot. Works across Claude Code, Gemini, Codex, Cursor, Copilot, and more.",
     outcome:

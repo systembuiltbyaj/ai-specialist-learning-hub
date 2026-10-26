@@ -1,23 +1,11 @@
 import { supabase } from "@/app/lib/supabase";
 import { supabaseAdmin } from "@/app/lib/supabaseAdmin";
-import type { Term, Tool, Resource } from "@/app/lib/types";
-import { SEED_TERMS } from "@/app/lib/seed/terms";
+import type { Tool, Resource } from "@/app/lib/types";
 import { SEED_TOOLS } from "@/app/lib/seed/tools";
 
 // Server-side data-access layer. Each function tries Supabase first, then falls
 // back to seed data on any error or when Supabase isn't configured. Pages never
 // crash because a table is missing or empty.
-
-export async function getTerms(): Promise<Term[]> {
-  if (!supabase) return SEED_TERMS;
-  try {
-    const { data, error } = await supabase.from("terms").select("*").order("name");
-    if (error || !data || data.length === 0) return SEED_TERMS;
-    return data as Term[];
-  } catch {
-    return SEED_TERMS;
-  }
-}
 
 export async function getTools(): Promise<Tool[]> {
   if (!supabase) return SEED_TOOLS;
