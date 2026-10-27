@@ -27,6 +27,10 @@ export function exportInterviewToMarkdown(entries: InterviewEntry[]): string {
     lines.push(`## ${e.question}`);
     if (e.topic) lines.push(`*Topic: ${e.topic}*`, "");
     lines.push(e.answer || "_(no answer yet)_", "");
+    for (const f of e.followUps ?? []) {
+      lines.push(`**Follow-up: ${f.question}**`, "", f.answer || "_(no answer yet)_", "");
+    }
+    if (e.alternative?.answer) lines.push(`**${e.alternative.label}**`, "", e.alternative.answer, "");
     lines.push("---", "");
   }
 
