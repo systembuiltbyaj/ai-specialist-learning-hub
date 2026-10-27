@@ -1,64 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import type { DiscoveryData, InterviewEntry } from "@/app/lib/types";
+import type { InterviewEntry, InterviewGuide } from "@/app/lib/types";
 import InterviewClient from "./InterviewClient";
-import EmployerGuide from "./EmployerGuide";
+import GuideView from "./GuideView";
 
-type Mode = "Employee" | "Employer";
+type Tab = "answers" | "discovery" | "phrases" | "tips";
 
-const MODES: { key: Mode; icon: string; title: string; sub: string }[] = [
-  {
-    key: "Employee",
-    icon: "🎤",
-    title: "Employee Interview",
-    sub: "You're the candidate — prep your answers.",
-  },
-  {
-    key: "Employer",
-    icon: "🧭",
-    title: "Employer Interview",
-    sub: "You interview the client — discovery playbook.",
-  },
+const TABS: { key: Tab; icon: string; title: string; sub: string }[] = [
+  { key: "answers", icon: "🎤", title: "Answer bank", sub: "Fill in, practise, download as PDF" },
+  { key: "discovery", icon: "🧭", title: "Discovery guide", sub: "Lead a client call, step by step" },
+  { key: "phrases", icon: "💬", title: "Phrases", sub: "Sound natural, not scripted" },
+  { key: "tips", icon: "💡", title: "Call tips", sub: "What real calls teach" },
 ];
 
 export default function InterviewTabs({
   interviewSeed,
-  discovery,
+  guides,
 }: {
   interviewSeed: InterviewEntry[];
-  discovery: DiscoveryData;
+  guides: InterviewGuide[];
 }) {
-  const [mode, setMode] = useState<Mode>("Employee");
+  const [tab, setTab] = useState<Tab>("answers");
+  const byId = Object.fromEntries(guides.map((g) => [g.id, g]));
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-2 sm:grid-cols-2" role="tablist" aria-label="Interview mode">
-        {MODES.map((m) => (
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4" role="tablist" aria-label="Interview prep sections">
+        {TABS.map((t) => (
           <button
-            key={m.key}
+            key={t.key}
             role="tab"
-            aria-selected={mode === m.key}
-            onClick={() => setMode(m.key)}
-            className={`card flex items-start gap-3 p-4 text-left transition-colors ${
-              mode === m.key ? "!border-violet-soft/60 bg-violet-soft/10" : "card-hover"
+            aria-selected={tab === t.key}
+            onClick={() => setTab(t.key)}
+            className={`card flex items-start gap-3 p-3.5 text-left transition-colors ${
+              tab === t.key ? "!border-violet-soft/60 bg-violet-soft/10" : "card-hover"
             }`}
           >
-            <span className="text-xl">{m.icon}</span>
-            <span>
-              <span
-                className={`block font-bold ${mode === m.key ? "text-violet-light" : "text-text"}`}
-              >
-                {m.title}
-              </span>
-              <span className="text-xs text-muted">{m.sub}</span>
+            <span className="text-xl" aria-hidden>
+              {t.icon}
+            </span>
+            <span className="min-w-0">
+              <span className={`block text-sm font-bold ${tab === t.key ? "text-violet-light" : "text-text"}`}>{t.title}</span>
+              <span className="text-xs text-muted">{t.sub}</span>
             </span>
           </button>
         ))}
       </div>
 
-      {mode === "Employee" && <InterviewClient seed={interviewSeed} />}
-      {mode === "Employer" && <EmployerGuide discovery={discovery} />}
+      {tab === "answers" && <InterviewClient seed={interviewSeed} />}
+      {tab === "discovery" && (
+        <div className="space-y-10">
+          <GuideView guide={byId.discovery} />
+          <GuideView guide={byId.prompts} />
+        </div>
+      )}
+      {tab === "phrases" && <GuideView guide={byId.phrases} />}
+      {tab === "tips" && <GuideView guide={byId.tips} />}
     </div>
   );
 }

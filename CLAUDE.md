@@ -154,7 +154,7 @@ are deleted. Do not reintroduce them without a reason.
   trust. Derive them (`DICTIONARY.length`) or omit them.
 - ES modules, `async/await`, 2-space indent, TypeScript strict.
 - Comment the *why*. Skip comments that restate the code.
-- **Learner progress lives in one store**: `app/lib/learner/state.ts` (pure, tested) + `store.ts` (`useLearner()`, key `lh.learner.v1`, zod-validated on load and on backup restore). Bookmarks, lessons, project steps, flashcards, quiz history/weak spots, interview ratings and streak all go there — don't add a parallel key for learning state. Interview *answers* stay in `lh.interview.v2` because they are the user's own writing, not progress.
+- **Learner progress lives in one store**: `app/lib/learner/state.ts` (pure, tested) + `store.ts` (`useLearner()`, key `lh.learner.v1`, zod-validated on load and on backup restore). Bookmarks, lessons, project steps, flashcards, quiz history/weak spots, interview ratings and streak all go there — don't add a parallel key for learning state. Interview *answers* stay in `lh.interview.v3` because they are the user's own writing, not progress. The answer bank (`app/lib/seed/interview.ts`) is fill-in templates — `[bracketed]` blanks are highlighted and counted — and it is public, so it must never contain real names, clients or places. The older personal set in `lh.interview.v2` is never overwritten; the page offers to restore it.
 - Other client components own their own localStorage key (`lh.<feature>.v<n>`).
 - Lessons and projects reference dictionary terms by id (`termIds`) — never copy definitions. `tests/paths.test.ts` fails on an unknown id.
 - Every page is a server component that hands data to a `"use client"` child.

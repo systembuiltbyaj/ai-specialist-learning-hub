@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { InterviewEntry } from "@/app/lib/types";
 import { useLearner } from "@/app/lib/learner/store";
 import { practiceOrder, rateInterviewAnswer, type InterviewRating } from "@/app/lib/learner/state";
+import TemplateText from "./TemplateText";
 
 // Most interview answers should land in about two minutes; the timer is a nudge, not a rule.
 const ANSWER_SECONDS = 120;
@@ -152,9 +153,11 @@ export default function InterviewPractice({
         ) : (
           <div className="space-y-4" aria-live="polite">
             <div className="border-l-2 border-gold pl-4">
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-text/85">
-                {entry.answer || <span className="italic text-muted">You haven&apos;t written an answer for this one yet.</span>}
-              </p>
+              {entry.answer ? (
+                <TemplateText text={entry.answer} className="text-sm leading-relaxed text-text/85" />
+              ) : (
+                <p className="text-sm italic text-muted">You haven&apos;t written an answer for this one yet.</p>
+              )}
             </div>
             <p className="text-xs text-muted">How did your spoken answer compare?</p>
             <div className="grid gap-2 sm:grid-cols-3">

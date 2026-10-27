@@ -95,12 +95,54 @@ export interface SearchRecord {
 }
 
 // ── Interview prep ──
+// Answers are fill-in templates: text in [square brackets] is a blank the
+// visitor replaces with their own detail, and the UI highlights it.
+export interface InterviewFollowUp {
+  question: string;
+  answer: string;
+}
+
 export interface InterviewEntry {
   id: string;
   question: string;
   answer: string;
   topic: string;
   createdAt: number;
+  // What interviewers ask next — answered in the same template style.
+  followUps?: InterviewFollowUp[];
+  // A more technical or alternative version for when they push further.
+  alternative?: { label: string; answer: string };
+  // Coaching note on delivery, not part of the spoken answer.
+  tip?: string;
+}
+
+// ── Interview guides (discovery, phrases, call tips) ──
+// Mirrors the source documents' paragraph markers so nothing is flattened.
+export type GuideBlock =
+  | { kind: "text" | "bullet" | "note" | "desc" | "sub" | "client" | "you" | "cue"; text: string }
+  | { kind: "kv" | "tip" | "deeper"; label: string; text: string }
+  | { kind: "followup"; question: string; answer: string[] }
+  | { kind: "table"; rows: string[][] }
+  | { kind: "prompt"; lines: string[] };
+
+export interface GuideItem {
+  heading: string;
+  blocks: GuideBlock[];
+}
+
+export interface GuideSection {
+  title: string;
+  intro: string[];
+  blocks: GuideBlock[];
+  items: GuideItem[];
+}
+
+export interface InterviewGuide {
+  id: string;
+  title: string;
+  subtitle: string;
+  cover: string[];
+  sections: GuideSection[];
 }
 
 // ── GHL Hub / Automation Hub ──
@@ -122,29 +164,6 @@ export interface LearnStep {
   title: string;
   detail: string;
   resource?: { label: string; url: string };
-}
-
-// ── Discovery playbook (employer interview) ──
-export interface QuestionGroup {
-  group: string;
-  accent: AccentKey;
-  why: string;
-  questions: string[];
-}
-
-export interface ExplainPoint {
-  feature: string;
-  outcome: string;
-}
-
-// Bundled and passed from the gated server component so the playbook never
-// ships inside a public client chunk. See app/interview/page.tsx.
-export interface DiscoveryData {
-  flow: { n: string; title: string; detail: string }[];
-  questions: QuestionGroup[];
-  explainPoints: ExplainPoint[];
-  dos: string[];
-  donts: string[];
 }
 
 // ── Claude Code Arsenal ──

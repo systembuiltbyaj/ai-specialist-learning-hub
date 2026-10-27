@@ -1,47 +1,32 @@
 import type { Metadata } from "next";
 import { INTERVIEW_SEED } from "@/app/lib/seed/interview";
-import {
-  DISCOVERY_FLOW,
-  DISCOVERY_QUESTIONS,
-  EXPLAIN_POINTS,
-  DISCOVERY_DOS,
-  DISCOVERY_DONTS,
-} from "@/app/lib/seed/discovery";
+import { INTERVIEW_GUIDES } from "@/app/lib/seed/interview-guides";
 import InterviewTabs from "./InterviewTabs";
 
 export const metadata: Metadata = {
-  title: "Interview",
+  title: "Interview Prep",
   description:
-    "Two modes — prep your own interview answers (Employee), and a discovery playbook to drive a client conversation (Employer).",
-  robots: { index: false, follow: false },
+    "An answer bank of AI, automation and GoHighLevel interview questions with fill-in templates you can personalise, practise and download as a PDF — plus a discovery-call guide, conversational phrases and call tips.",
 };
 
-// Public but noindex. The seed is imported here in the server component rather
-// than in the client child, so it stays out of /_next/static chunks — keep that
-// pattern if any of this content is ever made private again (CLAUDE.md Rule 1).
+// The seed and guides are imported here in the server component and passed down,
+// so they stay out of /_next/static chunks — keep that pattern if any of this
+// content is ever made private (CLAUDE.md Rule 1).
 export default function InterviewPage() {
-  const discovery = {
-    flow: DISCOVERY_FLOW,
-    questions: DISCOVERY_QUESTIONS,
-    explainPoints: EXPLAIN_POINTS,
-    dos: DISCOVERY_DOS,
-    donts: DISCOVERY_DONTS,
-  };
-
   return (
     <div className="container-hub space-y-6 py-8">
       <header>
-        <p className="eyebrow">Practice</p>
-        <h1 className="section-title">🎤 Interview</h1>
+        <p className="eyebrow">Get ready for the call</p>
+        <h1 className="section-title">🎤 Interview Prep</h1>
         <p className="mt-2 max-w-2xl text-muted">
-          Two modes: <span className="text-gold">Employee</span> — prep answers
-          for when you&apos;re interviewed; and{" "}
-          <span className="text-gold">Employer</span> — a discovery playbook for
-          when you interview a client about their business.
+          Start with the answer bank: every answer is a template — swap the highlighted{" "}
+          <span className="rounded bg-violet-soft/15 px-1 text-violet-light">[blanks]</span> for your own details, practise
+          out loud, then download your answers as a PDF. The guides cover leading a discovery call, phrases that keep a
+          conversation natural, and what real calls teach.
         </p>
       </header>
 
-      <InterviewTabs interviewSeed={INTERVIEW_SEED} discovery={discovery} />
+      <InterviewTabs interviewSeed={INTERVIEW_SEED} guides={INTERVIEW_GUIDES} />
     </div>
   );
 }

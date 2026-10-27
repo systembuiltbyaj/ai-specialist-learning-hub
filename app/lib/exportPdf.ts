@@ -32,6 +32,8 @@ export interface PdfOptions {
   /** Named in the subtitle so a filtered export can't pass as the full set. */
   topic?: string;
   total?: number;
+  /** Printed under the title, so the PDF reads as the candidate's own prep. */
+  name?: string;
 }
 
 export async function exportInterviewToPdf(
@@ -72,9 +74,19 @@ export async function exportInterviewToPdf(
     y += gap;
   };
 
+  // Blank lines are the author's paragraph breaks; keep them as breaks rather
+  // than letting the wrapper run the paragraphs together.
+  const paragraphs = (text: string, size: number, color: number, gapAfter: number) => {
+    const parts = text.trim().split(/\n\s*\n/);
+    parts.forEach((para, i) => {
+      write(para.replace(/\n/g, " "), { size, style: "normal", gap: i === parts.length - 1 ? gapAfter : 2.5, color });
+    });
+  };
+
   // ── Document header ──
-  const { topic = "All", total = entries.length } = options;
-  write("Interview Prep — Q&A", { size: 17, style: "bold", gap: 1.5 });
+  const { topic = "All", total = entries.length, name } = options;
+  write("My Interview Answers", { size: 17, style: "bold", gap: 1.5 });
+  if (name?.trim()) write(name.trim(), { size: 11, style: "normal", gap: 1.5, color: 60 });
   write(
     topic === "All"
       ? `${total} question${total === 1 ? "" : "s"}`
@@ -98,25 +110,23 @@ export async function exportInterviewToPdf(
 
     const answer = entry.answer.trim();
     if (answer) {
-      // Blank lines are the author's paragraph breaks; keep them as breaks
-      // rather than letting the wrapper run the paragraphs together.
-      const paragraphs = answer.split(/\n\s*\n/);
-      paragraphs.forEach((para, i) => {
-        write(para.replace(/\n/g, " "), {
-          size: 10,
-          style: "normal",
-          gap: i === paragraphs.length - 1 ? 6 : 3,
-          color: 40,
-        });
-      });
+      paragraphs(answer, 10, 40, 4);
     } else {
-      write("(no answer yet)", {
-        size: 10,
-        style: "italic",
-        gap: 6,
-        color: 140,
-      });
+      write("(no answer yet)", { size: 10, style: "italic", gap: 4, color: 140 });
     }
+
+    for (const followUp of entry.followUps ?? []) {
+      reserve(14);
+      write(`Follow-up: ${followUp.question}`, { size: 9.5, style: "bold", gap: 1, color: 70 });
+      paragraphs(followUp.answer || "(no answer yet)", 9.5, 60, 3.5);
+    }
+
+    if (entry.alternative?.answer.trim()) {
+      reserve(14);
+      write(entry.alternative.label || "If they push further", { size: 9.5, style: "bold", gap: 1, color: 70 });
+      paragraphs(entry.alternative.answer, 9.5, 60, 3.5);
+    }
+    y += 2;
   }
 
   // ── Page numbers, added last so the total is known ──
@@ -134,5 +144,5 @@ export async function exportInterviewToPdf(
     );
   }
 
-  doc.save("interview-prep.pdf");
+  doc.save("my-interview-answers.pdf");
 }
