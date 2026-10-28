@@ -2,9 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Update, UpdateCategory } from "@/app/lib/types";
-import { SEED_UPDATES } from "@/app/lib/seed/updates";
-
-const STORAGE_KEY = "lh.updates.v1";
+const STORAGE_KEY = "lh.updates.v2";
+const LEGACY_KEY = "lh.updates.v1";
 const CATEGORIES: UpdateCategory[] = ["GHL", "Claude", "AI Automation", "AI News"];
 
 const CHIP_STYLES: Record<UpdateCategory, string> = {
@@ -47,33 +46,73 @@ function renderContent(text: string) {
   );
 }
 
+// What a visitor changed, layered over the current news. Saving the whole list
+// (v1) froze it: anyone who had visited once never saw a newer edition again.
+interface Personal {
+  custom: Update[];
+  edits: Record<string, Draft>;
+  removed: string[];
+}
+const EMPTY: Personal = { custom: [], edits: {}, removed: [] };
+// Visitor-added items have timestamp ids (`u-<Date.now()>`); seed items don't.
+const isCustomId = (id: string) => /^u-\d{10,}$/.test(id);
+
+function loadPersonal(): Personal {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved) as Partial<Personal>;
+      return { custom: parsed.custom ?? [], edits: parsed.edits ?? {}, removed: parsed.removed ?? [] };
+    }
+    // One-time carry-over: keep what the visitor added themselves, drop the old snapshot.
+    const legacy = localStorage.getItem(LEGACY_KEY);
+    if (legacy) {
+      const items = JSON.parse(legacy) as Update[];
+      localStorage.removeItem(LEGACY_KEY);
+      return { ...EMPTY, custom: Array.isArray(items) ? items.filter((u) => isCustomId(u.id)) : [] };
+    }
+  } catch {
+    /* corrupt or blocked storage: start from the current news */
+  }
+  return EMPTY;
+}
+
+// Newest week first; anything a visitor filed as "This week" sits on top.
+function weekRank(week: string): string {
+  const iso = week.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  return iso ?? "9999-99-99";
+}
+
 export default function UpdatesClient({ initial }: { initial: Update[] }) {
-  const [updates, setUpdates] = useState<Update[]>(initial);
+  const [personal, setPersonal] = useState<Personal>(EMPTY);
   const [hydrated, setHydrated] = useState(false);
   const [filter, setFilter] = useState<"All" | UpdateCategory>("All");
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // The shared weekly feed was retired — this archive is per-browser only.
-  // Edits never leave the visitor's own localStorage.
+  // Per-browser only: the shared weekly feed is retired, and edits never leave
+  // the visitor's own localStorage.
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      setUpdates(saved ? JSON.parse(saved) : SEED_UPDATES);
-    } catch {
-      setUpdates(SEED_UPDATES);
-    }
+    setPersonal(loadPersonal());
     setHydrated(true);
   }, []);
 
   useEffect(() => {
     if (!hydrated) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updates));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(personal));
     } catch {
       /* ignore */
     }
-  }, [updates, hydrated]);
+  }, [personal, hydrated]);
+
+  const updates = useMemo(() => {
+    const removed = new Set(personal.removed);
+    const seed = initial
+      .filter((u) => !removed.has(u.id))
+      .map((u) => (personal.edits[u.id] ? { ...u, ...personal.edits[u.id] } : u));
+    return [...personal.custom, ...seed];
+  }, [initial, personal]);
 
   const filtered = useMemo(
     () => (filter === "All" ? updates : updates.filter((u) => u.category === filter)),
@@ -86,26 +125,32 @@ export default function UpdatesClient({ initial }: { initial: Update[] }) {
       if (!map.has(u.week)) map.set(u.week, []);
       map.get(u.week)!.push(u);
     }
-    return Array.from(map.entries());
+    return Array.from(map.entries()).sort((a, b) => weekRank(b[0]).localeCompare(weekRank(a[0])));
   }, [filtered]);
 
   const addUpdate = (d: Draft) => {
-    setUpdates((prev) => [
-      { id: `u-${Date.now()}`, ...d, week: d.week.trim() || "This week", ts: Date.now() },
-      ...prev,
-    ]);
+    const item: Update = { id: `u-${Date.now()}`, ...d, week: d.week.trim() || "This week", ts: Date.now() };
+    setPersonal((prev) => ({ ...prev, custom: [item, ...prev.custom] }));
     setAdding(false);
   };
 
   const editUpdate = (id: string, d: Draft) => {
-    setUpdates((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, ...d, week: d.week.trim() || u.week } : u)),
-    );
+    setPersonal((prev) => {
+      if (isCustomId(id)) {
+        return { ...prev, custom: prev.custom.map((u) => (u.id === id ? { ...u, ...d, week: d.week.trim() || u.week } : u)) };
+      }
+      const original = initial.find((u) => u.id === id);
+      return { ...prev, edits: { ...prev.edits, [id]: { ...d, week: d.week.trim() || original?.week || d.week } } };
+    });
     setEditingId(null);
   };
 
   const removeUpdate = (id: string) => {
-    setUpdates((prev) => prev.filter((u) => u.id !== id));
+    setPersonal((prev) =>
+      isCustomId(id)
+        ? { ...prev, custom: prev.custom.filter((u) => u.id !== id) }
+        : { ...prev, removed: [...prev.removed, id] },
+    );
   };
 
   return (
