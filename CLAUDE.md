@@ -134,9 +134,13 @@ anyone through a redirect.
 
 ## Rule 4 — retired, do not revive
 
-The weekly Updates feed is **retired**. `/api/updates` and `/api/cron/updates`
-are deleted; `CRON_SECRET` is gone. `/updates` is a read-only archive rendering
-`SEED_UPDATES` into per-browser localStorage.
+The automated weekly Updates feed is **retired**. `/api/updates` and `/api/cron/updates`
+are deleted; `CRON_SECRET` is gone. `/updates` is now **refreshed by hand**: edit
+`SEED_UPDATES` in `app/lib/seed/updates.ts` (every item needs an official source URL)
+and bump `UPDATES_VERIFIED_ON` — the page header derives its "last updated" date from it.
+Visitors' own additions, edits and hides live in `lh.updates.v2` as an overlay on the
+seed, so a refresh reaches everyone. (v1 stored a full copy of the list, which froze it
+for returning visitors; it is migrated once and removed.)
 
 It was never scheduled — the cron endpoint existed for six weeks with no caller,
 which is why the "weekly" feed silently froze. If you bring it back, wire the
