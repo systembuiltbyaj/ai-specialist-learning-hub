@@ -10,10 +10,10 @@ export const BRAND = {
   owner: "Allen Bactad",
   handle: "System-BuiltBy AJ",
   colors: {
-    bg: "#f4f1fc", // --c-bg, light theme
-    bgDark: "#0b081a", // --c-bg, dark theme
-    accent: "#f6cb1f", // --c-gold-fill
-    violet: "#5e17eb", // --c-violet
+    bg: "#f5f2ff", // --c-bg, light theme
+    bgDark: "#0d091e", // --c-bg, dark theme (the default)
+    accent: "#facc15", // --c-gold-fill, the yellow call to action
+    violet: "#7c4dff", // --c-violet
   },
 } as const;
 

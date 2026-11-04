@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
-import AutomationHubClient from "./AutomationHubClient";
-import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
+import type { WhatsNewItem } from "@/app/lib/types";
+import { RecipeCard } from "@/app/components/HubBlocks";
 import { TOKEN } from "@/app/lib/color";
+import PageHeader from "@/app/components/PageHeader";
+import { AUTO_PLATFORMS, AUTO_CONCEPTS, AUTO_AI, AUTO_RECIPES, AUTO_LEARN } from "@/app/lib/seed/automationhub";
+import HubTabs from "@/app/components/hub/HubTabs";
+import HubTimeline from "@/app/components/hub/HubTimeline";
+import TopicPanel, { type Topic } from "@/app/components/hub/TopicPanel";
+import SectionHead from "@/app/components/hub/SectionHead";
+import RefTile from "@/app/components/hub/RefTile";
+import { TipGrid, LearnSteps } from "@/app/components/hub/HubLists";
+import type { HubIconName } from "@/app/components/hub/HubIcon";
+
+const VERIFIED = "26 Oct 2026";
 
 const AUTOMATION_NEWS: WhatsNewItem[] = [
   {
@@ -82,27 +93,145 @@ export const metadata: Metadata = {
     "Learn Zapier, Make, and n8n — core concepts, AI-in-automation, build-ready recipes, and a learning path from beginner to AI-powered workflows.",
 };
 
+const PLATFORM_ICON: Record<string, HubIconName> = {
+  Zapier: "bolt",
+  "Make (formerly Integromat)": "flow",
+  n8n: "link",
+};
+
+// The topic tiles: one per platform, then the hub's other tabs. Sub-lines are
+// the seed's own pills and counts, so they can't drift from the content.
+const TOPICS: Topic[] = [
+  ...AUTO_PLATFORMS.map((platform) => ({
+    label: platform.name.replace(/\s*\(.*\)$/, ""),
+    sub: platform.pill,
+    icon: PLATFORM_ICON[platform.name] ?? "cube",
+    href: "#platforms",
+  })),
+  { label: "AI Steps", sub: `${AUTO_AI.length} patterns`, icon: "sparkle", href: "#ai-steps" },
+  { label: "Recipes", sub: `${AUTO_RECIPES.length} build-ready flows`, icon: "list", href: "#recipes" },
+  { label: "Learning path", sub: `${AUTO_LEARN.length} steps`, icon: "cap", href: "#learn" },
+];
+
 export default function AutomationHubPage() {
+  const overview = (
+    <>
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+        <HubTimeline title="What's new" items={AUTOMATION_NEWS} accent={TOKEN.blue} verified={VERIFIED} />
+        <TopicPanel title="Explore topics" icon="layers" topics={TOPICS} />
+      </div>
+
+      <section className="space-y-4">
+        <SectionHead
+          icon="star"
+          title="Top tools for automation"
+          description="Three tools, one skillset. Learn the concepts once — they transfer across all of them."
+          link={{ href: "#platforms", label: "Full comparison" }}
+        />
+        <div className="grid gap-3 lg:grid-cols-3">
+          {AUTO_PLATFORMS.map((platform) => (
+            <RefTile key={platform.name} card={platform} edge="left" compact />
+          ))}
+        </div>
+      </section>
+    </>
+  );
+
   return (
-    <div className="container-hub space-y-6 py-8">
-      <header>
-        <p className="eyebrow">Zapier · Make · n8n</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold uppercase tracking-tight text-text sm:text-5xl">
-          AI Automation{" "}
-          <span className="bg-gradient-to-r from-neon-blue to-violet-light bg-clip-text text-transparent">
-            Hub
-          </span>
-        </h1>
-        <p className="mt-2 max-w-2xl text-muted">
-          Go from clicking your first Zap to building AI-powered, self-hosted
-          workflows — platforms, core concepts, AI steps, recipes, and a learning
-          path.
-        </p>
-      </header>
+    <div className="container-hub space-y-8 py-8">
+      <PageHeader
+        href="/automation-hub"
+        eyebrow="Zapier · Make · n8n"
+        title="AI Automation"
+        accent="Hub"
+        stats={[
+          { label: "Latest updates", value: AUTOMATION_NEWS.length, icon: "/updates" },
+          { label: "Platforms", value: AUTO_PLATFORMS.length, icon: "/tools" },
+          { label: "Recipes", value: AUTO_RECIPES.length, icon: "/automation-hub" },
+          { label: "Learning steps", value: AUTO_LEARN.length, icon: "/learn" },
+        ]}
+      >
+        Zapier, Make and n8n: go from clicking your first Zap to building AI-powered, self-hosted workflows — platforms,
+        core concepts, AI steps, recipes, and a learning path.
+      </PageHeader>
 
-      <HubWhatsNew items={AUTOMATION_NEWS} accent={TOKEN.blue} verified="26 Oct 2026" />
-
-      <AutomationHubClient />
+      <HubTabs
+        label="AI Automation Hub sections"
+        tabs={[
+          { id: "whats-new", label: "What's New", icon: "rss", content: overview },
+          {
+            id: "platforms",
+            label: "Platforms",
+            icon: "layers",
+            content: (
+              <>
+                <p className="text-sm text-muted">
+                  Three tools, one skillset. Learn the concepts once — they transfer across all of them.
+                </p>
+                <div className="grid gap-3 lg:grid-cols-3">
+                  {AUTO_PLATFORMS.map((platform) => (
+                    <RefTile key={platform.name} card={platform} edge="left" />
+                  ))}
+                </div>
+              </>
+            ),
+          },
+          {
+            id: "concepts",
+            label: "Concepts",
+            icon: "cube",
+            content: (
+              <>
+                <p className="text-sm text-muted">
+                  The vocabulary of automation — the same ideas power Zapier, Make, and n8n.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {AUTO_CONCEPTS.map((concept) => (
+                    <RefTile key={concept.name} card={concept} />
+                  ))}
+                </div>
+              </>
+            ),
+          },
+          {
+            id: "recipes",
+            label: "Recipes",
+            icon: "list",
+            content: (
+              <>
+                <p className="text-sm text-muted">Build-ready flows — trigger → steps → outcome.</p>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {AUTO_RECIPES.map((recipe) => (
+                    <RecipeCard key={recipe.title} recipe={recipe} />
+                  ))}
+                </div>
+              </>
+            ),
+          },
+          {
+            id: "ai-steps",
+            label: "AI Steps",
+            icon: "sparkle",
+            content: (
+              <>
+                <p className="text-sm text-muted">Drop an LLM (Claude / OpenAI) into a workflow to give it a brain.</p>
+                <TipGrid tips={AUTO_AI} />
+              </>
+            ),
+          },
+          {
+            id: "learn",
+            label: "Learn",
+            icon: "cap",
+            content: (
+              <>
+                <p className="text-sm text-muted">A path from your first Zap to AI-powered, self-hosted workflows.</p>
+                <LearnSteps steps={AUTO_LEARN} />
+              </>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

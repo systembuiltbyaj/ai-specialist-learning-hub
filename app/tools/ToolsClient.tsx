@@ -4,8 +4,11 @@ import { useMemo, useState } from "react";
 import type { Tool, ToolCategory } from "@/app/lib/types";
 import { TOOL_CATEGORIES } from "@/app/lib/constants";
 import { MATRIX_COLUMNS } from "@/app/lib/seed/tools";
-import ToolCard from "@/app/components/ToolCard";
 import ComparisonTable from "@/app/components/ComparisonTable";
+import { TOOL_GLYPH } from "@/app/components/ui/Glyph";
+import { CategoryPills } from "@/app/components/ui/CategoryFilter";
+import { ViewToggle } from "@/app/components/ui/Controls";
+import ToolTile from "./ToolTile";
 
 type View = "matrix" | "cards";
 
@@ -13,44 +16,49 @@ export default function ToolsClient({ tools }: { tools: Tool[] }) {
   const [category, setCategory] = useState<ToolCategory>("AI Models");
   const [view, setView] = useState<View>("matrix");
 
-  const visible = useMemo(
-    () => tools.filter((t) => t.category === category),
-    [tools, category],
+  // No "All" option: the matrix columns differ per category, so tools are only
+  // ever compared within one.
+  const categoryItems = useMemo(
+    () =>
+      TOOL_CATEGORIES.map((c) => ({
+        key: c,
+        label: c,
+        count: tools.filter((t) => t.category === c).length,
+        glyph: TOOL_GLYPH[c],
+      })),
+    [tools],
   );
+  const visible = useMemo(() => tools.filter((t) => t.category === category), [tools, category]);
   const columns = MATRIX_COLUMNS[category] ?? [];
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-2">
-          {TOOL_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={`chip ${category === cat ? "chip-active" : "hover:border-gold/60"}`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+      <CategoryPills
+        items={categoryItems}
+        active={category}
+        onSelect={(key) => setCategory(key as ToolCategory)}
+        label="Tool category"
+      />
 
-        {/* View toggle */}
-        <div className="flex shrink-0 rounded-lg border border-line p-1">
-          {(["matrix", "cards"] as View[]).map((v) => (
-            <button
-              key={v}
-              onClick={() => setView(v)}
-              className={`rounded-md px-3 py-1.5 text-xs font-semibold capitalize transition-colors ${
-                view === v ? "bg-violet text-white" : "text-muted hover:text-text"
-              }`}
-            >
-              {v === "matrix" ? "▦ Matrix" : "▤ Cards"}
-            </button>
-          ))}
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted" aria-live="polite">
+          <span className="font-semibold text-text">{visible.length}</span> {visible.length === 1 ? "tool" : "tools"} ·{" "}
+          {category}
+        </p>
+        <ViewToggle
+          label="Layout"
+          value={view}
+          onChange={setView}
+          options={[
+            { value: "matrix", label: "Matrix", glyph: "table", showLabel: true },
+            { value: "cards", label: "Cards", glyph: "grid", showLabel: true },
+          ]}
+        />
       </div>
 
-      {view === "matrix" ? (
+      {visible.length === 0 ? (
+        <div className="card px-6 py-14 text-center text-[0.9375rem] text-muted">No tools in this category yet.</div>
+      ) : view === "matrix" ? (
         <>
           <ComparisonTable tools={visible} columns={columns} />
           <p className="text-xs text-muted">
@@ -60,7 +68,7 @@ export default function ToolsClient({ tools }: { tools: Tool[] }) {
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
           {visible.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
+            <ToolTile key={tool.id} tool={tool} />
           ))}
         </div>
       )}

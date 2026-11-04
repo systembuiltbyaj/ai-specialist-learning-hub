@@ -87,7 +87,7 @@ export default function InterviewPractice({
     const count = (r: InterviewRating) => results.filter((x) => x === r).length;
     return (
       <div className="mx-auto max-w-2xl space-y-5">
-        <div className="card p-8 text-center">
+        <div className="card card-glow p-8 text-center">
           <p className="eyebrow">Practice round complete · {scope}</p>
           <p className="mt-3 text-2xl font-black text-gold">{results.length} answers rehearsed</p>
           <div className="mt-4 flex justify-center gap-6 text-sm">
@@ -120,10 +120,10 @@ export default function InterviewPractice({
       </div>
 
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-text/10" aria-hidden>
-        <div className="h-full rounded-full bg-gradient-to-r from-gold to-violet-soft transition-all" style={{ width: `${(index / order.length) * 100}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-violet-soft to-violet-light transition-all" style={{ width: `${(index / order.length) * 100}%` }} />
       </div>
 
-      <article className="card space-y-5 p-6 sm:p-8">
+      <article className="card card-active space-y-5 p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="eyebrow">{entry.topic || "Interview question"}</p>

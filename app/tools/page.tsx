@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { TOOL_CATEGORIES } from "@/app/lib/constants";
 import { getTools } from "@/app/lib/data";
 import ToolsClient from "./ToolsClient";
+import PageHeader from "@/app/components/PageHeader";
 
 export const metadata: Metadata = {
   title: "AI Tools Comparison",
@@ -13,15 +15,10 @@ export default async function ToolsPage() {
 
   return (
     <div className="container-hub space-y-6 py-8">
-      <header>
-        <p className="eyebrow">Core feature</p>
-        <h1 className="section-title">⚖️ AI Tools Comparison</h1>
-        <p className="mt-2 max-w-2xl text-muted">
-          Models, coding agents, agent platforms, and automation tools — compared
-          in a matrix or as detailed cards, with pricing and clear &quot;when to
-          use&quot; guidance.
-        </p>
-      </header>
+      <PageHeader href="/tools" eyebrow="Compare before you choose" title="AI Tools" accent="Comparison" stats={[{ label: "Tools", value: tools.length, icon: "/tools" }, { label: "Categories", value: TOOL_CATEGORIES.length, icon: "/dev-tools" }]}>
+        Models, coding agents, agent platforms and automation tools — compared in a matrix or as detailed cards, with
+        pricing and clear &quot;when to use&quot; guidance.
+      </PageHeader>
 
       <ToolsClient tools={tools} />
     </div>

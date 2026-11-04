@@ -1,169 +1,203 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import {
-  ACRONYMS,
-  ACRONYM_CATEGORIES,
-  type AcronymCategory,
-} from "@/data/acronyms";
+import { useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { ACRONYMS, ACRONYM_CATEGORIES, type Acronym, type AcronymCategory } from "@/data/acronyms";
 import SearchBar from "@/app/components/SearchBar";
+import BookmarkButton from "@/app/components/BookmarkButton";
 import { highlight } from "@/app/lib/highlight";
 import { ACRONYM_TO_TERM, slugify } from "@/app/lib/reference";
-import { TOKEN, tint } from "@/app/lib/color";
+import Glyph, { ACRONYM_GLYPH } from "@/app/components/ui/Glyph";
+import { Tag } from "@/app/components/ui/Tag";
+import { CategoryPanel, CategoryPills, type CategoryItem } from "@/app/components/ui/CategoryFilter";
+import { SelectField, ViewToggle } from "@/app/components/ui/Controls";
+import Pagination from "@/app/components/ui/Pagination";
 
-const GOLD = TOKEN.gold;
-const COLOR_OF: Record<string, string> = Object.fromEntries(
-  ACRONYM_CATEGORIES.map((c) => [c.key, c.color]),
-);
-const ICON_OF: Record<string, string> = Object.fromEntries(
-  ACRONYM_CATEGORIES.map((c) => [c.key, c.icon]),
-);
+const PAGE_SIZE = 12;
+
+type Sort = "az" | "za";
+type View = "grid" | "list";
+
+const CATEGORY_ITEMS: CategoryItem[] = [
+  { key: "All", label: "All acronyms", count: ACRONYMS.length, glyph: "grid" },
+  ...ACRONYM_CATEGORIES.map(({ key }) => ({
+    key,
+    label: key,
+    count: ACRONYMS.filter((a) => a.category === key).length,
+    glyph: ACRONYM_GLYPH[key],
+  })),
+];
 
 export default function AcronymsClient() {
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState<AcronymCategory | "All">("All");
+  const [sort, setSort] = useState<Sort>("az");
+  const [view, setView] = useState<View>("grid");
+  const [page, setPage] = useState(1);
+  const resultsRef = useRef<HTMLElement>(null);
 
+  // Search and filters run over every acronym; pagination only slices the result.
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const direction = sort === "za" ? -1 : 1;
     return ACRONYMS.filter((a) => cat === "All" || a.category === cat)
-      .filter((a) => {
-        if (!q) return true;
-        return `${a.acronym} ${a.full} ${a.meaning}`.toLowerCase().includes(q);
-      })
-      .sort((a, b) => a.acronym.localeCompare(b.acronym, undefined, { sensitivity: "base" }));
-  }, [query, cat]);
+      .filter((a) => !q || `${a.acronym} ${a.full} ${a.meaning}`.toLowerCase().includes(q))
+      .sort((a, b) => direction * a.acronym.localeCompare(b.acronym, undefined, { sensitivity: "base" }));
+  }, [query, cat, sort]);
 
-  const countFor = (k: AcronymCategory | "All") =>
-    k === "All" ? ACRONYMS.length : ACRONYMS.filter((a) => a.category === k).length;
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const firstIndex = (current - 1) * PAGE_SIZE;
+  const visible = filtered.slice(firstIndex, firstIndex + PAGE_SIZE);
+
+  const search = (value: string) => {
+    setQuery(value);
+    setPage(1);
+  };
+  const chooseCategory = (key: string) => {
+    setCat(key as AcronymCategory | "All");
+    setPage(1);
+  };
+  const turnPage = (next: number) => {
+    setPage(next);
+    resultsRef.current?.scrollIntoView({ block: "start" });
+  };
 
   return (
     <div className="space-y-6">
-      <SearchBar
-        value={query}
-        onChange={setQuery}
-        placeholder="Search acronym, full name, or meaning…  (Ctrl+F)"
-        resultCount={filtered.length}
-      />
-
-      {/* Category chips */}
-      <div className="flex flex-wrap gap-2">
-        <Chip label="All" icon="✦" count={countFor("All")} color={GOLD} active={cat === "All"} onClick={() => setCat("All")} />
-        {ACRONYM_CATEGORIES.map((c) => (
-          <Chip
-            key={c.key}
-            label={c.key}
-            icon={c.icon}
-            count={countFor(c.key)}
-            color={c.color}
-            active={cat === c.key}
-            onClick={() => setCat(c.key)}
-          />
-        ))}
+      <div className="[&_input]:h-14 [&_input]:rounded-2xl [&_input]:text-base">
+        <SearchBar
+          value={query}
+          onChange={search}
+          placeholder="Search an acronym, full name or meaning, e.g. “MCP”…"
+          resultCount={filtered.length}
+        />
       </div>
 
-      <p className="text-xs text-muted">
-        <span className="font-bold text-text">{filtered.length}</span> acronym
-        {filtered.length === 1 ? "" : "s"}
-        {cat !== "All" && <> in {cat}</>}
-      </p>
+      <CategoryPills items={CATEGORY_ITEMS} active={cat} onSelect={chooseCategory} label="Filter by category" />
 
-      {filtered.length === 0 ? (
-        <div className="card p-10 text-center text-muted">
-          No acronyms match your filters{query && <> for “{query}”</>}.
-        </div>
-      ) : (
-        <div className="grid gap-3 md:grid-cols-2">
-          {filtered.map((a) => {
-            const color = COLOR_OF[a.category] ?? GOLD;
-            return (
-              <article key={a.acronym} className="card card-hover p-5">
-                <div className="flex items-start gap-3">
-                  <span
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-xl"
-                    style={{ backgroundColor: tint(color, 10), border: `1px solid ${tint(color, 27)}` }}
-                  >
-                    {a.icon}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-baseline gap-x-2">
-                      <h3 className="font-display text-lg font-extrabold tracking-tight text-text">
-                        {highlight(a.acronym, query)}
-                      </h3>
-                      <span className="text-sm font-semibold" style={{ color }}>
-                        {highlight(a.full, query)}
-                      </span>
-                    </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-text/80">
-                      {highlight(a.meaning, query)}
-                    </p>
-                    <div className="mt-2 flex flex-wrap items-center gap-3">
-                      <span
-                        className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-                        style={{ color, borderColor: tint(color, 33), backgroundColor: tint(color, 6) }}
-                      >
-                        {ICON_OF[a.category]} {a.category}
-                      </span>
-                      {/* Acronyms the dictionary already covers link straight to
-                          that entry, so the deeper page always wins. */}
-                      <a
-                        href={
-                          ACRONYM_TO_TERM[slugify(a.acronym)]
-                            ? `/dictionary/${ACRONYM_TO_TERM[slugify(a.acronym)]}`
-                            : `/acronyms/${slugify(a.acronym)}`
-                        }
-                        className="text-xs font-medium text-gold hover:underline"
-                      >
-                        {ACRONYM_TO_TERM[slugify(a.acronym)] ? "Full entry ↗" : "Details ↗"}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      )}
+      <div className="grid gap-6 xl:grid-cols-[16rem_minmax(0,1fr)]">
+        <aside className="hidden xl:block">
+          <div className="sticky top-6">
+            <CategoryPanel items={CATEGORY_ITEMS} active={cat} onSelect={chooseCategory} label="Acronym categories" />
+          </div>
+        </aside>
+
+        <section ref={resultsRef} aria-label="Acronyms" className="min-w-0 scroll-mt-24 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-muted" aria-live="polite">
+              {filtered.length === 0 ? (
+                "No acronyms"
+              ) : (
+                <>
+                  Showing{" "}
+                  <span className="font-semibold text-text">
+                    {firstIndex + 1}–{firstIndex + visible.length}
+                  </span>{" "}
+                  of {filtered.length} {filtered.length === 1 ? "acronym" : "acronyms"}
+                </>
+              )}
+              {cat !== "All" && <> · {cat}</>}
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <SelectField
+                label="Sort"
+                value={sort}
+                onChange={(value) => {
+                  setSort(value);
+                  setPage(1);
+                }}
+                options={[
+                  { value: "az", label: "A → Z" },
+                  { value: "za", label: "Z → A" },
+                ]}
+              />
+              <ViewToggle
+                label="Layout"
+                value={view}
+                onChange={setView}
+                options={[
+                  { value: "grid", label: "Grid view", glyph: "grid" },
+                  { value: "list", label: "List view", glyph: "list" },
+                ]}
+              />
+            </div>
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="card px-6 py-14 text-center">
+              <p className="text-[0.9375rem] text-muted">
+                No acronyms match your filters{query && <> for “{query}”</>}.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  search("");
+                  setCat("All");
+                }}
+                className="btn-ghost mt-5 px-4 py-2 text-xs"
+              >
+                Clear search and filters
+              </button>
+            </div>
+          ) : (
+            <div className={view === "grid" ? "grid gap-4 sm:grid-cols-2 2xl:grid-cols-3" : "space-y-3"}>
+              {visible.map((a) => (
+                <AcronymCard key={a.acronym} entry={a} query={query} compact={view === "list"} />
+              ))}
+            </div>
+          )}
+
+          <Pagination page={current} pageCount={pageCount} onChange={turnPage} label="Acronym pages" />
+        </section>
+      </div>
     </div>
   );
 }
 
-function Chip({
-  label,
-  icon,
-  count,
-  color,
-  active,
-  onClick,
-}: {
-  label: string;
-  icon?: string;
-  count: number;
-  color: string;
-  active: boolean;
-  onClick: () => void;
-}) {
+function AcronymCard({ entry, query, compact }: { entry: Acronym; query: string; compact: boolean }) {
+  // Acronyms the dictionary already covers link straight to that entry, so the
+  // deeper page always wins (and /acronyms/<slug> would only redirect there).
+  const slug = slugify(entry.acronym);
+  const termId = ACRONYM_TO_TERM[slug];
+  const href = termId ? `/dictionary/${termId}` : `/acronyms/${slug}`;
+
   return (
-    <button
-      onClick={onClick}
-      className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors"
-      style={
-        active
-          ? { color, backgroundColor: tint(color, 14), borderColor: tint(color, 55) }
-          : { color: "rgb(var(--c-text) / 0.8)", borderColor: "rgb(var(--c-line))" }
-      }
-    >
-      {icon && <span aria-hidden>{icon}</span>}
-      {label}
-      <span
-        className="rounded-full px-1.5 text-[0.6rem] font-semibold"
-        style={
-          active
-            ? { backgroundColor: tint(color, 22) }
-            : { backgroundColor: "rgb(var(--c-text) / 0.06)", color }
-        }
-      >
-        {count}
-      </span>
-    </button>
+    <article className={`card card-hover flex flex-col ${compact ? "px-4 py-3.5" : "p-5"}`}>
+      <div className={`flex items-start ${compact ? "gap-3" : "gap-4"}`}>
+        <span className={`icon-tile ${compact ? "h-10 w-10" : "h-12 w-12"}`}>
+          <Glyph name={ACRONYM_GLYPH[entry.category]} className={compact ? "h-5 w-5" : "h-6 w-6"} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="break-words text-lg font-bold leading-snug tracking-[-0.01em] text-text">
+                <Link href={href} className="rounded-sm transition-colors hover:text-gold">
+                  {highlight(entry.acronym, query)}
+                </Link>
+              </h3>
+              <p className="mt-0.5 text-sm font-semibold leading-snug text-violet-light">{highlight(entry.full, query)}</p>
+            </div>
+            {/* Bookmarks belong to dictionary terms, so only acronyms with an
+                entry there can be saved. */}
+            {termId && <BookmarkButton kind="term" id={termId} label={entry.acronym} compact />}
+          </div>
+          <p className={`mt-2 text-sm leading-relaxed text-text/80 ${compact ? "" : "line-clamp-3"}`}>
+            {highlight(entry.meaning, query)}
+          </p>
+        </div>
+      </div>
+
+      <div className={`flex flex-wrap items-center gap-2 ${compact ? "mt-3 pl-[3.25rem]" : "mt-auto pt-4"}`}>
+        <Tag>{entry.category}</Tag>
+        <Link
+          href={href}
+          aria-label={`${termId ? "Full dictionary entry" : "Details"} for ${entry.acronym}`}
+          className="ml-auto rounded-md text-xs font-semibold text-violet-light transition-colors hover:text-gold"
+        >
+          {termId ? "Full entry →" : "Details →"}
+        </Link>
+      </div>
+    </article>
   );
 }

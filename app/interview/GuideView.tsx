@@ -177,11 +177,11 @@ export default function GuideView({ guide }: { guide: InterviewGuide }) {
 
   return (
     <div className="space-y-6">
-      <header className="card p-5">
-        <h2 className="text-xl font-extrabold text-text">{guide.title}</h2>
+      <header className="card card-glow p-5 sm:p-6">
+        <h2 className="text-xl font-extrabold tracking-[-0.02em] text-text sm:text-2xl">{guide.title}</h2>
         <p className="mt-1 text-sm text-muted">{guide.subtitle}</p>
         {guide.cover.length > 0 && (
-          <div className="mt-3 space-y-1.5 border-t border-line/70 pt-3">
+          <div className="mt-3 space-y-1.5 border-t border-violet-soft/15 pt-3">
             <p className="text-sm font-semibold text-text">{guide.cover[0]}</p>
             {guide.cover.slice(1).map((line, i) => (
               <p key={i} className="text-sm text-text/75">
@@ -195,7 +195,7 @@ export default function GuideView({ guide }: { guide: InterviewGuide }) {
       {guide.sections.length > 2 && (
         <nav aria-label={`${guide.title} sections`} className="sticky top-0 z-10 -mx-1 flex gap-2 overflow-x-auto bg-bg/70 px-1 py-2 backdrop-blur-md">
           {guide.sections.map((section, i) => (
-            <a key={i} href={`#${anchor(i)}`} className="chip shrink-0 hover:border-violet-soft/50">
+            <a key={i} href={`#${anchor(i)}`} className="chip shrink-0 px-4 py-2 text-sm hover:border-violet-soft/60">
               {section.title}
             </a>
           ))}
@@ -204,7 +204,10 @@ export default function GuideView({ guide }: { guide: InterviewGuide }) {
 
       {guide.sections.map((section, i) => (
         <section key={i} id={anchor(i)} className="scroll-mt-16 space-y-3">
-          <h3 className="text-lg font-bold text-text">{section.title}</h3>
+          <h3 className="flex items-center gap-2.5 text-lg font-bold text-text">
+            <span className="h-5 w-1 rounded-full bg-gradient-to-b from-violet-light to-violet" aria-hidden />
+            {section.title}
+          </h3>
           {section.intro.map((line, j) => (
             <p key={j} className={j === 0 ? "text-sm font-medium text-text/85" : "text-sm text-muted"}>
               {line}
@@ -212,10 +215,12 @@ export default function GuideView({ guide }: { guide: InterviewGuide }) {
           ))}
           {section.blocks.length > 0 && <Blocks blocks={section.blocks} />}
           {section.items.map((item, j) => (
-            <article key={j} className="card space-y-3 p-4 sm:p-5">
+            <article key={j} className="card card-hover space-y-3 p-4 sm:p-5">
               <h4 className="font-bold text-text">
                 {/* Only number items when the section really is a sequence. */}
-                {section.items.length > 1 && <span className="mr-2 text-violet-light">{j + 1}.</span>}
+                {section.items.length > 1 && (
+                  <span className="icon-tile-muted mr-2.5 inline-grid h-7 w-7 align-middle text-xs font-extrabold">{j + 1}</span>
+                )}
                 {item.heading}
               </h4>
               <Blocks blocks={item.blocks} />

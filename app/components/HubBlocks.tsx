@@ -1,4 +1,4 @@
-import type { AccentKey, AutomationRecipe, Tip, LearnStep } from "@/app/lib/types";
+import type { AccentKey, AutomationRecipe } from "@/app/lib/types";
 
 const ACCENT_TEXT: Record<AccentKey, string> = {
   teal: "text-gold",
@@ -48,37 +48,5 @@ export function RecipeCard({ recipe }: { recipe: AutomationRecipe }) {
         </div>
       </div>
     </article>
-  );
-}
-
-export function TipCard({ tip }: { tip: Tip }) {
-  return (
-    <article className="card accent-bar accent-teal p-5">
-      <h3 className="font-bold text-gold">✓ {tip.title}</h3>
-      <p className="mt-2 text-sm text-text/75">{tip.detail}</p>
-    </article>
-  );
-}
-
-export function LearnList({ steps }: { steps: LearnStep[] }) {
-  return (
-    <ol className="space-y-3">
-      {steps.map((s) => (
-        <li key={s.title} className="card p-5">
-          <h3 className="font-bold text-text">{s.title}</h3>
-          <p className="mt-1 text-sm text-text/75">{s.detail}</p>
-          {s.resource && (
-            <a
-              href={s.resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-block text-xs font-medium text-violet-light underline hover:text-gold"
-            >
-              {s.resource.label} →
-            </a>
-          )}
-        </li>
-      ))}
-    </ol>
   );
 }

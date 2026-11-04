@@ -8,7 +8,7 @@ type Theme = "light" | "dark";
 // The <html data-theme> attribute (set before paint by app/layout.tsx) is the
 // source of truth; this component only reads and flips it.
 function readTheme(): Theme {
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
 }
 
 const listeners = new Set<() => void>();
@@ -18,7 +18,8 @@ function subscribe(listener: () => void) {
 }
 
 function setTheme(theme: Theme) {
-  if (theme === "dark") document.documentElement.dataset.theme = "dark";
+  // Dark is the default, so only light needs the attribute.
+  if (theme === "light") document.documentElement.dataset.theme = "light";
   else delete document.documentElement.dataset.theme;
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
@@ -29,7 +30,7 @@ function setTheme(theme: Theme) {
 }
 
 export default function ThemeToggle() {
-  const theme = useSyncExternalStore(subscribe, readTheme, () => "light" as Theme);
+  const theme = useSyncExternalStore(subscribe, readTheme, () => "dark" as Theme);
   const next: Theme = theme === "dark" ? "light" : "dark";
 
   return (
@@ -38,7 +39,7 @@ export default function ThemeToggle() {
       onClick={() => setTheme(next)}
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
-      className="grid h-8 w-8 place-items-center rounded-lg border border-line/80 text-muted transition-colors hover:border-violet-soft/50 hover:text-violet-light"
+      className="grid h-8 w-8 place-items-center rounded-lg border border-violet-soft/30 text-muted transition-colors hover:border-violet-soft/60 hover:text-violet-light"
     >
       {theme === "dark" ? (
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>

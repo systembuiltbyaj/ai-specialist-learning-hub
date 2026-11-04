@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import type { InterviewEntry, InterviewGuide } from "@/app/lib/types";
+import NavIcon from "@/app/components/NavIcons";
 import InterviewClient from "./InterviewClient";
 import GuideView from "./GuideView";
+import Glyph, { type GlyphName } from "./Glyph";
 
 type Tab = "answers" | "discovery" | "phrases" | "tips";
 
-const TABS: { key: Tab; icon: string; title: string; sub: string }[] = [
-  { key: "answers", icon: "🎤", title: "Answer bank", sub: "Fill in, practise, download as PDF" },
-  { key: "discovery", icon: "🧭", title: "Discovery guide", sub: "Lead a client call, step by step" },
-  { key: "phrases", icon: "💬", title: "Phrases", sub: "Sound natural, not scripted" },
-  { key: "tips", icon: "💡", title: "Call tips", sub: "What real calls teach" },
+// `icon` is a glyph name, or "mic" for the Interview route's own sidebar icon.
+const TABS: { key: Tab; icon: GlyphName | "mic"; title: string; sub: string }[] = [
+  { key: "answers", icon: "mic", title: "Answer bank", sub: "Fill in, practise, download as PDF" },
+  { key: "discovery", icon: "compass", title: "Discovery guide", sub: "Lead a client call, step by step" },
+  { key: "phrases", icon: "chat", title: "Phrases", sub: "Sound natural, not scripted" },
+  { key: "tips", icon: "bulb", title: "Call tips", sub: "What real calls teach" },
 ];
 
 export default function InterviewTabs({
@@ -26,23 +29,21 @@ export default function InterviewTabs({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4" role="tablist" aria-label="Interview prep sections">
+      <div className="grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 lg:grid-cols-4" role="tablist" aria-label="Interview prep sections">
         {TABS.map((t) => (
           <button
             key={t.key}
             role="tab"
             aria-selected={tab === t.key}
             onClick={() => setTab(t.key)}
-            className={`card flex items-start gap-3 p-3.5 text-left transition-colors ${
-              tab === t.key ? "!border-violet-soft/60 bg-violet-soft/10" : "card-hover"
-            }`}
+            className={`card flex items-center gap-3 p-3.5 text-left sm:p-4 ${tab === t.key ? "card-active" : "card-hover"}`}
           >
-            <span className="text-xl" aria-hidden>
-              {t.icon}
+            <span className={`${tab === t.key ? "icon-tile" : "icon-tile-muted"} h-10 w-10 sm:h-11 sm:w-11`}>
+              {t.icon === "mic" ? <NavIcon href="/interview" className="h-5 w-5" /> : <Glyph name={t.icon} className="h-5 w-5" />}
             </span>
             <span className="min-w-0">
               <span className={`block text-sm font-bold ${tab === t.key ? "text-violet-light" : "text-text"}`}>{t.title}</span>
-              <span className="text-xs text-muted">{t.sub}</span>
+              <span className="block text-xs text-muted">{t.sub}</span>
             </span>
           </button>
         ))}

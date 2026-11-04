@@ -4,81 +4,89 @@
 
 /* ─────────────────────────────────────────────────────────────
    Themes. Colours are RGB channels so Tailwind can apply alpha
-   (`bg-surface/60`). Light "lavender glass" is the default; dark
-   "midnight glass" is the same design at night.
+   (`bg-surface/60`). Dark "violet night" is the default: an
+   indigo-black canvas lit by purple glows, translucent violet
+   cards, violet actions and a yellow call to action. Light
+   "lavender day" is the same design by daylight.
+
+   Token names describe roles, not hues:
+   `gold` = highlight text, `gold-fill` = the yellow CTA fill,
+   `violet` = the primary action, `violet-soft/-light` = accent lines and text.
    ───────────────────────────────────────────────────────────── */
-:root {
+:root,
+.scope-dark {
+  color-scheme: dark;
+  --c-bg: 13 9 30;
+  --c-surface: 26 18 54;
+  --c-surface-2: 36 26 74;
+  --c-line: 66 50 128;
+  --c-muted: 172 162 208;
+  --c-text: 246 243 255;
+  --c-gold: 190 156 255;
+  --c-gold-soft: 214 190 255;
+  --c-gold-dim: 160 120 245;
+  --c-gold-fill: 250 204 21;
+  --c-violet: 124 77 255;
+  --c-violet-soft: 145 100 255;
+  --c-violet-light: 186 150 255;
+  --c-pink: 255 107 180;
+  --c-yellow: 250 204 21;
+  --c-blue: 96 165 255;
+  --c-orange: 255 150 100;
+  --c-success: 74 222 128;
+  --c-danger: 255 120 140;
+  --c-onaccent: 24 16 48;
+  --c-onprimary: 255 255 255;
+
+  /* Cards are tinted glass: a violet wash over the canvas, a violet hairline. */
+  --glass: linear-gradient(180deg, rgb(34 24 72 / 0.72), rgb(22 15 50 / 0.72));
+  --glass-strong: rgb(24 17 52 / 0.94);
+  --glass-edge: rgb(139 92 246 / 0.24);
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 18px 44px -20px rgb(0 0 0 / 0.75);
+  --shadow-glow: 0 0 0 1px rgb(145 100 255 / 0.45), 0 18px 48px -16px rgb(124 77 255 / 0.55);
+  --shadow-glow-gold: 0 14px 34px -12px rgb(250 204 21 / 0.45);
+
+  /* The canvas glows and the lit swoosh on feature cards. */
+  --glow-a: rgb(124 60 255 / 0.32);
+  --glow-b: rgb(80 40 200 / 0.22);
+  --swoosh: 176 130 255;
+}
+
+:root[data-theme="light"] {
   color-scheme: light;
-  --c-bg: 244 241 252;
+  --c-bg: 245 242 255;
   --c-surface: 255 255 255;
-  --c-surface-2: 247 244 255;
-  --c-line: 221 213 245;
-  --c-muted: 104 99 140;
-  --c-text: 31 26 64;
-  /* Deep amber: brand gold that still passes contrast as text on white. */
-  --c-gold: 168 107 0;
-  --c-gold-soft: 196 134 10;
-  --c-gold-dim: 140 90 0;
-  --c-gold-fill: 246 203 31;
-  --c-violet: 94 23 235;
-  --c-violet-soft: 112 72 240;
-  --c-violet-light: 99 45 222;
-  --c-pink: 214 51 108;
+  --c-surface-2: 241 235 255;
+  --c-line: 220 208 250;
+  --c-muted: 98 90 140;
+  --c-text: 26 18 56;
+  /* Violet deep enough to read as text on white (7:1). */
+  --c-gold: 98 44 220;
+  --c-gold-soft: 124 77 255;
+  --c-gold-dim: 84 36 190;
+  --c-gold-fill: 250 204 21;
+  --c-violet: 110 60 245;
+  --c-violet-soft: 124 77 255;
+  --c-violet-light: 98 44 220;
+  --c-pink: 214 51 128;
   --c-yellow: 161 98 7;
   --c-blue: 37 99 235;
   --c-orange: 214 92 30;
-  --c-success: 4 140 100;
+  --c-success: 22 150 80;
   --c-danger: 206 44 84;
-  --c-onaccent: 31 26 64;
+  --c-onaccent: 26 18 56;
+  --c-onprimary: 255 255 255;
 
-  --glass: rgb(255 255 255 / 0.62);
-  --glass-strong: rgb(255 255 255 / 0.82);
-  --glass-edge: rgb(255 255 255 / 0.85);
-  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 12px 32px -12px rgb(76 44 160 / 0.18);
-  --shadow-glow: 0 18px 44px -16px rgb(94 23 235 / 0.35);
-  --shadow-glow-gold: 0 14px 36px -14px rgb(214 150 0 / 0.45);
+  --glass: linear-gradient(180deg, rgb(255 255 255 / 0.9), rgb(250 247 255 / 0.85));
+  --glass-strong: rgb(255 255 255 / 0.96);
+  --glass-edge: rgb(150 110 255 / 0.22);
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 14px 36px -18px rgb(76 44 160 / 0.28);
+  --shadow-glow: 0 0 0 1px rgb(124 77 255 / 0.4), 0 16px 40px -16px rgb(124 77 255 / 0.4);
+  --shadow-glow-gold: 0 14px 34px -12px rgb(214 160 0 / 0.45);
 
-  /* The canvas: soft pastel orbs, the one bold element of the theme. */
-  --orb-lilac: rgb(186 160 255 / 0.55);
-  --orb-rose: rgb(255 170 210 / 0.55);
-  --orb-sky: rgb(160 205 255 / 0.5);
-  --orb-apricot: rgb(255 205 160 / 0.45);
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --c-bg: 11 8 26;
-  --c-surface: 26 20 56;
-  --c-surface-2: 36 28 74;
-  --c-line: 58 48 105;
-  --c-muted: 160 154 200;
-  --c-text: 241 238 255;
-  --c-gold: 246 203 31;
-  --c-gold-soft: 255 224 102;
-  --c-gold-dim: 212 168 0;
-  --c-gold-fill: 246 203 31;
-  --c-violet: 94 23 235;
-  --c-violet-soft: 124 92 252;
-  --c-violet-light: 172 120 255;
-  --c-pink: 255 107 163;
-  --c-yellow: 255 217 94;
-  --c-blue: 96 165 255;
-  --c-orange: 255 156 110;
-  --c-success: 52 211 153;
-  --c-danger: 255 120 120;
-  --c-onaccent: 18 14 40;
-
-  --glass: rgb(30 24 64 / 0.55);
-  --glass-strong: rgb(30 24 64 / 0.8);
-  --glass-edge: rgb(255 255 255 / 0.08);
-  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 16px 40px -16px rgb(0 0 0 / 0.6);
-  --shadow-glow: 0 18px 44px -16px rgb(124 92 252 / 0.45);
-  --shadow-glow-gold: 0 14px 36px -14px rgb(246 203 31 / 0.3);
-
-  --orb-lilac: rgb(110 60 230 / 0.35);
-  --orb-rose: rgb(200 60 140 / 0.22);
-  --orb-sky: rgb(60 110 230 / 0.22);
-  --orb-apricot: rgb(240 160 60 / 0.08);
+  --glow-a: rgb(160 120 255 / 0.28);
+  --glow-b: rgb(200 170 255 / 0.3);
+  --swoosh: 124 77 255;
 }
 
 html {
@@ -92,61 +100,120 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Canvas orbs. Static on purpose — the glass reads better over a still field,
-   and nothing here should compete with the content for attention. */
+/* Canvas light: a purple bloom top-right and a deeper one low-left. Static —
+   nothing behind the content should move. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(38rem 38rem at 12% 8%, var(--orb-lilac), transparent 70%),
-    radial-gradient(34rem 34rem at 92% 18%, var(--orb-rose), transparent 70%),
-    radial-gradient(40rem 40rem at 78% 96%, var(--orb-sky), transparent 70%),
-    radial-gradient(28rem 28rem at 4% 88%, var(--orb-apricot), transparent 70%);
+    radial-gradient(46rem 30rem at 88% -6%, var(--glow-a), transparent 70%),
+    radial-gradient(40rem 34rem at 30% 105%, var(--glow-b), transparent 70%);
   pointer-events: none;
 }
 
-/* Visible keyboard focus everywhere, in the brand violet. */
+/* Visible keyboard focus everywhere, in the accent violet. */
 :focus-visible {
-  outline: 2px solid rgb(var(--c-violet-soft));
+  outline: 2px solid rgb(var(--c-violet-light));
   outline-offset: 2px;
+}
+
+/* ── Sidebar: a floating violet-black panel in both themes. */
+.sidebar-panel {
+  background: linear-gradient(180deg, rgb(22 15 48), rgb(15 10 34));
+  border: 1px solid rgb(139 92 246 / 0.18);
 }
 
 @layer components {
   .container-hub {
-    @apply mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-10;
   }
 
-  /* Cards — frosted glass: translucent fill, white edge highlight, tinted shadow. */
+  /* Cards — tinted glass with a violet hairline. */
   .card {
-    @apply relative overflow-hidden rounded-2xl border backdrop-blur-xl transition-[transform,box-shadow,border-color] duration-300;
+    @apply relative overflow-hidden rounded-[1.25rem] border transition-[box-shadow,border-color,transform] duration-200;
     background: var(--glass);
     border-color: var(--glass-edge);
     box-shadow: var(--shadow-card);
   }
   .card-hover {
-    @apply hover:-translate-y-0.5 hover:border-violet-soft/40 hover:shadow-glow;
+    @apply hover:-translate-y-0.5 hover:shadow-glow;
   }
-  /* Code is always set on a dark panel — the convention developers read fastest,
-     and it keeps samples legible over the light glass. */
-  .code-surface {
-    background: rgb(22 18 48);
-    color: rgb(236 233 255);
+  /* The selected / featured state: a lit violet edge. */
+  .card-active {
+    border-color: rgb(var(--c-violet-soft) / 0.75);
+    box-shadow: var(--shadow-glow);
+  }
+  /* Feature cards: a violet wash and the lit swoosh in the bottom-right corner —
+     the motif every mockup repeats. Content sits above it. */
+  .card-glow {
+    background:
+      radial-gradient(90% 120% at 100% 0%, rgb(var(--c-violet) / 0.28), transparent 60%),
+      var(--glass);
+  }
+  .card-glow::after,
+  .swoosh::after {
+    content: "";
+    position: absolute;
+    right: -2rem;
+    bottom: -2rem;
+    width: 22rem;
+    height: 9rem;
+    border-radius: 50%;
+    border-top: 2px solid rgb(var(--swoosh) / 0.85);
+    background: radial-gradient(60% 80% at 70% 20%, rgb(var(--swoosh) / 0.35), transparent 70%);
+    filter: drop-shadow(0 -4px 10px rgb(var(--swoosh) / 0.6));
+    transform: rotate(-14deg);
+    pointer-events: none;
+  }
+  .card-glow > *,
+  .swoosh > * {
+    position: relative;
+    z-index: 1;
   }
 
-  /* A stronger pane for floating chrome (sidebar, menus) that sits over cards. */
+  /* Code is always set on a dark panel — the convention developers read fastest. */
+  .code-surface {
+    background: rgb(12 8 28);
+    color: rgb(236 232 255);
+  }
+
+  /* A stronger pane for floating chrome (menus, the mobile bar) that sits over cards. */
   .glass-pane {
-    @apply backdrop-blur-2xl;
+    @apply backdrop-blur-xl;
     background: var(--glass-strong);
     border: 1px solid var(--glass-edge);
     box-shadow: var(--shadow-card);
   }
 
+  /* The square icon tile in headers and rows — a lit violet gradient. */
+  .icon-tile {
+    @apply grid shrink-0 place-items-center rounded-xl text-white;
+    background: linear-gradient(145deg, rgb(160 110 255), rgb(110 60 240));
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.35) inset, 0 10px 24px -10px rgb(124 77 255 / 0.8);
+  }
+  /* The quiet version, for rows that aren't the focus. */
+  .icon-tile-muted {
+    @apply grid shrink-0 place-items-center rounded-xl border text-violet-light;
+    background: rgb(var(--c-violet) / 0.14);
+    border-color: rgb(var(--c-violet-soft) / 0.25);
+  }
+
+  /* Stat strip: one card split into segments (icon, number, label). */
+  .stat-strip {
+    @apply card grid divide-y sm:divide-x sm:divide-y-0;
+    --tw-divide-opacity: 1;
+    border-color: var(--glass-edge);
+  }
+  .stat-strip > * {
+    border-color: rgb(var(--c-violet-soft) / 0.18);
+  }
+
   /* Left accent bar (apply .accent-* alongside) */
   .accent-bar::before {
     content: "";
-    @apply absolute inset-y-0 left-0 w-1;
+    @apply absolute inset-y-0 left-0 z-[2] w-1;
   }
   .accent-teal::before {
     background: theme("colors.gold.DEFAULT");
@@ -167,43 +234,101 @@ body::before {
     background: theme("colors.neon.orange");
   }
 
-  /* Buttons */
-  /* Buttons. Gold stays the brand's "do this" colour; violet is the primary action. */
+  /* Buttons. Yellow is the one "go" call to action per view; violet is the
+     everyday primary; ghost is everything else. */
   .btn-gold {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gold-fill px-5 py-2.5 text-sm font-bold text-onaccent transition-all hover:shadow-glow-gold hover:brightness-105 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold-fill px-5 py-2.5 text-sm font-bold text-onaccent transition-all hover:shadow-glow-gold hover:brightness-105 active:scale-[0.98];
   }
   .btn-violet {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-violet-soft to-violet px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-glow hover:brightness-110 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-onprimary transition-all hover:shadow-glow hover:brightness-110 active:scale-[0.98];
+    background: linear-gradient(135deg, rgb(150 100 255), rgb(110 60 240));
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold text-text backdrop-blur-md transition-all hover:border-violet-soft/50 hover:text-violet-light active:scale-[0.98];
-    background: var(--glass);
-    border-color: var(--glass-edge);
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold text-text transition-all hover:border-violet-soft/60 active:scale-[0.98];
+    background: rgb(var(--c-violet) / 0.08);
+    border-color: rgb(var(--c-violet-soft) / 0.35);
   }
 
-  /* Chips / filters */
+  /* Chips / filters — dark pills, the active one filled violet. */
   .chip {
-    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium text-text/80 backdrop-blur-md transition-colors;
-    background: var(--glass);
-    border-color: var(--glass-edge);
+    @apply inline-flex items-center rounded-full border px-3.5 py-1.5 text-xs font-medium text-text/85 transition-colors;
+    background: rgb(var(--c-violet) / 0.08);
+    border-color: rgb(var(--c-violet-soft) / 0.3);
   }
   .chip-active {
-    @apply border-violet bg-violet text-white;
+    @apply border-transparent text-onprimary;
+    background: linear-gradient(135deg, rgb(150 100 255), rgb(110 60 240));
+    box-shadow: 0 8px 20px -10px rgb(124 77 255 / 0.9);
   }
 
   /* Inputs */
   .input-hub {
-    @apply w-full rounded-xl border px-4 py-3 text-text placeholder:text-muted outline-none backdrop-blur-md transition-colors focus:border-violet-soft focus:ring-2 focus:ring-violet-soft/25;
-    background: var(--glass-strong);
-    border-color: rgb(var(--c-line));
+    @apply w-full rounded-xl border px-4 py-3 text-text placeholder:text-muted outline-none transition-colors focus:border-violet-soft focus:ring-2 focus:ring-violet-soft/25;
+    background: rgb(var(--c-violet) / 0.07);
+    border-color: rgb(var(--c-violet-soft) / 0.3);
   }
 
   /* Typography helpers — sentence case, weight and size carry the hierarchy. */
   .section-title {
-    @apply font-display text-2xl font-extrabold tracking-[-0.025em] text-text sm:text-[2rem];
+    @apply font-display text-2xl font-extrabold tracking-[-0.03em] text-text sm:text-[2rem];
+  }
+  /* Page titles: big, bold, white — the accent word goes violet. */
+  .page-title {
+    @apply font-display text-[2rem] font-extrabold leading-[1.05] tracking-[-0.035em] text-text sm:text-[2.75rem];
+  }
+  .title-accent {
+    @apply bg-gradient-to-r from-violet-light to-violet-soft bg-clip-text text-transparent;
   }
   .eyebrow {
     @apply text-[0.8rem] font-semibold tracking-normal text-violet-light;
+  }
+
+  /* ── The 3D glyph: three stacked violet slabs seen from above, the page's
+     icon on the top face. Pure CSS so it themes and scales with no assets. */
+  .glyph {
+    @apply relative grid place-items-center;
+    perspective: 900px;
+  }
+  .glyph-stack {
+    position: relative;
+    width: 6.5rem;
+    height: 6.5rem;
+    transform: rotateX(52deg) rotateZ(-38deg);
+    transform-style: preserve-3d;
+  }
+  .glyph-slab {
+    position: absolute;
+    inset: 0;
+    border-radius: 1.6rem;
+    background: linear-gradient(145deg, rgb(130 80 250), rgb(80 36 190));
+    border: 1px solid rgb(200 170 255 / 0.35);
+  }
+  .glyph-slab:nth-child(1) {
+    transform: translateZ(0);
+    opacity: 0.55;
+    box-shadow: 0 30px 60px -10px rgb(110 60 240 / 0.9);
+  }
+  .glyph-slab:nth-child(2) {
+    transform: translateZ(14px);
+    opacity: 0.8;
+  }
+  .glyph-slab:nth-child(3) {
+    transform: translateZ(28px);
+    display: grid;
+    place-items: center;
+    color: white;
+    background: linear-gradient(145deg, rgb(178 140 255), rgb(124 77 255));
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.5) inset, 0 0 40px rgb(150 100 255 / 0.55);
+  }
+  /* The light trail that sweeps behind the glyph. */
+  .glyph-trail {
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    width: 30rem;
+    height: 10rem;
+    pointer-events: none;
+    overflow: visible;
   }
 
   /* ─────────────────────────────────────────────────────────────

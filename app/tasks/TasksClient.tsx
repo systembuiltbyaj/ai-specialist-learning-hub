@@ -2,28 +2,49 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { TaskItem, TaskStatus } from "@/app/lib/types";
+import Glyph, { type GlyphName } from "./Glyph";
 
 const STORAGE_KEY = "lh.tasks.v1";
 const STATUSES: TaskStatus[] = ["To Do", "In Progress", "Done"];
 const DAYS = ["This week", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-// Gold marks the work happening now. To Do is waiting, Done recedes — a
-// finished column should get quieter, not louder.
-const COLUMN: Record<TaskStatus, { rail: string; head: string; tint: string }> = {
+type Priority = "all" | "urgent" | "normal";
+
+// Each column owns one hue — violet waiting, yellow in motion, green finished —
+// so a card's state reads from across the room before its title does.
+const COLUMN: Record<
+  TaskStatus,
+  { dot: string; head: string; frame: string; drop: string; pill: string; art: string; glyph: GlyphName; empty: [string, string] }
+> = {
   "To Do": {
-    rail: "bg-violet-soft",
+    dot: "bg-violet-soft",
     head: "text-violet-light",
-    tint: "bg-violet/[0.07]",
+    frame: "border-violet-soft/45 bg-violet/[0.08]",
+    drop: "border-violet-soft bg-violet/[0.16] shadow-glow",
+    pill: "border-violet-soft/60 text-violet-light hover:bg-violet/15",
+    art: "border-violet-soft/50 bg-violet/20 text-violet-light",
+    glyph: "lines",
+    empty: ["No cards yet", "Add your first task to get started."],
   },
   "In Progress": {
-    rail: "bg-gold",
-    head: "text-gold",
-    tint: "bg-gold/[0.06]",
+    dot: "bg-neon-yellow",
+    head: "text-neon-yellow",
+    frame: "border-neon-yellow/40 bg-neon-yellow/[0.05]",
+    drop: "border-neon-yellow bg-neon-yellow/[0.1]",
+    pill: "border-neon-yellow/60 text-neon-yellow hover:bg-neon-yellow/10",
+    art: "border-neon-yellow/50 bg-neon-yellow/15 text-neon-yellow",
+    glyph: "dots",
+    empty: ["Nothing in progress", "Move a card here when you start working on it."],
   },
   Done: {
-    rail: "bg-line",
-    head: "text-muted",
-    tint: "bg-text/[0.02]",
+    dot: "bg-success",
+    head: "text-success",
+    frame: "border-success/35 bg-success/[0.05]",
+    drop: "border-success bg-success/[0.1]",
+    pill: "border-success/60 text-success hover:bg-success/10",
+    art: "border-success/50 bg-success/15 text-success",
+    glyph: "check",
+    empty: ["Nothing done yet", "Completed cards will appear here."],
   },
 };
 
@@ -43,6 +64,8 @@ export default function TasksClient() {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<TaskStatus | null>(null);
   const [announcement, setAnnouncement] = useState("");
+  const [dayFilter, setDayFilter] = useState("All");
+  const [priority, setPriority] = useState<Priority>("all");
 
   useEffect(() => {
     try {
@@ -78,6 +101,11 @@ export default function TasksClient() {
     }
     return map;
   }, [tasks]);
+
+  const filtering = dayFilter !== "All" || priority !== "all";
+  const visible = (t: TaskItem) =>
+    (dayFilter === "All" || t.day === dayFilter) &&
+    (priority === "all" || (priority === "urgent" ? t.urgent : !t.urgent));
 
   const nextCreatedAt = () => tasks.reduce((m, t) => Math.max(m, t.createdAt), 0) + 1;
 
@@ -120,36 +148,85 @@ export default function TasksClient() {
 
   const clearDone = () => setTasks((prev) => prev.filter((t) => t.status !== "Done"));
 
+  // Until storage is read the counts are unknown, not zero.
+  const count = (n: number) => (hydrated ? n : "—");
+  const stats: { label: string; value: number; glyph: GlyphName; tone: string }[] = [
+    { label: "Total cards", value: tasks.length, glyph: "layers", tone: "bg-violet/20 text-violet-light" },
+    { label: "To Do", value: byStatus["To Do"].length, glyph: "clipboard", tone: "bg-violet/20 text-violet-light" },
+    { label: "In Progress", value: byStatus["In Progress"].length, glyph: "progress", tone: "bg-neon-yellow/15 text-neon-yellow" },
+    { label: "Done", value: byStatus.Done.length, glyph: "done", tone: "bg-success/15 text-success" },
+  ];
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Screen readers get told about moves; sighted users see the card jump. */}
       <p aria-live="polite" className="sr-only">
         {announcement}
       </p>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="entry-meta">
-          {tasks.length} {tasks.length === 1 ? "card" : "cards"}
-          {byStatus.Done.length > 0 && <> · {byStatus.Done.length} done</>}
-        </p>
+      <div className="stat-strip grid-cols-2 sm:grid-cols-4">
+        {stats.map((s) => (
+          <div key={s.label} className="flex items-center gap-3 px-4 py-4 sm:px-5">
+            <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-full ${s.tone}`}>
+              <Glyph name={s.glyph} className="h-6 w-6" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-2xl font-extrabold leading-none tracking-[-0.03em] text-text">{count(s.value)}</span>
+              <span className="mt-1 block truncate text-sm text-muted">{s.label}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <button onClick={() => setAddingTo("To Do")} className="btn-violet">
+          <Glyph name="plus" className="h-4 w-4" /> Add card
+        </button>
+        <label className="min-w-[9rem] flex-1 sm:max-w-[13rem]">
+          <span className="sr-only">Filter by day</span>
+          <select value={dayFilter} onChange={(e) => setDayFilter(e.target.value)} className="input-hub py-2.5 text-sm">
+            <option value="All">All days</option>
+            {DAYS.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="min-w-[9rem] flex-1 sm:max-w-[13rem]">
+          <span className="sr-only">Filter by priority</span>
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value as Priority)}
+            className="input-hub py-2.5 text-sm"
+          >
+            <option value="all">All priorities</option>
+            <option value="urgent">Urgent only</option>
+            <option value="normal">Not urgent</option>
+          </select>
+        </label>
         {byStatus.Done.length > 0 && (
           <button
             onClick={clearDone}
-            className="font-mono text-[0.68rem] text-muted underline decoration-line underline-offset-4 transition-colors hover:text-neon-pink hover:decoration-neon-pink"
+            className="ml-auto text-sm font-medium text-muted underline decoration-line underline-offset-4 transition-colors hover:text-danger hover:decoration-danger"
           >
-            clear done
+            Clear done ({byStatus.Done.length})
           </button>
         )}
       </div>
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         {STATUSES.map((status) => {
-          const cards = byStatus[status];
+          const all = byStatus[status];
+          const cards = all.filter(visible);
           const isTarget = dropTarget === status;
+          const style = COLUMN[status];
+          const adding = addingTo === status;
 
           return (
             <section
               key={status}
+              aria-label={status}
               onDragOver={(e) => {
                 e.preventDefault();
                 setDropTarget(status);
@@ -162,23 +239,19 @@ export default function TasksClient() {
                 setDropTarget(null);
                 setDraggingId(null);
               }}
-              className={`flex flex-col rounded-xl border transition-colors ${
-                isTarget ? "border-gold bg-gold/[0.06]" : `border-line ${COLUMN[status].tint}`
+              className={`flex min-w-0 flex-col rounded-[1.25rem] border transition-[border-color,background-color,box-shadow] ${
+                isTarget ? style.drop : style.frame
               }`}
             >
-              <header className="flex items-center gap-2 border-b border-line/70 px-4 py-3">
-                <span className={`h-2 w-2 shrink-0 rounded-full ${COLUMN[status].rail}`} />
-                <h2
-                  className={`font-mono text-[0.7rem] font-bold uppercase tracking-[0.16em] ${COLUMN[status].head}`}
-                >
-                  {status}
-                </h2>
-                <span className="ml-auto font-mono text-[0.7rem] text-muted">
-                  {cards.length}
+              <header className="flex items-center gap-2.5 border-b border-text/10 px-4 py-3.5">
+                <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${style.dot}`} />
+                <h2 className={`font-mono text-sm font-bold uppercase tracking-[0.12em] ${style.head}`}>{status}</h2>
+                <span className={`ml-auto font-mono text-sm ${style.head}`}>
+                  {filtering && hydrated ? `${cards.length}/${all.length}` : count(all.length)}
                 </span>
               </header>
 
-              <div className="flex min-h-[7rem] flex-1 flex-col gap-2 p-3">
+              <div className="flex min-h-[15rem] flex-1 flex-col gap-2.5 p-3">
                 {cards.map((task) =>
                   editingId === task.id ? (
                     <CardForm
@@ -214,7 +287,24 @@ export default function TasksClient() {
                   ),
                 )}
 
-                {addingTo === status ? (
+                {cards.length === 0 && !adding && hydrated && (
+                  <div className="flex flex-1 flex-col items-center justify-center px-2 pt-4 text-center">
+                    <div className="relative h-14 w-20" aria-hidden>
+                      <span className={`absolute left-0 top-2 h-11 w-16 -rotate-6 rounded-xl border opacity-60 ${style.art}`} />
+                      <span className={`absolute right-0 top-0 grid h-11 w-16 place-items-center rounded-xl border ${style.art}`}>
+                        <Glyph name={style.glyph} className="h-7 w-7" />
+                      </span>
+                    </div>
+                    <p className="mt-4 font-bold text-text">
+                      {all.length > 0 ? "No matching cards" : style.empty[0]}
+                    </p>
+                    <p className="mt-1 text-sm text-muted">
+                      {all.length > 0 ? "Change the filters to see the rest of this column." : style.empty[1]}
+                    </p>
+                  </div>
+                )}
+
+                {adding ? (
                   <CardForm
                     initial={emptyDraft()}
                     submitLabel="Add card"
@@ -224,9 +314,11 @@ export default function TasksClient() {
                 ) : (
                   <button
                     onClick={() => setAddingTo(status)}
-                    className="mt-auto rounded-lg border border-dashed border-line px-3 py-2 text-left font-mono text-[0.7rem] text-muted transition-colors hover:border-gold/60 hover:text-gold"
+                    className={`inline-flex items-center gap-2 self-center rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${style.pill} ${
+                      cards.length === 0 && hydrated ? "mb-6 mt-4" : "mt-auto"
+                    }`}
                   >
-                    + Add a card
+                    <Glyph name="plus" className="h-4 w-4" /> Add a card
                   </button>
                 )}
               </div>
@@ -235,7 +327,8 @@ export default function TasksClient() {
         })}
       </div>
 
-      <p className="font-mono text-[0.65rem] text-muted">
+      <p className="flex items-start gap-2 text-sm text-muted">
+        <Glyph name="info" className="mt-0.5 h-4 w-4 shrink-0" />
         Drag a card between columns, or use the ← → buttons. Saved to this browser only.
       </p>
     </div>
@@ -269,52 +362,41 @@ function Card({
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      className={`group cursor-grab rounded-lg border border-line bg-surface px-3 py-2.5 transition-opacity active:cursor-grabbing ${
+      className={`group cursor-grab rounded-xl border border-violet-soft/20 bg-surface/80 px-3.5 py-3 shadow-card transition-[opacity,border-color] hover:border-violet-soft/45 active:cursor-grabbing ${
         dragging ? "opacity-40" : ""
       }`}
     >
       <div className="flex items-start gap-2">
-        {task.urgent && !done && (
-          <span
-            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-neon-pink"
-            title="Urgent"
-          />
-        )}
         <h3
-          className={`flex-1 text-[0.875rem] font-semibold leading-snug ${
+          className={`min-w-0 flex-1 break-words text-[0.9rem] font-semibold leading-snug ${
             done ? "text-muted line-through" : "text-text"
           }`}
         >
           {task.title}
         </h3>
+        {task.urgent && !done && (
+          <span className="shrink-0 rounded-full border border-neon-pink/50 bg-neon-pink/10 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-neon-pink">
+            Urgent
+          </span>
+        )}
       </div>
 
       {task.notes && (
-        <p className="mt-1 line-clamp-2 text-[0.78rem] leading-relaxed text-muted">
-          {task.notes}
-        </p>
+        <p className="mt-1 line-clamp-2 text-[0.8rem] leading-relaxed text-muted">{task.notes}</p>
       )}
 
-      <div className="mt-2 flex items-center gap-2">
-        <span className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+      <div className="mt-2.5 flex items-center gap-2">
+        <span className="rounded-full bg-violet/10 px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-muted">
           {task.day}
         </span>
 
         {/* Drag-and-drop is mouse-only, so every move is also reachable by
-            keyboard through these controls. */}
-        <div className="ml-auto flex items-center gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
-          <IconButton
-            label={`Move ${task.title} left`}
-            disabled={i === 0}
-            onClick={() => onMove(-1)}
-          >
+            keyboard through these controls. Always shown on touch-sized screens. */}
+        <div className="ml-auto flex items-center gap-0.5 transition-opacity sm:opacity-0 sm:focus-within:opacity-100 sm:group-hover:opacity-100">
+          <IconButton label={`Move ${task.title} left`} disabled={i === 0} onClick={() => onMove(-1)}>
             ←
           </IconButton>
-          <IconButton
-            label={`Move ${task.title} right`}
-            disabled={i === STATUSES.length - 1}
-            onClick={() => onMove(1)}
-          >
+          <IconButton label={`Move ${task.title} right`} disabled={i === STATUSES.length - 1} onClick={() => onMove(1)}>
             →
           </IconButton>
           <IconButton label={`Flag ${task.title} urgent`} onClick={onToggleUrgent}>
@@ -351,8 +433,8 @@ function IconButton({
       disabled={disabled}
       aria-label={label}
       title={label}
-      className={`grid h-5 w-5 place-items-center rounded font-mono text-[0.7rem] transition-colors disabled:opacity-25 ${
-        danger ? "text-muted hover:text-neon-pink" : "text-muted hover:text-gold"
+      className={`grid h-7 w-7 place-items-center rounded-lg font-mono text-[0.8rem] transition-colors hover:bg-violet/10 disabled:opacity-25 disabled:hover:bg-transparent ${
+        danger ? "text-muted hover:text-danger" : "text-muted hover:text-gold"
       }`}
     >
       {children}
@@ -386,30 +468,30 @@ function CardForm({
   };
 
   return (
-    <form
-      onSubmit={submit}
-      className="space-y-2 rounded-lg border border-gold/50 bg-surface p-3"
-    >
+    <form onSubmit={submit} className="space-y-2.5 rounded-xl border border-violet-soft/50 bg-surface/90 p-3 shadow-glow">
       <input
         ref={inputRef}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="What needs doing?"
-        className="input-hub px-2.5 py-1.5 text-[0.875rem]"
+        aria-label="Card title"
+        className="input-hub px-3 py-2 text-[0.875rem]"
         required
       />
       <textarea
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notes (optional)"
+        aria-label="Notes"
         rows={2}
-        className="input-hub resize-y px-2.5 py-1.5 text-[0.8rem]"
+        className="input-hub resize-y px-3 py-2 text-[0.8rem]"
       />
       <div className="flex items-center gap-2">
         <select
           value={day}
           onChange={(e) => setDay(e.target.value)}
-          className="input-hub w-auto flex-1 px-2 py-1.5 font-mono text-[0.7rem]"
+          aria-label="Day"
+          className="input-hub w-auto min-w-0 flex-1 px-2.5 py-2 text-[0.8rem]"
         >
           {DAYS.map((d) => (
             <option key={d} value={d}>
@@ -417,29 +499,22 @@ function CardForm({
             </option>
           ))}
         </select>
-        <label className="flex items-center gap-1.5 font-mono text-[0.68rem] text-muted">
+        <label className="flex items-center gap-1.5 text-[0.8rem] text-muted">
           <input
             type="checkbox"
             checked={urgent}
             onChange={(e) => setUrgent(e.target.checked)}
             className="accent-neon-pink"
           />
-          urgent
+          Urgent
         </label>
       </div>
       <div className="flex gap-2">
-        <button
-          type="submit"
-          className="rounded-md bg-gold-fill px-3 py-1.5 text-[0.75rem] font-bold text-onaccent transition-colors hover:brightness-110"
-        >
+        <button type="submit" className="btn-violet px-4 py-1.5 text-xs">
           {submitLabel}
         </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-md border border-line px-3 py-1.5 font-mono text-[0.7rem] text-muted transition-colors hover:text-text"
-        >
-          cancel
+        <button type="button" onClick={onCancel} className="btn-ghost px-4 py-1.5 text-xs">
+          Cancel
         </button>
       </div>
     </form>

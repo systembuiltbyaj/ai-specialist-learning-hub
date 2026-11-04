@@ -44,12 +44,19 @@ Dead stores were content-diffed and deleted on 2026-10-26: `seed/terms.ts`,
 
 ### Precedence, in one line
 `data/dictionary.ts` is the source of truth for terms. The `--c-*` CSS variables in
-`app/globals.css` are the source of truth for colour — a light ("lavender glass",
-default) and a dark ("midnight glass") set; `tailwind.config.ts` only maps class
-names onto them. Never hardcode a hex or `text-white` in a component: it breaks one
-of the two themes. For inline-style colours use `TOKEN` / `tint()` from
-`app/lib/color.ts`. Brand name, tagline and logo live in `BRAND` (`app/lib/constants.ts`)
-and `public/aj-mark.png` / `app/icon.png`.
+`app/globals.css` are the source of truth for colour — a dark ("violet night",
+**default**) and a light ("lavender day", `data-theme="light"`) set;
+`tailwind.config.ts` only maps class names onto them. Token names describe roles,
+not hues (`gold` = highlight text, `gold-fill` = the yellow call to action,
+`violet` = the primary action — pair it with `text-onprimary`). Never hardcode a
+hex or `text-white` in a component: it breaks one of the two themes. The sidebar
+stays dark in both themes via `.scope-dark`. Shared look: `.card`, `.card-glow`
+(the lit swoosh), `.icon-tile`, `.btn-gold` (one yellow CTA per view). Section
+pages open with `app/components/PageHeader.tsx` (two-tone title, CSS-only 3D
+`HeroGlyph`, `StatStrip` — stats passed from data, never typed). For inline-style
+colours use `TOKEN` / `tint()` from `app/lib/color.ts`. Brand name, tagline and
+logo live in `BRAND` (`app/lib/constants.ts`) and `public/aj-mark.png` /
+`app/icon.png`.
 
 ---
 

@@ -1,22 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import type { Update, UpdateCategory } from "@/app/lib/types";
+import { formatIsoDate } from "@/app/lib/content/format";
+import NavIcon from "@/app/components/NavIcons";
 const STORAGE_KEY = "lh.updates.v2";
 const LEGACY_KEY = "lh.updates.v1";
 const CATEGORIES: UpdateCategory[] = ["GHL", "Claude", "AI Automation", "AI News"];
 
 const CHIP_STYLES: Record<UpdateCategory, string> = {
-  GHL: "border-neon-pink/40 text-neon-pink",
-  Claude: "border-gold/50 text-gold",
-  "AI Automation": "border-violet-soft/50 text-violet-light",
-  "AI News": "border-neon-blue/40 text-neon-blue",
-};
-const ACCENT: Record<UpdateCategory, string> = {
-  GHL: "accent-pink",
-  Claude: "accent-teal",
-  "AI Automation": "accent-purple",
-  "AI News": "accent-blue",
+  GHL: "border-neon-pink/45 bg-neon-pink/10 text-neon-pink",
+  Claude: "border-gold/50 bg-gold/10 text-gold",
+  "AI Automation": "border-success/45 bg-success/10 text-success",
+  "AI News": "border-neon-blue/45 bg-neon-blue/10 text-neon-blue",
 };
 
 interface Draft {
@@ -44,6 +40,20 @@ function renderContent(text: string) {
       <span key={i}>{part}</span>
     ),
   );
+}
+
+// The collapsed row is a button, so its preview can't hold links; the source
+// URL is shown, clickable, once the row is opened.
+function preview(text: string): string {
+  return text
+    .replace(/\s*Source:\s*https?:\/\/\S+/g, "")
+    .replace(/https?:\/\/[^\s)]+/g, "")
+    .trim();
+}
+
+function weekLabel(week: string): string {
+  const iso = week.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  return iso ? `Week of ${formatIsoDate(iso)}` : week;
 }
 
 // What a visitor changed, layered over the current news. Saving the whole list
@@ -156,29 +166,27 @@ export default function UpdatesClient({ initial }: { initial: Update[] }) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
           {(["All", ...CATEGORIES] as const).map((c) => (
             <button
               key={c}
               onClick={() => setFilter(c)}
-              className={`chip ${filter === c ? "chip-active" : "hover:border-violet-soft/60"}`}
+              aria-pressed={filter === c}
+              className={`chip px-4 py-2 text-sm ${filter === c ? "chip-active" : "hover:border-violet-soft/60"}`}
             >
               {c}
             </button>
           ))}
         </div>
-        <button
-          onClick={() => setAdding((v) => !v)}
-          className="btn-violet shrink-0 px-4 py-2 text-xs"
-        >
-          {adding ? "Cancel" : "+ Add Update"}
+        <button onClick={() => setAdding((v) => !v)} className="btn-violet shrink-0 self-start sm:self-auto">
+          {adding ? "Cancel" : "+ Add update"}
         </button>
       </div>
 
       {adding && (
         <UpdateForm
           initial={emptyDraft()}
-          submitLabel="Save Update"
+          submitLabel="Save update"
           onSubmit={addUpdate}
           onCancel={() => setAdding(false)}
         />
@@ -186,71 +194,110 @@ export default function UpdatesClient({ initial }: { initial: Update[] }) {
 
       {grouped.length === 0 && (
         <div className="card p-10 text-center text-muted">
-          No updates here yet. Click <span className="text-gold">+ Add Update</span> to log one.
+          No updates here yet. Click <span className="text-gold">+ Add update</span> to log one.
         </div>
       )}
 
-      <div className="space-y-8">
-        {grouped.map(([week, items]) => (
-          <section key={week}>
-            <div className="mb-3 flex items-center gap-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-gold">📅 {week}</h2>
-              <div className="h-px flex-1 bg-line" />
-              <span className="text-xs text-muted">
+      <div className="space-y-5">
+        {grouped.map(([week, items], index) => (
+          <section key={week} className={`card p-4 sm:p-6 ${index === 0 ? "card-glow" : ""}`}>
+            <header className="flex items-center gap-3 border-b border-violet-soft/15 pb-3">
+              <span className={`${index === 0 ? "icon-tile" : "icon-tile-muted"} h-10 w-10`}>
+                <NavIcon href="/updates" className="h-5 w-5" />
+              </span>
+              <h2 className="text-lg font-bold tracking-[-0.02em] text-text">{weekLabel(week)}</h2>
+              <span className="ml-auto shrink-0 text-xs text-muted">
                 {items.length} update{items.length > 1 ? "s" : ""}
               </span>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            </header>
+            <ol className="relative before:absolute before:bottom-6 before:left-[0.6875rem] before:top-6 before:w-px before:bg-violet-soft/30 before:content-['']">
               {items.map((u) =>
                 editingId === u.id ? (
-                  <UpdateForm
-                    key={u.id}
-                    initial={u}
-                    submitLabel="Update"
-                    onSubmit={(d) => editUpdate(u.id, d)}
-                    onCancel={() => setEditingId(null)}
-                  />
+                  <li key={u.id} className="py-3">
+                    <UpdateForm
+                      initial={u}
+                      submitLabel="Update"
+                      onSubmit={(d) => editUpdate(u.id, d)}
+                      onCancel={() => setEditingId(null)}
+                    />
+                  </li>
                 ) : (
-                  <article
+                  <UpdateRow
                     key={u.id}
-                    className={`card card-hover accent-bar ${ACCENT[u.category]} group p-5`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className={`chip border ${CHIP_STYLES[u.category]}`}>
-                        {u.category}
-                      </span>
-                      <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                        <button
-                          onClick={() => setEditingId(u.id)}
-                          className="text-xs text-muted hover:text-gold"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => removeUpdate(u.id)}
-                          className="text-muted hover:text-neon-pink"
-                          aria-label="Delete update"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                    <h3 className="mt-3 font-bold text-text">{u.title}</h3>
-                    <p className="mt-2 whitespace-pre-wrap text-sm text-text/70">
-                      {renderContent(u.content)}
-                    </p>
-                  </article>
+                    update={u}
+                    onEdit={() => setEditingId(u.id)}
+                    onRemove={() => removeUpdate(u.id)}
+                  />
                 ),
               )}
-            </div>
+            </ol>
           </section>
         ))}
       </div>
 
       <p className="text-center text-xs text-muted">
-        Archive through June 2026. Anything you add is saved to this browser only.
+        Anything you add or edit is saved to this browser only.
       </p>
     </div>
+  );
+}
+
+function UpdateRow({ update, onEdit, onRemove }: { update: Update; onEdit: () => void; onRemove: () => void }) {
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+
+  return (
+    <li className="relative border-b border-violet-soft/15 pl-8 last:border-0">
+      <span
+        aria-hidden
+        className="absolute left-[0.4375rem] top-[1.4rem] h-2.5 w-2.5 rounded-full bg-violet-light ring-4 ring-violet/20"
+      />
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="group flex w-full flex-col items-start gap-2 rounded-lg py-4 text-left sm:flex-row sm:gap-4"
+      >
+        <span
+          className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[0.68rem] font-bold uppercase tracking-wide sm:mt-0.5 sm:w-[7.75rem] sm:text-center ${CHIP_STYLES[update.category]}`}
+        >
+          {update.category}
+        </span>
+        <span className="flex w-full min-w-0 flex-1 items-start gap-3">
+          <span className="min-w-0 flex-1">
+            <span className="block font-bold leading-snug text-text transition-colors group-hover:text-gold">
+              {update.title}
+            </span>
+            {!open && <span className="mt-1 line-clamp-2 text-sm text-muted">{preview(update.content)}</span>}
+          </span>
+          <svg
+            viewBox="0 0 24 24"
+            className={`mt-0.5 h-5 w-5 shrink-0 text-muted transition-transform group-hover:text-text ${open ? "rotate-90" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.8}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="m9 6 6 6-6 6" />
+          </svg>
+        </span>
+      </button>
+      {open && (
+        <div id={panelId} className="pb-4 sm:pl-[8.75rem]">
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-text/80">{renderContent(update.content)}</p>
+          <div className="mt-3 flex gap-3">
+            <button onClick={onEdit} className="text-xs font-semibold text-muted hover:text-gold">
+              Edit
+            </button>
+            <button onClick={onRemove} className="text-xs font-semibold text-muted hover:text-danger" aria-label={`Delete ${update.title}`}>
+              Delete
+            </button>
+          </div>
+        </div>
+      )}
+    </li>
   );
 }
 
@@ -277,12 +324,13 @@ function UpdateForm({
   };
 
   return (
-    <form onSubmit={submit} className="card space-y-3 p-5 md:col-span-2">
+    <form onSubmit={submit} className="card card-active space-y-3 p-5">
       <div className="grid gap-3 sm:grid-cols-2">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Update title *"
+          aria-label="Update title"
           className="input-hub"
           required
         />
@@ -290,12 +338,14 @@ function UpdateForm({
           value={week}
           onChange={(e) => setWeek(e.target.value)}
           placeholder="Week (e.g. Week of 2026-06-09)"
+          aria-label="Week"
           className="input-hub"
         />
       </div>
       <select
         value={category}
         onChange={(e) => setCategory(e.target.value as UpdateCategory)}
+        aria-label="Category"
         className="input-hub"
       >
         {CATEGORIES.map((c) => (
@@ -308,6 +358,7 @@ function UpdateForm({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="What changed / what you learned…"
+        aria-label="Details"
         rows={4}
         className="input-hub resize-y"
       />

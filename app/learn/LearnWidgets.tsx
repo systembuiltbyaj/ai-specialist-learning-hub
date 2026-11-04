@@ -22,8 +22,8 @@ export function LessonDone({ lessonId }: { lessonId: string }) {
   return (
     <span
       aria-label={done ? "Completed" : "Not completed"}
-      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-bold ${
-        done ? "border-success bg-success/15 text-success" : "border-line text-transparent"
+      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border-[1.5px] text-xs font-bold transition-colors ${
+        done ? "border-success bg-success/15 text-success" : "border-violet-soft/40 text-transparent"
       }`}
     >
       ✓
@@ -37,21 +37,39 @@ export function PathProgress({ lessonIds }: { lessonIds: string[] }) {
   const done = hydrated ? lessonIds.filter((id) => learner.lessons[id]).length : 0;
   const pct = Math.round((done / lessonIds.length) * 100);
   return (
-    <div className="space-y-1.5">
-      <div className="flex justify-between text-xs text-muted">
+    <div className="space-y-2">
+      <div className="flex justify-between text-xs font-medium text-text/80">
         <span>
           {done} of {lessonIds.length} lessons
         </span>
-        <span>{pct}%</span>
+        <span className="text-muted">{pct}%</span>
       </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-text/10" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-        <div className="h-full rounded-full bg-gradient-to-r from-gold to-violet-soft transition-all" style={{ width: `${pct}%` }} />
+      <div
+        className="h-1.5 overflow-hidden rounded-full bg-violet-soft/15"
+        role="progressbar"
+        aria-label="Lessons completed"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div
+          className={`h-full rounded-full transition-all ${pct === 100 ? "bg-success" : "bg-gradient-to-r from-violet-light to-violet"}`}
+          style={{ width: `${pct}%` }}
+        />
       </div>
     </div>
   );
 }
 
-export function ContinueLearning({ lessons }: { lessons: LessonLink[] }) {
+const PLAY = (
+  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden>
+    <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" />
+  </svg>
+);
+
+// The full version is the lit banner at the top of /learn; `inset` is the
+// compact tile used inside the home dashboard.
+export function ContinueLearning({ lessons, inset = false }: { lessons: LessonLink[]; inset?: boolean }) {
   const [learner] = useLearner();
   const hydrated = useHydrated();
   if (!hydrated) return null;
@@ -62,7 +80,7 @@ export function ContinueLearning({ lessons }: { lessons: LessonLink[] }) {
 
   if (!next) {
     return (
-      <div className="card border-gold/40 p-5">
+      <div className={`card ${inset ? "" : "card-glow"} p-5`}>
         <p className="font-bold text-gold">You&apos;ve finished every lesson. 🎓</p>
         <p className="mt-1 text-sm text-muted">Lock it in with a project, or keep your memory fresh with flashcards.</p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -77,16 +95,32 @@ export function ContinueLearning({ lessons }: { lessons: LessonLink[] }) {
     );
   }
 
+  const label = done === 0 ? "Start here" : "Continue where you left off";
+  const meta = `${next.pathTitle} · ${next.minutes} min · ${done} of ${lessons.length} lessons done`;
+
+  if (inset) {
+    return (
+      <Link href={next.href} className="card card-hover flex items-center gap-4 p-4">
+        <span className="icon-tile h-12 w-12">{PLAY}</span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-xs text-muted">{label}</span>
+          <span className="block truncate text-lg font-bold text-text">{next.title}</span>
+          <span className="block truncate text-xs text-muted">{meta}</span>
+        </span>
+        <span aria-hidden className="text-xl text-text/70">→</span>
+      </Link>
+    );
+  }
+
   return (
-    <Link href={next.href} className="card card-hover flex items-center justify-between gap-4 border-gold/40 p-5">
-      <div className="min-w-0">
-        <p className="eyebrow">{done === 0 ? "Start here" : "Continue where you left off"}</p>
-        <p className="mt-1 truncate text-lg font-bold text-text">{next.title}</p>
-        <p className="text-xs text-muted">
-          {next.pathTitle} · {next.minutes} min · {done} of {lessons.length} lessons done
-        </p>
-      </div>
-      <span className="btn-gold shrink-0 px-4 py-2 text-xs">{done === 0 ? "Start →" : "Continue →"}</span>
+    <Link href={next.href} className="card card-glow card-hover flex items-center gap-4 p-5">
+      <span className="icon-tile h-14 w-14">{PLAY}</span>
+      <span className="min-w-0 flex-1">
+        <span className="eyebrow block">{label}</span>
+        <span className="mt-0.5 block truncate text-xl font-bold text-text">{next.title}</span>
+        <span className="block truncate text-xs text-muted">{meta}</span>
+      </span>
+      <span className="btn-gold shrink-0 px-5 py-2">{done === 0 ? "Start →" : "Continue →"}</span>
     </Link>
   );
 }
@@ -105,26 +139,30 @@ export function LessonActions({
   const done = hydrated && Boolean(learner.lessons[lessonId]);
 
   return (
-    <div className="card space-y-4 p-5">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="card card-glow space-y-4 p-5 sm:p-6">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           onClick={() => update((state) => setLessonComplete(state, lessonId, !done, new Date()))}
           aria-pressed={done}
-          className={done ? "btn-ghost px-5" : "btn-gold px-5"}
+          className={done ? "btn-ghost rounded-full px-5" : "btn-gold px-5"}
         >
           {done ? "✓ Completed — undo" : "Mark lesson complete"}
         </button>
-        <Link href={quizHref} className="btn-violet px-5">
+        <Link href={quizHref} className="btn-violet rounded-full px-5">
           Quiz me on this lesson
         </Link>
       </div>
       {done && next && (
-        <Link href={next.href} className="flex items-center justify-between rounded-lg border border-violet-soft/30 bg-violet-soft/[0.08] p-3 text-sm">
-          <span>
+        <Link
+          href={next.href}
+          className="card card-hover flex items-center gap-4 p-3.5 text-sm"
+        >
+          <span className="icon-tile h-10 w-10">{PLAY}</span>
+          <span className="min-w-0 flex-1">
             <span className="eyebrow block">Up next</span>
-            <span className="font-semibold text-text">{next.title}</span>
+            <span className="block truncate font-semibold text-text">{next.title}</span>
           </span>
-          <span className="text-gold">→</span>
+          <span aria-hidden className="text-lg text-violet-light">→</span>
         </Link>
       )}
     </div>

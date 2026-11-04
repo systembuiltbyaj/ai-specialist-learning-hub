@@ -15,7 +15,7 @@ import {
 } from "@/app/lib/quiz";
 import { useHydrated, useLearner } from "@/app/lib/learner/store";
 import { addCards, localDay, recordQuizRun, weakTermIds } from "@/app/lib/learner/state";
-import { tint } from "@/app/lib/color";
+import NavIcon from "@/app/components/NavIcons";
 
 type Phase = "setup" | "active" | "results";
 type Mode = "practice" | "exam";
@@ -203,12 +203,13 @@ function Setup({
       )}
 
       {weakCount > 0 && (
-        <div className="card flex flex-col gap-3 border-gold/40 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="card flex flex-col gap-3 border-violet-soft/50 p-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-text/85">
             <span className="font-bold text-gold">{weakCount} weak spot{weakCount === 1 ? "" : "s"}</span> — terms
             you&apos;ve missed before. A short practice round turns them around fastest.
           </p>
-          <button onClick={onWeakSpots} className="btn-gold shrink-0 px-5">
+          {/* Violet, not yellow: the yellow button is reserved for "Start quiz" below. */}
+          <button onClick={onWeakSpots} className="btn-violet shrink-0 rounded-full px-5">
             Practice weak spots →
           </button>
         </div>
@@ -216,32 +217,45 @@ function Setup({
 
       {/* Mode */}
       <div>
-        <p className="eyebrow mb-2">1 · How do you want to play?</p>
-        <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Quiz mode">
+        <StepLabel n={1} id="quiz-step-mode">
+          How do you want to play?
+        </StepLabel>
+        <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-labelledby="quiz-step-mode">
           {(
             [
               ["practice", "Practice", "Instant feedback and a plain-English explanation after every answer."],
               ["exam", "Exam", "No hints until the end. Your score counts toward your personal best."],
             ] as const
-          ).map(([key, title, blurb]) => (
-            <button
-              key={key}
-              role="radio"
-              aria-checked={mode === key}
-              onClick={() => setMode(key)}
-              className={`card p-4 text-left transition-colors ${mode === key ? "!border-violet-soft/60 bg-violet-soft/10" : "card-hover"}`}
-            >
-              <span className={`block font-bold ${mode === key ? "text-violet-light" : "text-text"}`}>{title}</span>
-              <span className="text-xs text-muted">{blurb}</span>
-            </button>
-          ))}
+          ).map(([key, title, blurb]) => {
+            const active = mode === key;
+            return (
+              <button
+                key={key}
+                role="radio"
+                aria-checked={active}
+                onClick={() => setMode(key)}
+                className={`card flex items-center gap-4 p-4 text-left sm:p-5 ${active ? "card-glow card-active" : "card-hover"}`}
+              >
+                <span className={`${active ? "icon-tile" : "icon-tile-muted"} h-12 w-12 sm:h-14 sm:w-14`}>
+                  {key === "practice" ? <TargetIcon /> : <CapIcon />}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-lg font-bold text-text">{title}</span>
+                  <span className="block text-sm text-muted">{blurb}</span>
+                </span>
+                <RadioMark checked={active} />
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Subject */}
       <div>
-        <p className="eyebrow mb-2">2 · Pick your subject</p>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <StepLabel n={2} id="quiz-step-subject">
+          Pick your subject
+        </StepLabel>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="group" aria-labelledby="quiz-step-subject">
           {QUIZ_SUBJECTS.map((s) => {
             const active = subject === s.key;
             const best = bests[s.key];
@@ -250,25 +264,22 @@ function Setup({
                 key={s.key}
                 onClick={() => setSubject(s.key)}
                 aria-pressed={active}
-                className={`card flex items-start gap-3 p-4 text-left transition-colors ${active ? "" : "card-hover"}`}
-                style={active ? { borderColor: s.color, backgroundColor: tint(s.color, 7) } : undefined}
+                className={`card flex flex-col items-start p-4 text-left sm:p-5 ${active ? "card-active" : "card-hover"}`}
               >
-                <span className="text-2xl" aria-hidden>
-                  {s.icon}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block font-bold" style={{ color: active ? s.color : undefined }}>
-                    {s.label}
+                <span className="flex w-full items-start justify-between gap-2">
+                  <span className={`${active ? "icon-tile" : "icon-tile-muted"} h-11 w-11`}>
+                    <NavIcon href={SUBJECT_ICON[s.key]} className="h-6 w-6" />
                   </span>
-                  <span className="text-xs text-muted">{s.blurb}</span>
+                  <RadioMark checked={active} />
                 </span>
+                <span className="mt-3 block text-lg font-bold text-text">{s.label}</span>
+                <span className="mt-0.5 block text-sm text-muted">{s.blurb}</span>
                 {best && (
                   <span
-                    className="shrink-0 rounded-full border px-2 py-0.5 text-[0.6rem] font-bold"
-                    style={{ color: s.color, borderColor: tint(s.color, 40), backgroundColor: tint(s.color, 8) }}
+                    className="mt-3 rounded-full border border-violet-soft/40 bg-violet/10 px-2 py-0.5 text-[0.65rem] font-bold text-violet-light"
                     title={`Best exam: ${best.correct}/${best.total}`}
                   >
-                    ★ {best.pct}%
+                    ★ Best {best.pct}%
                   </span>
                 )}
               </button>
@@ -278,31 +289,36 @@ function Setup({
       </div>
 
       {/* Level + length */}
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-[auto_1px_auto] lg:items-start lg:gap-8">
         <div>
-          <p className="eyebrow mb-2">3 · Difficulty</p>
-          <div className="flex flex-wrap gap-2">
+          <StepLabel n={3} id="quiz-step-level">
+            Difficulty
+          </StepLabel>
+          <div className="flex flex-wrap gap-2" role="group" aria-labelledby="quiz-step-level">
             {LEVELS.map((l) => (
               <button
                 key={l}
                 onClick={() => setLevel(l)}
                 aria-pressed={level === l}
-                className={`chip ${level === l ? "chip-active" : "hover:border-gold/60"}`}
+                className={`chip px-5 py-2 text-sm ${level === l ? "chip-active" : "hover:border-violet-soft/60"}`}
               >
                 {l}
               </button>
             ))}
           </div>
         </div>
+        <span aria-hidden className="hidden self-stretch bg-violet-soft/20 lg:block" />
         <div>
-          <p className="eyebrow mb-2">4 · Length</p>
-          <div className="flex flex-wrap gap-2">
+          <StepLabel n={4} id="quiz-step-length">
+            Length
+          </StepLabel>
+          <div className="flex flex-wrap gap-2" role="group" aria-labelledby="quiz-step-length">
             {LENGTHS.map((n) => (
               <button
                 key={n}
                 onClick={() => setLength(n)}
                 aria-pressed={length === n}
-                className={`chip ${length === n ? "chip-active" : "hover:border-gold/60"}`}
+                className={`chip px-5 py-2 text-sm ${length === n ? "chip-active" : "hover:border-violet-soft/60"}`}
               >
                 {n} questions
               </button>
@@ -311,32 +327,94 @@ function Setup({
         </div>
       </div>
 
-      <div className="card flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted">
-          {available < 4 ? (
-            <span className="text-neon-pink">Only {available} terms here — pick a broader subject or level.</span>
-          ) : (
-            <>
-              <span className="text-text">
-                {willAsk} question{willAsk === 1 ? "" : "s"}
-              </span>{" "}
-              from <span className="text-gold">{subject}</span> ·{" "}
-              {mode === "practice" ? "practice mode" : "exam mode"}. Answer with keys{" "}
-              <kbd className="rounded border border-line px-1 font-mono text-[0.7rem]">1</kbd>–
-              <kbd className="rounded border border-line px-1 font-mono text-[0.7rem]">4</kbd>, next with{" "}
-              <kbd className="rounded border border-line px-1 font-mono text-[0.7rem]">Enter</kbd>.
-            </>
-          )}
-        </p>
+      <div className="card card-glow card-active flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
+        <span className="icon-tile hidden h-14 w-14 sm:grid">
+          <NavIcon href="/quiz" className="h-7 w-7" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-xl font-extrabold tracking-[-0.02em] text-text sm:text-2xl">Ready to start?</p>
+          <p className="mt-1 text-sm text-muted">
+            {available < 4 ? (
+              <span className="text-neon-pink">Only {available} terms here — pick a broader subject or level.</span>
+            ) : (
+              <>
+                <span className="text-text">
+                  {willAsk} question{willAsk === 1 ? "" : "s"}
+                </span>{" "}
+                from <span className="font-semibold text-neon-yellow">{subject}</span> ·{" "}
+                {mode === "practice" ? "Practice mode" : "Exam mode"}. Answer with keys{" "}
+                <kbd className="rounded border border-line px-1 font-mono text-[0.7rem]">1</kbd>–
+                <kbd className="rounded border border-line px-1 font-mono text-[0.7rem]">4</kbd>, next with{" "}
+                <kbd className="rounded border border-line px-1 font-mono text-[0.7rem]">Enter</kbd>.
+              </>
+            )}
+          </p>
+        </div>
         <button
           onClick={onStart}
           disabled={available < 4}
-          className="btn-violet shrink-0 px-6 disabled:cursor-not-allowed disabled:opacity-40"
+          className="btn-gold shrink-0 px-7 py-3 text-base disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Start →
+          Start quiz →
         </button>
       </div>
     </div>
+  );
+}
+
+// Each setup subject borrows the sidebar icon of the hub it quizzes.
+const SUBJECT_ICON: Record<QuizSubject, string> = {
+  "Tech Dictionary": "/dictionary",
+  Claude: "/claude-hub",
+  GoHighLevel: "/ghl-hub",
+  "Automation Hub": "/automation-hub",
+};
+
+function StepLabel({ n, id, children }: { n: number; id: string; children: React.ReactNode }) {
+  return (
+    <p id={id} className="mb-3 flex items-center gap-3 text-[0.9375rem] font-bold text-text">
+      <span aria-hidden className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-violet/20 text-xs font-bold text-violet-light ring-1 ring-violet-soft/40">
+        {n}
+      </span>
+      <span>
+        <span className="sr-only">Step {n}: </span>
+        {children}
+      </span>
+    </p>
+  );
+}
+
+// Purely visual: the button itself carries aria-checked / aria-pressed.
+function RadioMark({ checked }: { checked: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border-[1.5px] text-xs font-bold transition-colors ${
+        checked ? "border-transparent bg-violet-light text-onprimary" : "border-muted/60 text-transparent"
+      }`}
+    >
+      ✓
+    </span>
+  );
+}
+
+function TargetIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" aria-hidden>
+      <circle cx="12" cy="12" r="8.5" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function CapIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="m2.5 9 9.5-4.5L21.5 9 12 13.5 2.5 9Z" />
+      <path d="M6.5 11v4.5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3V11" />
+      <path d="M21.5 9v5" />
+    </svg>
   );
 }
 
@@ -436,7 +514,7 @@ function Exam({
       </div>
 
       <div
-        className="h-1.5 w-full overflow-hidden rounded-full bg-text/10"
+        className="h-2 w-full overflow-hidden rounded-full bg-violet-soft/15"
         role="progressbar"
         aria-valuenow={current + 1}
         aria-valuemin={1}
@@ -444,12 +522,12 @@ function Exam({
         aria-label="Quiz progress"
       >
         <div
-          className="h-full rounded-full bg-gradient-to-r from-gold to-violet-soft transition-all"
+          className="h-full rounded-full bg-gradient-to-r from-violet-light to-violet transition-all"
           style={{ width: `${((current + 1) / questions.length) * 100}%` }}
         />
       </div>
 
-      <article className="card p-6" key={q.id}>
+      <article className="card card-glow card-active p-5 sm:p-6" key={q.id}>
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-violet-light">
           Q{current + 1} / {questions.length} · {q.promptLabel}
         </p>
@@ -473,7 +551,7 @@ function Exam({
               >
                 <span
                   className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-bold ${
-                    selected ? "border-violet bg-violet text-white" : "border-line text-muted"
+                    selected ? "border-violet bg-violet text-onprimary" : "border-line text-muted"
                   }`}
                 >
                   {i + 1}
@@ -508,7 +586,7 @@ function Exam({
               aria-label={`Go to question ${i + 1}${answers[i] !== null ? " (answered)" : ""}`}
               className={`h-7 w-7 rounded-md border text-[0.65rem] font-bold transition-colors ${
                 i === current
-                  ? "border-violet bg-violet text-white"
+                  ? "border-violet bg-violet text-onprimary"
                   : answers[i] !== null
                     ? "border-violet-soft/60 bg-violet/20 text-violet-light"
                     : "border-line text-muted hover:border-violet-soft/60"
@@ -659,7 +737,7 @@ function Results({
                 </span>
                 <span className="col-span-2 h-1.5 overflow-hidden rounded-full bg-text/10">
                   <span
-                    className="block h-full rounded-full bg-gradient-to-r from-gold to-violet-soft"
+                    className="block h-full rounded-full bg-gold-fill"
                     style={{ width: `${(right / total) * 100}%` }}
                   />
                 </span>
