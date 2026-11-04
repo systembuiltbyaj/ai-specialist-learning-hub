@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { DICTIONARY, type DictCategory } from "@/data/dictionary";
 import { TOKEN, tint } from "@/app/lib/color";
+import HeroGlyph from "@/app/components/HeroGlyph";
 
 const CAT_COLOR: Record<DictCategory, string> = {
   "AI Foundations": TOKEN.violet,
@@ -41,7 +42,9 @@ export default function TermOfTheDay() {
   const color = CAT_COLOR[term.category];
 
   return (
-    <article className="card accent-bar accent-purple flex flex-col gap-3 p-6">
+    <article className="card card-glow grid gap-6 p-6 md:grid-cols-[13rem_minmax(0,1fr)] md:items-center">
+      <HeroGlyph href="/dictionary" className="hidden h-44 md:grid" />
+      <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <p className="eyebrow">📅 Term of the Day</p>
         <button
@@ -55,7 +58,7 @@ export default function TermOfTheDay() {
 
       <div>
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-display text-xl font-extrabold uppercase tracking-tight text-text">
+          <h3 className="font-display text-2xl font-extrabold tracking-[-0.02em] text-text">
             {term.term}
           </h3>
           {term.aliases.length > 0 && (
@@ -77,7 +80,9 @@ export default function TermOfTheDay() {
 
       <p className="text-sm leading-relaxed text-text/85">{term.definition}</p>
       {term.analogy && (
-        <p className="text-sm italic leading-relaxed text-muted">💡 {term.analogy}</p>
+        <p className="rounded-2xl border border-violet-soft/30 bg-violet/10 px-4 py-2 text-sm leading-relaxed text-text/85">
+          💡 {term.analogy}
+        </p>
       )}
 
       <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -93,6 +98,7 @@ export default function TermOfTheDay() {
         >
           🧪 Quiz me on {quizSubjectFor(term.category)} →
         </Link>
+      </div>
       </div>
     </article>
   );

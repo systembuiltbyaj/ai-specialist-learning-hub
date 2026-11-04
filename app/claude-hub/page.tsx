@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
 import ClaudeHubClient from "./ClaudeHubClient";
-import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
+import type { WhatsNewItem } from "@/app/lib/types";
 import { model } from "@/data/models";
-import { TOKEN } from "@/app/lib/color";
+import { TOKEN, tint } from "@/app/lib/color";
+import PageHeader from "@/app/components/PageHeader";
+import { ARSENAL_CATEGORIES, ARSENAL_TOTAL } from "@/app/lib/seed/arsenal-skills";
+import { ARSENAL_MCPS, FRAMEWORK_STEPS } from "@/app/lib/seed/arsenal";
+import type { ModelEntry } from "@/app/lib/content/types";
+import HubTimeline from "@/app/components/hub/HubTimeline";
+import SectionHead from "@/app/components/hub/SectionHead";
+import FlowSteps from "@/app/components/hub/FlowSteps";
+import CtaBanner from "@/app/components/hub/CtaBanner";
+import HubIcon, { type HubIconName } from "@/app/components/hub/HubIcon";
 
 const RELEASE_NOTES = "https://platform.claude.com/docs/en/release-notes/overview";
 const PRICING = "https://platform.claude.com/docs/en/about-claude/pricing";
@@ -94,32 +103,175 @@ export const metadata: Metadata = {
     "Browse the skills library, plug in MCP servers, and follow the framework — everything to turn Claude Code into a shipping-grade setup.",
 };
 
+const VERIFIED = "26 Oct 2026";
+
+// The current lineup, strongest first. Opus is lit as the card to start from:
+// its registry summary records Anthropic's docs recommending it for most work.
+const LINEUP: { entry: ModelEntry; featured?: boolean }[] = [
+  { entry: FABLE },
+  { entry: OPUS, featured: true },
+  { entry: SONNET },
+  { entry: HAIKU },
+];
+
+const TIER_LABEL: Partial<Record<ModelEntry["tier"], string>> = {
+  flagship: "Flagship",
+  balanced: "Balanced",
+  fast: "Fast",
+};
+const TIER_COLOR: Partial<Record<ModelEntry["tier"], string>> = {
+  flagship: TOKEN.purple,
+  balanced: TOKEN.blue,
+  fast: TOKEN.green,
+};
+
+function formatContext(tokens: number): string {
+  return tokens >= 1_000_000 ? `${tokens / 1_000_000}M` : `${Math.round(tokens / 1000)}K`;
+}
+
+const ON_THIS_PAGE: { href: string; label: string; icon: HubIconName }[] = [
+  { href: "#whats-new", label: "What's New", icon: "rss" },
+  { href: "#models", label: "Models", icon: "layers" },
+  { href: "#workflow", label: "Workflow", icon: "flow" },
+  { href: "#skills", label: "Skills", icon: "sparkle" },
+  { href: "#mcps", label: "MCPs", icon: "plug" },
+  { href: "#framework", label: "Framework", icon: "list" },
+];
+
+// Keyed by step number; a step added to the seed falls back to a check.
+const WORKFLOW_ICON: Record<string, HubIconName> = {
+  "01": "user",
+  "02": "shield",
+  "03": "bolt",
+  "04": "book",
+  "05": "rocket",
+};
+
 export default function ClaudeHubPage() {
   return (
-    <div className="container-hub space-y-6 py-8">
-      <header>
-        <p className="eyebrow">Claude Code</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold uppercase tracking-tight text-text sm:text-5xl">
-          Claude Code{" "}
-          <span className="bg-gradient-to-r from-violet-light to-neon-pink bg-clip-text text-transparent">
-            Arsenal
-          </span>
-        </h1>
-        <p className="mt-2 max-w-2xl text-muted">
-          The Anthropic agent that actually ships work. Browse the skills library,
-          plug in MCPs, and follow the framework — from a blank install to a
-          shipping-grade Claude setup.
-        </p>
-      </header>
+    <div className="container-hub space-y-10 py-8">
+      <PageHeader
+        href="/claude-hub"
+        eyebrow={`Hub · verified ${VERIFIED}`}
+        title="Claude Code"
+        accent="Arsenal"
+        stats={[
+          { label: "Claude Code skills", value: ARSENAL_TOTAL, icon: "/claude-hub" },
+          { label: "Skill categories", value: ARSENAL_CATEGORIES.length, icon: "/dictionary" },
+          { label: "MCP servers", value: ARSENAL_MCPS.length, icon: "/tools" },
+          { label: "Framework steps", value: FRAMEWORK_STEPS.length, icon: "/learn" },
+        ]}
+        actions={
+          <nav aria-label="On this page" className="flex flex-wrap gap-2">
+            {ON_THIS_PAGE.map((item) => (
+              <a key={item.href} href={item.href} className="chip gap-1.5 hover:border-violet-soft/60">
+                <HubIcon name={item.icon} className="h-3.5 w-3.5" />
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        }
+      >
+        The Anthropic agent that actually ships work. Browse the skills library, plug in MCPs, and follow the framework
+        — from a blank install to a shipping-grade Claude setup.
+      </PageHeader>
 
-      <HubWhatsNew
-        items={CLAUDE_NEWS}
-        accent={TOKEN.orange}
-        verified="26 Oct 2026"
-        note="against Anthropic docs"
+      <div id="whats-new" className="scroll-mt-20">
+        <HubTimeline
+          title="What's new in Claude"
+          items={CLAUDE_NEWS}
+          accent={TOKEN.orange}
+          verified={VERIFIED}
+          note="against Anthropic docs"
+        />
+      </div>
+
+      <section className="space-y-4">
+        <SectionHead
+          id="models"
+          icon="layers"
+          title="Claude models"
+          description="Anthropic's current lineup — names, prices and context windows come from the site's model registry."
+          link={{ href: "/dev-tools#llms", label: "Compare with other models" }}
+        />
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {LINEUP.map(({ entry, featured }) => {
+            const color = TIER_COLOR[entry.tier] ?? TOKEN.violet;
+            return (
+              <article
+                key={entry.id}
+                className={`card card-hover flex h-full flex-col p-5 ${featured ? "card-active" : ""}`}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="icon-tile h-10 w-10">
+                    <HubIcon name="sparkle" className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-display font-bold leading-snug text-text">{entry.name}</h3>
+                    {TIER_LABEL[entry.tier] && (
+                      <span
+                        className="mt-1 inline-block rounded-full px-2 py-0.5 text-[0.65rem] font-semibold"
+                        style={{ color, backgroundColor: tint(color, 14) }}
+                      >
+                        {TIER_LABEL[entry.tier]}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <p className="mb-4 mt-3 text-[0.82rem] leading-relaxed text-text/85">{entry.summary}</p>
+                <dl className="mt-auto space-y-1 border-t border-violet-soft/15 pt-3 text-[0.72rem] text-muted [&_dt]:font-semibold [&_dt]:text-text/80">
+                  {entry.contextTokens !== undefined && (
+                    <div>
+                      <dt className="inline">Context: </dt>
+                      <dd className="inline">{formatContext(entry.contextTokens)} tokens</dd>
+                    </div>
+                  )}
+                  <div>
+                    <dt className="inline">Price: </dt>
+                    <dd className="inline">{entry.pricingNote}</dd>
+                  </div>
+                </dl>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <SectionHead
+          id="workflow"
+          icon="flow"
+          title="The Claude workflow"
+          description={`${FRAMEWORK_STEPS.length} steps from a blank install to a shipping-grade Claude setup.`}
+          link={{ href: "#framework", label: "Open the framework" }}
+        />
+        <FlowSteps
+          label="Claude Code framework"
+          steps={FRAMEWORK_STEPS.map((step) => ({
+            title: step.title,
+            body: step.kicker,
+            icon: WORKFLOW_ICON[step.n] ?? "check",
+            href: "#framework",
+          }))}
+        />
+      </section>
+
+      <section className="space-y-4">
+        <SectionHead
+          icon="terminal"
+          title="The arsenal"
+          description="Search the skills library, copy MCP configs, and work through the framework."
+        />
+        <ClaudeHubClient />
+      </section>
+
+      <CtaBanner
+        icon="rocket"
+        title="Start building with Claude"
+        body="Put the skills, MCPs and framework to work on a hands-on project, step by step."
+        href="/projects"
+        label="Explore projects"
       />
-
-      <ClaudeHubClient />
     </div>
   );
 }

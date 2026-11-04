@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DICTIONARY, CATEGORIES } from "@/data/dictionary";
 import FlashcardsClient, { type CardFace } from "./FlashcardsClient";
+import PageHeader from "@/app/components/PageHeader";
 
 export const metadata: Metadata = {
   title: "Flashcards",
@@ -22,14 +23,11 @@ export default function FlashcardsPage() {
 
   return (
     <div className="container-hub space-y-6 py-8">
-      <header>
-        <p className="eyebrow">Remember what you read</p>
-        <h1 className="section-title">🃏 Flashcards</h1>
-        <p className="mt-2 max-w-2xl text-muted">
-          See the term, recall what it means, then flip and rate yourself honestly. Cards you miss come back sooner;
-          cards you know wait longer. Ten minutes a day beats an hour once a week.
-        </p>
-      </header>
+      {/* The stat strip lives in the client: everything but the deck size comes from browser storage. */}
+      <PageHeader href="/flashcards" eyebrow="Remember what you read" title="Flashcards">
+        See the term, recall what it means, then flip and rate yourself honestly. Cards you miss come back sooner;
+        cards you know wait longer. Ten minutes a day beats an hour once a week.
+      </PageHeader>
       <FlashcardsClient cards={cards} categories={CATEGORIES} />
     </div>
   );

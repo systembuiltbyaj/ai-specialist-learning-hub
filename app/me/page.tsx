@@ -3,6 +3,7 @@ import { DICTIONARY } from "@/data/dictionary";
 import { LESSON_ORDER, PATHS, lessonHref } from "@/data/paths";
 import { PROJECTS } from "@/data/projects";
 import MeClient, { type MeCatalog } from "./MeClient";
+import PageHeader from "@/app/components/PageHeader";
 
 export const metadata: Metadata = {
   title: "My Progress",
@@ -28,14 +29,10 @@ export default function MePage() {
 
   return (
     <div className="container-hub space-y-6 py-8">
-      <header>
-        <p className="eyebrow">Your learning, at a glance</p>
-        <h1 className="section-title">📈 My Progress</h1>
-        <p className="mt-2 max-w-2xl text-muted">
-          Everything here lives in this browser only — no account, nothing sent anywhere. Download a backup now and then;
-          clearing site data or switching devices starts you fresh.
-        </p>
-      </header>
+      <PageHeader href="/me" eyebrow="Your learning, at a glance" title="My" accent="Progress">
+        Everything here lives in this browser only — no account, nothing sent anywhere. Download a backup now and then;
+        clearing site data or switching devices starts you fresh.
+      </PageHeader>
       <MeClient catalog={catalog} />
     </div>
   );

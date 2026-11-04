@@ -1,8 +1,20 @@
 import type { Metadata } from "next";
-import GhlHubClient from "./GhlHubClient";
-import HubWhatsNew, { type WhatsNewItem } from "@/app/components/HubWhatsNew";
+import type { WhatsNewItem } from "@/app/lib/types";
+import { RecipeCard } from "@/app/components/HubBlocks";
 import { model } from "@/data/models";
 import { TOKEN } from "@/app/lib/color";
+import PageHeader from "@/app/components/PageHeader";
+import { GHL_CONCEPTS, GHL_RECIPES, GHL_BEST_PRACTICES, GHL_LEARN } from "@/app/lib/seed/ghlhub";
+import HubTabs from "@/app/components/hub/HubTabs";
+import HubTimeline from "@/app/components/hub/HubTimeline";
+import TopicPanel from "@/app/components/hub/TopicPanel";
+import SectionHead from "@/app/components/hub/SectionHead";
+import FlowSteps from "@/app/components/hub/FlowSteps";
+import RefTile from "@/app/components/hub/RefTile";
+import { TipGrid, LearnSteps, stripStepNumber } from "@/app/components/hub/HubLists";
+import type { HubIconName } from "@/app/components/hub/HubIcon";
+
+const VERIFIED = "26 Oct 2026";
 
 // Every item below was read directly off HighLevel's own changelog, docs, or
 // help center, not a third-party roundup. If you add one, open the page and
@@ -80,32 +92,137 @@ export const metadata: Metadata = {
     "Learn and build with GoHighLevel — core building blocks, copy-and-build automation recipes, best practices, and a learning path.",
 };
 
+// Icons for the building-block tiles; a concept added to the seed without one
+// still renders, with the generic cube.
+const CONCEPT_ICON: Record<string, HubIconName> = {
+  "Sub-Account (Location)": "user",
+  Snapshot: "layers",
+  Workflow: "bolt",
+  "Pipeline & Opportunity": "funnel",
+  "Trigger Link": "link",
+  "Custom Field & Custom Value": "database",
+};
+const FEATURED_CONCEPTS = 6;
+const LEARN_ICONS: HubIconName[] = ["cube", "bolt", "flow", "layers", "plug"];
+
 export default function GhlHubPage() {
+  const overview = (
+    <>
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+        <HubTimeline
+          title="What's new in GHL"
+          items={GHL_NEWS}
+          accent={TOKEN.green}
+          verified={VERIFIED}
+          note="against HighLevel's changelog and docs"
+        />
+        <TopicPanel
+          title="Building blocks"
+          icon="layers"
+          link={{ href: "#concepts", label: `All ${GHL_CONCEPTS.length}` }}
+          topics={GHL_CONCEPTS.slice(0, FEATURED_CONCEPTS).map((concept) => ({
+            label: concept.name,
+            sub: concept.pill,
+            icon: CONCEPT_ICON[concept.name] ?? "cube",
+            href: "#concepts",
+          }))}
+        />
+      </div>
+
+      <section className="space-y-4">
+        <SectionHead
+          icon="cap"
+          title="Learning path"
+          description="A path from core objects to integrations."
+          link={{ href: "#learn", label: "See the full path" }}
+        />
+        <FlowSteps
+          label="GHL learning path"
+          steps={GHL_LEARN.map((step, i) => ({
+            title: stripStepNumber(step.title),
+            icon: LEARN_ICONS[i % LEARN_ICONS.length],
+            href: "#learn",
+          }))}
+        />
+      </section>
+    </>
+  );
+
   return (
-    <div className="container-hub space-y-6 py-8">
-      <header>
-        <p className="eyebrow">Build & learn</p>
-        <h1 className="mt-3 font-display text-3xl font-extrabold uppercase tracking-tight text-text sm:text-5xl">
-          GHL{" "}
-          <span className="bg-gradient-to-r from-gold to-neon-pink bg-clip-text text-transparent">
-            Hub
-          </span>
-        </h1>
-        <p className="mt-2 max-w-2xl text-muted">
-          Your GoHighLevel command center — the core building blocks,
-          ready-to-build automation recipes, best practices, and a path to go
-          from operator to strategist.
-        </p>
-      </header>
+    <div className="container-hub space-y-8 py-8">
+      <PageHeader
+        href="/ghl-hub"
+        eyebrow="Build & learn"
+        title="GHL"
+        accent="Hub"
+        stats={[
+          { label: "Updates", value: GHL_NEWS.length, icon: "/updates" },
+          { label: "Building blocks", value: GHL_CONCEPTS.length, icon: "/ghl-hub" },
+          { label: "Recipes", value: GHL_RECIPES.length, icon: "/projects" },
+          { label: "Learning steps", value: GHL_LEARN.length, icon: "/learn" },
+        ]}
+      >
+        Your GoHighLevel command center — the core building blocks, ready-to-build automation recipes, best practices,
+        and a path to go from operator to strategist.
+      </PageHeader>
 
-      <HubWhatsNew
-        items={GHL_NEWS}
-        accent={TOKEN.green}
-        verified="26 Oct 2026"
-        note="against HighLevel's changelog and docs"
+      <HubTabs
+        label="GHL Hub sections"
+        tabs={[
+          { id: "whats-new", label: "What's New", icon: "rss", content: overview },
+          {
+            id: "concepts",
+            label: "Concepts",
+            icon: "layers",
+            content: (
+              <>
+                <p className="text-sm text-muted">
+                  The building blocks — get fluent here and automation is just moving these around.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {GHL_CONCEPTS.map((concept) => (
+                    <RefTile key={concept.name} card={concept} />
+                  ))}
+                </div>
+              </>
+            ),
+          },
+          {
+            id: "build",
+            label: "Build",
+            icon: "bolt",
+            content: (
+              <>
+                <p className="text-sm text-muted">
+                  Copy-and-build automation recipes — trigger → steps → outcome. Start with Speed-to-Lead.
+                </p>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {GHL_RECIPES.map((recipe) => (
+                    <RecipeCard key={recipe.title} recipe={recipe} />
+                  ))}
+                </div>
+              </>
+            ),
+          },
+          {
+            id: "best-practices",
+            label: "Best Practices",
+            icon: "shield",
+            content: <TipGrid tips={GHL_BEST_PRACTICES} />,
+          },
+          {
+            id: "learn",
+            label: "Learn",
+            icon: "cap",
+            content: (
+              <>
+                <p className="text-sm text-muted">A path from core objects to integrations.</p>
+                <LearnSteps steps={GHL_LEARN} />
+              </>
+            ),
+          },
+        ]}
       />
-
-      <GhlHubClient />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 // Every colour is a CSS variable (RGB channels) defined per theme in
 // app/globals.css, so one class name — `text-gold`, `bg-surface` — renders
-// correctly in both the light "lavender glass" and dark "midnight glass" themes.
+// correctly in both the dark "violet night" and light "lavender day" themes.
 // Change a colour in globals.css, not here.
 const token = (name: string) => `rgb(var(--c-${name}) / <alpha-value>)`;
 
@@ -47,6 +47,8 @@ const config: Config = {
         danger: token("danger"),
         // Text that sits on a bright gold fill — dark ink in both themes.
         onaccent: token("onaccent"),
+        // Text on the primary action (`bg-violet`).
+        onprimary: token("onprimary"),
         // Legacy surface aliases.
         navy: {
           DEFAULT: token("bg"),

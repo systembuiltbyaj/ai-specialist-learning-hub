@@ -10,9 +10,9 @@ import {
 } from "@/app/lib/seed/arsenal-skills";
 import { ARSENAL_MCPS, FRAMEWORK_STEPS, MOST_USED } from "@/app/lib/seed/arsenal";
 import { TOKEN, tint } from "@/app/lib/color";
-
-const TABS = ["Skills", "MCPs", "Framework"] as const;
-type Tab = (typeof TABS)[number];
+import HubTabs from "@/app/components/hub/HubTabs";
+import HubIcon from "@/app/components/hub/HubIcon";
+import CopyButton from "@/app/components/hub/CopyButton";
 
 const PALETTE = [
   TOKEN.violet, TOKEN.green, TOKEN.blue, TOKEN.amber, TOKEN.pink,
@@ -23,27 +23,37 @@ const catColor = (name: string) => {
   return PALETTE[(i < 0 ? 0 : i) % PALETTE.length];
 };
 
+// Tab ids double as URL hashes, so the page's chip nav and framework flow can
+// link straight to "#skills", "#mcps" or "#framework".
 export default function ClaudeHubClient() {
-  const [tab, setTab] = useState<Tab>("Skills");
-
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
-        {TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`chip ${tab === t ? "chip-active" : "hover:border-violet-soft/60"}`}
-          >
-            {t === "Skills" ? "✦ " : t === "MCPs" ? "⚡ " : "▣ "}
-            {t}
-          </button>
-        ))}
-      </div>
+    <HubTabs
+      label="Claude Code arsenal"
+      tabs={[
+        { id: "skills", label: "Skills", icon: "sparkle", content: <SkillsTab /> },
+        { id: "mcps", label: "MCPs", icon: "plug", content: <McpsTab /> },
+        { id: "framework", label: "Framework", icon: "list", content: <FrameworkTab /> },
+      ]}
+    />
+  );
+}
 
-      {tab === "Skills" && <SkillsTab />}
-      {tab === "MCPs" && <McpsTab />}
-      {tab === "Framework" && <FrameworkTab />}
+function SummaryBar({ children, aside }: { children: React.ReactNode; aside?: React.ReactNode }) {
+  return (
+    <div className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm">{children}</p>
+      {aside && <span className="font-mono text-xs text-muted">{aside}</span>}
+    </div>
+  );
+}
+
+function GroupHeading({ color, title, count }: { color: string; title: string; count: number }) {
+  return (
+    <div className="mb-3 flex items-center gap-2">
+      <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+      <h3 className="text-sm font-bold uppercase tracking-wider text-text">{title}</h3>
+      <span className="text-xs text-muted">{count}</span>
+      <div className="ml-2 h-px flex-1 bg-violet-soft/20" />
     </div>
   );
 }
@@ -83,28 +93,25 @@ function SkillsTab() {
 
   return (
     <div className="space-y-5">
-      <div className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm">
-          <span className="font-black text-violet-light">{ARSENAL_TOTAL}</span>{" "}
-          <span className="text-text/80">skills across</span>{" "}
-          <span className="font-black text-violet-light">{ARSENAL_CATEGORIES.length}</span>{" "}
-          <span className="text-text/80">categories</span>
-        </p>
-        <span className="font-mono text-xs text-muted">
-          full library · {ARSENAL_BUNDLE_MB} MB
-        </span>
-      </div>
+      <SummaryBar aside={<>full library · {ARSENAL_BUNDLE_MB} MB</>}>
+        <span className="font-black text-violet-light">{ARSENAL_TOTAL}</span>{" "}
+        <span className="text-text/80">skills across</span>{" "}
+        <span className="font-black text-violet-light">{ARSENAL_CATEGORIES.length}</span>{" "}
+        <span className="text-text/80">categories</span>
+      </SummaryBar>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={`Search ${ARSENAL_TOTAL} skills by name, id, or description…`}
+          aria-label="Search skills"
           className="input-hub flex-1"
         />
         <select
           value={cat}
           onChange={(e) => setCat(e.target.value)}
+          aria-label="Filter by category"
           className="input-hub sm:w-64"
         >
           <option value="All">All categories ({ARSENAL_TOTAL})</option>
@@ -119,12 +126,10 @@ function SkillsTab() {
       {showMostUsed && (
         <section>
           <div className="mb-3 flex items-center gap-2">
-            <span className="text-gold">★</span>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gold">
-              Most Used Today
-            </h3>
+            <HubIcon name="star" className="h-4 w-4 text-gold" />
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gold">Most Used Today</h3>
             <span className="text-xs text-muted">{mostUsed.length}</span>
-            <div className="ml-2 h-px flex-1 bg-line" />
+            <div className="ml-2 h-px flex-1 bg-violet-soft/20" />
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {mostUsed.map((s, i) => {
@@ -132,26 +137,25 @@ function SkillsTab() {
               return (
                 <article
                   key={s.id}
-                  className="card card-hover accent-bar accent-teal flex flex-col p-4"
+                  className="card card-hover flex items-start gap-3.5 p-4"
+                  style={{ borderLeftColor: color, borderLeftWidth: 3 }}
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <h4 className="font-bold text-text">
-                      <span className="mr-1.5 text-gold">#{i + 1}</span>
-                      {s.name}
-                    </h4>
-                    <span
-                      className="shrink-0 rounded-full px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-                      style={{ color, backgroundColor: tint(color, 10) }}
-                    >
-                      {s.category}
-                    </span>
-                  </div>
-                  <p className="mt-1.5 text-xs leading-relaxed text-text/80">
-                    <span className="font-semibold text-gold">Why: </span>
-                    {s.why}
-                  </p>
-                  <div className="mt-2">
-                    <span className="rounded border border-line bg-text/[0.06] px-2 py-0.5 font-mono text-[0.6rem] text-text/70">
+                  <span className="icon-tile h-10 w-10 font-display text-sm font-extrabold">#{i + 1}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <h4 className="font-bold text-text">{s.name}</h4>
+                      <span
+                        className="shrink-0 rounded-full px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
+                        style={{ color, backgroundColor: tint(color, 12) }}
+                      >
+                        {s.category}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-xs leading-relaxed text-text/80">
+                      <span className="font-semibold text-gold">Why: </span>
+                      {s.why}
+                    </p>
+                    <span className="mt-2 inline-block break-all rounded border border-violet-soft/20 bg-violet/[0.08] px-2 py-0.5 font-mono text-[0.6rem] text-text/75">
                       ❯ {s.id}
                     </span>
                   </div>
@@ -170,14 +174,7 @@ function SkillsTab() {
         const color = catColor(category);
         return (
           <section key={category}>
-            <div className="mb-3 flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
-              <h3 className="text-sm font-bold uppercase tracking-wider text-text">
-                {category}
-              </h3>
-              <span className="text-xs text-muted">{skills.length}</span>
-              <div className="ml-2 h-px flex-1 bg-line" />
-            </div>
+            <GroupHeading color={color} title={category} count={skills.length} />
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {skills.map((s) => (
                 <article
@@ -187,16 +184,14 @@ function SkillsTab() {
                 >
                   <span
                     className="self-start rounded-full px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wide"
-                    style={{ color, backgroundColor: tint(color, 10) }}
+                    style={{ color, backgroundColor: tint(color, 12) }}
                   >
                     {category}
                   </span>
                   <h4 className="mt-2 font-bold text-text">{s.name}</h4>
-                  <p className="mt-1 line-clamp-3 text-xs leading-relaxed text-muted">
-                    {s.description}
-                  </p>
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <span className="rounded border border-line bg-text/[0.06] px-2 py-0.5 font-mono text-[0.6rem] text-text/70">
+                  <p className="mt-1 line-clamp-3 text-xs leading-relaxed text-muted">{s.description}</p>
+                  <div className="mt-auto flex flex-wrap items-center gap-2 pt-3">
+                    <span className="break-all rounded border border-violet-soft/20 bg-violet/[0.08] px-2 py-0.5 font-mono text-[0.6rem] text-text/75">
                       ❯ {s.id}
                     </span>
                     {s.hasBundle && (
@@ -228,15 +223,10 @@ function configFor(m: ArsenalMcp): string {
 function McpsTab() {
   return (
     <div className="space-y-5">
-      <div className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm">
-          <span className="font-black text-violet-light">{ARSENAL_MCPS.length}</span>{" "}
-          <span className="text-text/80">MCP servers ready to plug into Claude Code</span>
-        </p>
-        <span className="font-mono text-xs text-muted">
-          Copy config → paste into ~/.claude.json
-        </span>
-      </div>
+      <SummaryBar aside="Copy config → paste into ~/.claude.json">
+        <span className="font-black text-violet-light">{ARSENAL_MCPS.length}</span>{" "}
+        <span className="text-text/80">MCP servers ready to plug into Claude Code</span>
+      </SummaryBar>
       <div className="grid gap-3 md:grid-cols-2">
         {ARSENAL_MCPS.map((m) => (
           <McpCard key={m.name} mcp={m} />
@@ -247,45 +237,39 @@ function McpsTab() {
 }
 
 function McpCard({ mcp }: { mcp: ArsenalMcp }) {
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(configFor(mcp));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* ignore */
-    }
-  };
   return (
-    <article className="card accent-bar accent-purple flex flex-col p-5">
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="font-bold text-text">⚡ {mcp.name}</h3>
-        <span className="rounded-full border border-neon-pink/40 px-2 py-0.5 font-mono text-[0.55rem] text-neon-pink">
-          {mcp.pkg}
+    <article className="card card-hover flex flex-col p-5">
+      <div className="flex items-start gap-3">
+        <span className="icon-tile h-10 w-10">
+          <HubIcon name="plug" className="h-5 w-5" />
         </span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-display font-bold text-text">{mcp.name}</h3>
+          <span className="mt-1 inline-block break-all rounded-full border border-neon-pink/40 px-2 py-0.5 font-mono text-[0.55rem] text-neon-pink">
+            {mcp.pkg}
+          </span>
+        </div>
       </div>
-      <p className="mt-2 text-sm leading-relaxed text-text/75">{mcp.description}</p>
+      <p className="mt-3 text-sm leading-relaxed text-text/80">{mcp.description}</p>
       <ul className="mt-3 space-y-1.5">
         {mcp.features.map((f, i) => (
           <li key={i} className="flex gap-2 text-xs text-text/75">
-            <span className="text-violet-light">✓</span>
+            <HubIcon name="check" className="mt-px h-3.5 w-3.5 shrink-0 text-violet-light" />
             <span>{f}</span>
           </li>
         ))}
       </ul>
-      <div className="mt-4 overflow-hidden rounded-lg border border-line">
-        <div className="flex items-center justify-between border-b border-line bg-text/[0.03] px-3 py-2">
-          <span className="font-mono text-[0.6rem] uppercase tracking-wider text-violet-light">
-            Install command
-          </span>
-          <button onClick={copy} className="btn-ghost px-2.5 py-1 text-[0.65rem]">
-            {copied ? "✓ Copied" : "Copy config"}
-          </button>
+      <div className="mt-auto pt-4">
+        {/* scope-dark: the install panel is always dark, so its tokens must stay dark-theme. */}
+        <div className="scope-dark code-surface overflow-hidden rounded-lg border border-violet-soft/25">
+          <div className="flex items-center justify-between gap-2 border-b border-violet-soft/20 px-3 py-2">
+            <span className="font-mono text-[0.6rem] uppercase tracking-wider text-violet-light">Install command</span>
+            <CopyButton text={configFor(mcp)} label="Copy config" />
+          </div>
+          <pre className="overflow-x-auto px-3 py-2.5">
+            <code className="font-mono text-[0.7rem]">{mcp.cmd}</code>
+          </pre>
         </div>
-        <pre className="code-surface overflow-x-auto px-3 py-2.5">
-          <code className="font-mono text-[0.7rem] text-text/85">{mcp.cmd}</code>
-        </pre>
       </div>
     </article>
   );
@@ -295,14 +279,10 @@ function McpCard({ mcp }: { mcp: ArsenalMcp }) {
 function FrameworkTab() {
   return (
     <div className="space-y-4">
-      <div className="card p-4">
-        <p className="text-sm">
-          <span className="font-black text-violet-light">{FRAMEWORK_STEPS.length}</span>{" "}
-          <span className="text-text/80">
-            steps from a blank install to a shipping-grade Claude setup
-          </span>
-        </p>
-      </div>
+      <SummaryBar>
+        <span className="font-black text-violet-light">{FRAMEWORK_STEPS.length}</span>{" "}
+        <span className="text-text/80">steps from a blank install to a shipping-grade Claude setup</span>
+      </SummaryBar>
       {FRAMEWORK_STEPS.map((step) => (
         <StepCard key={step.n} step={step} />
       ))}
@@ -315,13 +295,14 @@ function StepCard({ step }: { step: FrameworkStep }) {
   return (
     <article className="card overflow-hidden" style={{ borderLeftColor: step.accent, borderLeftWidth: 3 }}>
       <button
-        className="flex w-full items-start gap-4 p-5 text-left"
+        type="button"
+        className="flex w-full items-start gap-4 rounded-[1.25rem] p-5 text-left"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
         <span
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl font-display text-lg font-bold text-white"
-          style={{ backgroundColor: step.accent }}
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl font-display text-lg font-bold"
+          style={{ color: step.accent, backgroundColor: tint(step.accent, 16) }}
         >
           {step.n}
         </span>
@@ -335,18 +316,21 @@ function StepCard({ step }: { step: FrameworkStep }) {
           <h3 className="mt-1 font-display text-lg font-bold text-text">{step.title}</h3>
           <p className="mt-1 text-sm text-muted">{step.summary}</p>
         </div>
-        <span className="text-muted">{open ? "▲" : "▼"}</span>
+        <HubIcon
+          name="chevron"
+          className={`mt-1 h-5 w-5 shrink-0 text-muted transition-transform ${open ? "-rotate-90" : "rotate-90"}`}
+        />
       </button>
 
       {open && (
-        <div className="space-y-5 border-t border-line px-5 pb-5 pt-4">
+        <div className="space-y-5 border-t border-violet-soft/15 px-5 pb-5 pt-4">
           {step.sections.map((sec, si) => (
             <div key={si}>
               {sec.title && (
                 <h4 className="mb-2 flex items-center gap-2 text-sm font-bold text-text">
                   <span
-                    className="grid h-5 w-5 place-items-center rounded font-mono text-[0.6rem] text-white"
-                    style={{ backgroundColor: step.accent }}
+                    className="grid h-5 w-5 shrink-0 place-items-center rounded font-mono text-[0.6rem] font-bold"
+                    style={{ color: step.accent, backgroundColor: tint(step.accent, 16) }}
                   >
                     {si + 1}
                   </span>
@@ -367,11 +351,11 @@ function StepCard({ step }: { step: FrameworkStep }) {
                 </ul>
               )}
               {sec.code?.map((c, ci) => (
-                <CodeBox key={ci} label={c.label} code={c.code} accent={step.accent} />
+                <CodeBox key={ci} label={c.label} code={c.code} />
               ))}
             </div>
           ))}
-          <div className="rounded-lg border border-line bg-text/[0.03] p-3">
+          <div className="rounded-xl border border-violet-soft/20 bg-violet/[0.06] p-3">
             <p className="font-mono text-[0.6rem] font-bold uppercase tracking-wider" style={{ color: step.accent }}>
               ✓ Outcome
             </p>
@@ -383,29 +367,17 @@ function StepCard({ step }: { step: FrameworkStep }) {
   );
 }
 
-function CodeBox({ label, code, accent }: { label: string; code: string; accent: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* ignore */
-    }
-  };
+function CodeBox({ label, code }: { label: string; code: string }) {
   return (
-    <div className="mb-2 ml-7 overflow-hidden rounded-lg border border-line">
-      <div className="flex items-center justify-between border-b border-line bg-text/[0.03] px-3 py-2">
-        <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: accent }}>
+    <div className="scope-dark code-surface mb-2 overflow-hidden rounded-lg border border-violet-soft/25 sm:ml-7">
+      <div className="flex items-center justify-between gap-2 border-b border-violet-soft/20 px-3 py-2">
+        <span className="min-w-0 truncate font-mono text-[0.6rem] uppercase tracking-wider text-violet-light">
           {label}
         </span>
-        <button onClick={copy} className="btn-ghost px-2.5 py-1 text-[0.65rem]">
-          {copied ? "✓ Copied" : "Copy"}
-        </button>
+        <CopyButton text={code} />
       </div>
-      <pre className="code-surface overflow-x-auto p-3">
-        <code className="font-mono text-[0.7rem] leading-relaxed text-text/85">{code}</code>
+      <pre className="overflow-x-auto p-3">
+        <code className="font-mono text-[0.7rem] leading-relaxed">{code}</code>
       </pre>
     </div>
   );

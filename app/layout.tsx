@@ -8,7 +8,7 @@ import Footer from "@/app/components/Footer";
 import IntroOverlay from "@/app/components/IntroOverlay";
 
 // One voice for everything: Plus Jakarta Sans's rounded geometry suits the
-// soft glass theme, and hierarchy comes from weight and size. IBM Plex Mono is
+// violet glass theme, and hierarchy comes from weight and size. IBM Plex Mono is
 // kept for code samples only.
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -56,9 +56,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// Runs before first paint so a saved dark preference never flashes light first.
-// Static string, no user input — safe to inline (the CSP allows inline scripts).
-const THEME_SCRIPT = `try{if(localStorage.getItem("${THEME_STORAGE_KEY}")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}`;
+// Dark is the default; this runs before first paint so a saved light preference
+// never flashes dark first. Static string, no user input — safe to inline (the
+// CSP allows inline scripts).
+const THEME_SCRIPT = `try{if(localStorage.getItem("${THEME_STORAGE_KEY}")==="light")document.documentElement.dataset.theme="light"}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -75,7 +76,7 @@ export default function RootLayout({
         <IntroOverlay />
         <Sidebar />
         {/* Content shell — offset by the fixed sidebar on desktop */}
-        <div className="flex min-h-screen flex-col lg:pl-[17rem]">
+        <div className="flex min-h-screen flex-col lg:pl-[17.5rem]">
           <main className="flex-1 pb-16 pt-4">{children}</main>
           <Footer />
         </div>

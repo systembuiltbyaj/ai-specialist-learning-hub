@@ -8,6 +8,7 @@ import { useHydrated, useLearner } from "@/app/lib/learner/store";
 import type { InterviewRating, LearnerState } from "@/app/lib/learner/state";
 import InterviewPractice from "./InterviewPractice";
 import TemplateText from "./TemplateText";
+import Glyph from "./Glyph";
 
 // Textarea that grows to fit its content — see the whole answer while editing.
 function AutoTextarea({
@@ -55,6 +56,13 @@ export const RATING_STYLE: Record<InterviewRating | "unrated", { label: string; 
   shaky: { label: "Shaky", className: "border-gold/50 bg-gold/10 text-gold" },
   missed: { label: "Missed", className: "border-danger/50 bg-danger/10 text-danger" },
   unrated: { label: "Not practised", className: "border-line text-muted" },
+};
+
+const READINESS_BAR: Record<InterviewRating | "unrated", string> = {
+  nailed: "bg-success",
+  shaky: "bg-gold",
+  missed: "bg-danger",
+  unrated: "bg-muted/50",
 };
 
 function ratingOf(learner: LearnerState, id: string): InterviewRating | "unrated" {
@@ -212,13 +220,18 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
   return (
     <div className="space-y-5">
       {legacy.length > 0 && (
-        <div className="card flex flex-col gap-3 border-gold/40 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-text/85">
-            <span className="font-bold text-gold">You have {legacy.length} answers from the earlier version</span> saved in
-            this browser. Bring them back alongside the new templates?
-          </p>
+        <div className="card card-active flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div className="flex items-start gap-3">
+            <span className="icon-tile-muted h-10 w-10">
+              <Glyph name="history" className="h-5 w-5" />
+            </span>
+            <p className="text-sm text-text/85">
+              <span className="font-bold text-gold">You have {legacy.length} answers from the earlier version</span> saved in
+              this browser. Bring them back alongside the new templates?
+            </p>
+          </div>
           <div className="flex shrink-0 gap-2">
-            <button onClick={restoreLegacy} className="btn-gold px-4 py-2 text-xs">
+            <button onClick={restoreLegacy} className="btn-violet px-4 py-2 text-xs">
               Restore my answers
             </button>
             <button onClick={() => setLegacy([])} className="btn-ghost px-4 py-2 text-xs">
@@ -229,36 +242,43 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
       )}
 
       {/* How saving works — said plainly, because there is no account behind it. */}
-      <div className="card grid gap-4 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-5">
-        <div className="space-y-1.5 text-sm">
-          <p className="font-semibold text-text">Make these answers yours, then download them.</p>
-          <p className="text-muted">
-            Click any question → <span className="text-text/80">Edit</span> → replace the highlighted blanks. Your edits save
-            automatically in this browser only — they don&apos;t sync to other devices and disappear if you clear browsing
-            data, so download a PDF when you&apos;re done.
-          </p>
-          <p className="text-xs text-muted" aria-live="polite">
-            {progress.personalised} of {entries.length} personalised
-            {progress.blanks > 0 && ` · ${progress.blanks} blanks left in what's shown`}
-          </p>
+      <div className="card card-glow grid gap-5 p-5 md:grid-cols-[minmax(0,1fr)_17rem] md:items-center sm:p-6">
+        <div className="flex items-start gap-4">
+          <span className="icon-tile h-12 w-12">
+            <Glyph name="download" className="h-6 w-6" />
+          </span>
+          <div className="min-w-0 space-y-1.5 text-sm">
+            <p className="text-base font-bold text-text">Make these answers yours, then download them.</p>
+            <p className="text-muted">
+              Click any question → <span className="text-text/80">Edit</span> → replace the highlighted blanks. Your edits
+              save automatically in this browser only — they don&apos;t sync to other devices and disappear if you clear
+              browsing data, so download a PDF when you&apos;re done.
+            </p>
+            <p className="text-xs font-medium text-violet-light" aria-live="polite">
+              {progress.personalised} of {entries.length} personalised
+              {progress.blanks > 0 && ` · ${progress.blanks} blanks left in what's shown`}
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col gap-2 sm:w-64">
+        <div className="flex flex-col gap-2.5">
           <label className="block">
             <span className="mb-1 block text-xs font-medium text-muted">Your name on the PDF (optional)</span>
             <input value={name} onChange={(e) => setName(e.target.value.slice(0, 80))} placeholder="e.g. Sam Rivera" className="input-hub py-2 text-sm" />
           </label>
-          <button onClick={handlePdf} disabled={buildingPdf || filtered.length === 0} className="btn-violet w-full disabled:opacity-50">
-            {buildingPdf ? "Building PDF…" : `⬇ Download my answers (PDF)`}
+          <button onClick={handlePdf} disabled={buildingPdf || filtered.length === 0} className="btn-gold w-full disabled:opacity-50">
+            <Glyph name="download" className="h-4 w-4" />
+            {buildingPdf ? "Building PDF…" : "Download my answers (PDF)"}
           </button>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[13.5rem_minmax(0,1fr)]">
+      <div className="grid gap-6 lg:grid-cols-[14.5rem_minmax(0,1fr)]">
         {/* ── Sidebar: search, topics, readiness ── */}
-        <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
-          <label className="block">
+        <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
+          <label className="relative block">
             <span className="sr-only">Search questions and answers</span>
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search…" className="input-hub" />
+            <Glyph name="search" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search…" className="input-hub py-2.5 pl-10" />
           </label>
 
           {/* Mobile: a compact select. Desktop: the full topic list. */}
@@ -274,33 +294,41 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
             </select>
           </label>
 
-          <nav aria-label="Topics" className="hidden lg:block">
-            <p className="eyebrow mb-2">Topics</p>
+          <nav aria-label="Topics" className="card hidden p-3 lg:block">
+            <p className="eyebrow mb-2 px-2">Topics</p>
             <ul className="max-h-[50vh] space-y-0.5 overflow-y-auto pr-1">
               {[["All", entries.length] as const, ...topicCounts].map(([t, n]) => (
                 <li key={t}>
                   <button
                     onClick={() => setTopic(t)}
                     aria-current={topic === t ? "true" : undefined}
-                    className={`flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-sm transition-colors ${
-                      topic === t ? "bg-violet/10 font-semibold text-violet-light" : "text-text/75 hover:bg-text/5 hover:text-text"
+                    className={`flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-sm transition-colors ${
+                      topic === t ? "chip-active font-semibold" : "text-text/75 hover:bg-violet/10 hover:text-text"
                     }`}
                   >
                     <span className="truncate">{t === "All" ? "All topics" : t}</span>
-                    <span className="text-xs text-muted">{n}</span>
+                    <span className={`text-xs ${topic === t ? "opacity-85" : "text-muted"}`}>{n}</span>
                   </button>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <div className="hidden lg:block">
-            <p className="eyebrow mb-2">Readiness</p>
-            <ul className="space-y-1 text-xs">
+          <div className="card hidden p-4 lg:block">
+            <p className="eyebrow mb-3">Readiness</p>
+            <ul className="space-y-2.5 text-xs">
               {(["nailed", "shaky", "missed", "unrated"] as const).map((r) => (
-                <li key={r} className="flex justify-between">
-                  <span className="text-text/70">{RATING_STYLE[r].label}</span>
-                  <span className="text-muted">{readiness[r]}</span>
+                <li key={r}>
+                  <div className="flex justify-between">
+                    <span className="text-text/80">{RATING_STYLE[r].label}</span>
+                    <span className="font-mono text-muted">{readiness[r]}</span>
+                  </div>
+                  <div className="mt-1 h-1 overflow-hidden rounded-full bg-text/10" aria-hidden>
+                    <div
+                      className={`h-full rounded-full ${READINESS_BAR[r]}`}
+                      style={{ width: `${entries.length ? Math.round((readiness[r] / entries.length) * 100) : 0}%` }}
+                    />
+                  </div>
                 </li>
               ))}
             </ul>
@@ -310,14 +338,18 @@ export default function InterviewClient({ seed }: { seed: InterviewEntry[] }) {
         {/* ── Main: toolbar + questions ── */}
         <section className="min-w-0 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={() => setPracticing(true)} disabled={filtered.length === 0} className="btn-gold px-4 py-2 text-xs disabled:opacity-40">
-              ▶ Practice {filtered.length > 0 && `(${filtered.length})`}
+            <button onClick={() => setPracticing(true)} disabled={filtered.length === 0} className="btn-violet px-4 py-2 text-xs disabled:opacity-40">
+              <Glyph name="play" className="h-3.5 w-3.5" /> Practice {filtered.length > 0 && `(${filtered.length})`}
             </button>
             <button onClick={handleMarkdown} className="btn-ghost px-4 py-2 text-xs">
-              ⬇ Markdown
+              <Glyph name="download" className="h-3.5 w-3.5" /> Markdown
             </button>
             <button onClick={() => setAdding((v) => !v)} className="btn-ghost ml-auto px-4 py-2 text-xs">
-              {adding ? "Cancel" : "+ Add your own question"}
+              {adding ? "Cancel" : (
+                <>
+                  <Glyph name="plus" className="h-3.5 w-3.5" /> Add your own question
+                </>
+              )}
             </button>
           </div>
 
@@ -394,38 +426,38 @@ function EntryCard({
   const blanks = blanksIn(entry);
 
   return (
-    <article className="card p-4 sm:p-5">
-      <button className="w-full text-left" onClick={() => setExpanded((v) => !v)} aria-expanded={expanded}>
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-bold leading-snug text-text">
-            <span className="mr-1.5 text-gold">Q</span>
-            {entry.question}
-          </h3>
-          <span className="mt-0.5 shrink-0 text-xs text-muted" aria-hidden>
-            {expanded ? "▲" : "▼"}
+    <article className={`card p-4 sm:p-5 ${expanded ? "card-active" : "card-hover"}`}>
+      <button className="group flex w-full items-start gap-3.5 rounded-lg text-left" onClick={() => setExpanded((v) => !v)} aria-expanded={expanded}>
+        <span className={`${expanded ? "icon-tile" : "icon-tile-muted"} h-9 w-9 text-sm font-extrabold`} aria-hidden>
+          Q
+        </span>
+        <span className="block min-w-0 flex-1">
+          <span className="flex items-start justify-between gap-3">
+            <h3 className="font-bold leading-snug text-text transition-colors group-hover:text-gold">{entry.question}</h3>
+            <Glyph name="chevron" className={`mt-0.5 h-5 w-5 shrink-0 text-muted transition-transform ${expanded ? "rotate-90" : ""}`} />
           </span>
-        </div>
-        {!expanded && <p className="mt-1.5 line-clamp-2 text-sm text-text/60">{entry.answer || <span className="italic">No answer yet.</span>}</p>}
-        <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[0.68rem]">
-          <span className={`rounded-full border px-2 py-0.5 font-semibold ${style.className}`}>{style.label}</span>
-          {blanks > 0 ? (
-            <span className="rounded-full border border-violet-soft/40 bg-violet-soft/10 px-2 py-0.5 font-semibold text-violet-light">
-              {blanks} blank{blanks === 1 ? "" : "s"} to fill
-            </span>
-          ) : (
-            edited && <span className="rounded-full border border-success/40 bg-success/10 px-2 py-0.5 font-semibold text-success">Personalised</span>
-          )}
-          {(entry.followUps?.length ?? 0) > 0 && (
-            <span className="text-muted">
-              {entry.followUps!.length} follow-up{entry.followUps!.length === 1 ? "" : "s"}
-            </span>
-          )}
-          {entry.topic && <span className="text-muted">· {entry.topic}</span>}
-        </div>
+          {!expanded && <span className="mt-1.5 line-clamp-2 block text-sm text-text/60">{entry.answer || <span className="italic">No answer yet.</span>}</span>}
+          <span className="mt-2.5 flex flex-wrap items-center gap-2 text-[0.68rem]">
+            <span className={`rounded-full border px-2 py-0.5 font-semibold ${style.className}`}>{style.label}</span>
+            {blanks > 0 ? (
+              <span className="rounded-full border border-violet-soft/40 bg-violet-soft/10 px-2 py-0.5 font-semibold text-violet-light">
+                {blanks} blank{blanks === 1 ? "" : "s"} to fill
+              </span>
+            ) : (
+              edited && <span className="rounded-full border border-success/40 bg-success/10 px-2 py-0.5 font-semibold text-success">Personalised</span>
+            )}
+            {(entry.followUps?.length ?? 0) > 0 && (
+              <span className="text-muted">
+                {entry.followUps!.length} follow-up{entry.followUps!.length === 1 ? "" : "s"}
+              </span>
+            )}
+            {entry.topic && <span className="text-muted">· {entry.topic}</span>}
+          </span>
+        </span>
       </button>
 
       {expanded && (
-        <div className="mt-4 space-y-4 border-t border-line pt-4">
+        <div className="mt-4 space-y-4 border-t border-violet-soft/15 pt-4">
           {entry.answer ? (
             <TemplateText text={entry.answer} className="text-sm leading-relaxed text-text/85" />
           ) : (

@@ -6,7 +6,7 @@ import { BRAND, NAV_ITEMS } from "@/app/lib/constants";
 // public site its static generation. The sign-out control lives on /unlock.
 export default function Footer() {
   return (
-    <footer className="border-t border-line bg-surface/60">
+    <footer className="border-t border-violet-soft/15">
       <div className="container-hub flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-display text-sm font-bold text-text">{BRAND.name}</p>

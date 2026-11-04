@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { DICTIONARY } from "@/data/dictionary";
 import { ACRONYM_SLUGS, ACRONYM_TO_TERM, acronymBySlug } from "@/app/lib/reference";
+import Glyph, { ACRONYM_GLYPH } from "@/app/components/ui/Glyph";
+import { Tag } from "@/app/components/ui/Tag";
 
 // dynamicParams stays true so the 22 overlapping slugs remain routable and can
 // redirect. Anything genuinely unknown calls notFound() below.
@@ -51,36 +53,41 @@ export default async function AcronymPage({ params }: Params) {
   ).slice(0, 4);
 
   return (
-    <article className="container-hub max-w-3xl space-y-6 py-8">
-      <nav className="text-sm text-muted">
-        <Link href="/acronyms" className="hover:text-gold">
+    <article className="container-hub max-w-4xl space-y-6 py-10">
+      <nav aria-label="Breadcrumb" className="text-sm text-muted">
+        <Link href="/acronyms" className="rounded-md transition-colors hover:text-gold">
           ← Acronym Decoder
         </Link>
       </nav>
 
-      <header>
-        <span className="chip border border-gold/40 text-gold">{entry.category}</span>
-        <h1 className="section-title mt-3">
-          <span className="mr-2">{entry.icon}</span>
-          {entry.acronym}
-        </h1>
-        <p className="mt-2 text-lg text-text/80">{entry.full}</p>
+      <header className="card card-glow p-6 sm:p-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+          <span className="icon-tile h-14 w-14">
+            <Glyph name={ACRONYM_GLYPH[entry.category]} className="h-7 w-7" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="eyebrow">Acronym</p>
+            <h1 className="page-title mt-1 break-words">{entry.acronym}</h1>
+            <p className="mt-2 text-lg font-semibold leading-snug text-violet-light">{entry.full}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Tag>{entry.category}</Tag>
+            </div>
+            <p className="mt-5 text-[1.0625rem] leading-relaxed text-text/90 sm:text-lg">{entry.meaning}</p>
+          </div>
+        </div>
       </header>
 
-      <p className="text-base leading-relaxed text-text/85">{entry.meaning}</p>
-
       {relatedTerms.length > 0 && (
-        <section>
-          <h2 className="text-xs font-bold uppercase tracking-wider text-muted">
+        <section className="card p-5">
+          <h2 className="flex items-center gap-3 text-base font-bold text-text">
+            <span className="icon-tile-muted h-9 w-9">
+              <Glyph name="book" className="h-[1.125rem] w-[1.125rem]" />
+            </span>
             Go deeper in the dictionary
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {relatedTerms.map((t) => (
-              <Link
-                key={t.id}
-                href={`/dictionary/${t.id}`}
-                className="chip hover:border-gold hover:text-gold"
-              >
+              <Link key={t.id} href={`/dictionary/${t.id}`} className="chip hover:border-violet-soft/70 hover:text-text">
                 {t.term}
               </Link>
             ))}
@@ -88,12 +95,11 @@ export default async function AcronymPage({ params }: Params) {
         </section>
       )}
 
-      <p className="border-t border-line pt-6 text-sm text-muted">
-        <Link href="/acronyms" className="text-gold hover:underline">
+      <p className="flex flex-wrap gap-x-5 gap-y-2 border-t border-violet-soft/20 pt-5 text-sm">
+        <Link href="/acronyms" className="rounded-md font-semibold text-violet-light transition-colors hover:text-gold">
           All acronyms
         </Link>
-        {" · "}
-        <Link href="/dictionary" className="text-gold hover:underline">
+        <Link href="/dictionary" className="rounded-md font-semibold text-violet-light transition-colors hover:text-gold">
           Browse the dictionary →
         </Link>
       </p>

@@ -4,6 +4,7 @@ import { isSupabaseConfigured } from "@/app/lib/supabase";
 import { isAdmin } from "@/app/lib/adminSession";
 import { SEED_RESOURCES } from "@/app/lib/seed/resources";
 import ResourcesClient from "./ResourcesClient";
+import PageHeader from "@/app/components/PageHeader";
 
 export const metadata: Metadata = {
   title: "Learning Resources",
@@ -26,14 +27,10 @@ export default async function ResourcesPage() {
 
   return (
     <div className="container-hub space-y-6 py-8">
-      <header>
-        <p className="eyebrow">Dashboard</p>
-        <h1 className="section-title">🔖 Learning Resources</h1>
-        <p className="mt-2 max-w-2xl text-muted">
-          Bookmark docs, videos, posts, and courses; organize by category; track
-          progress and weekly goals; and export your learning journey.
-        </p>
-      </header>
+      <PageHeader href="/resources" eyebrow="Your saved links" title="Learning" accent="Resources">
+        Bookmark docs, videos, posts and courses; organize by category; track progress and weekly goals; and export
+        your learning journey.
+      </PageHeader>
 
       <ResourcesClient initial={resources} remote={remote} />
     </div>

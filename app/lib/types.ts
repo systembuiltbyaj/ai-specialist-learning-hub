@@ -227,3 +227,13 @@ export interface StackItem {
   accent: AccentKey;
   badge?: { label: string; kind: "os" | "paid" | "free" | "cloud" };
 }
+
+// A dated "What's New" entry on a hub page. The hub's verified date is a
+// separate required prop, so the feed can't claim a freshness it doesn't have.
+export interface WhatsNewItem {
+  date: string; // e.g. "Jun 2026"
+  title: string;
+  blurb: string;
+  source?: string; // URL
+  sourceLabel?: string;
+}
