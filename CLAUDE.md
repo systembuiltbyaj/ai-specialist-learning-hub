@@ -201,6 +201,13 @@ See `.env.example`. All optional. `ADMIN_PASSCODE` is only needed to authorize
 resource writes; `NEXT_PUBLIC_SITE_URL` sets the canonical origin for metadata
 and the sitemap, falling back to `VERCEL_URL` then localhost.
 
+**Production domain:** `learnwithaj.ajautomate.co` — a Namecheap CNAME into
+Vercel (DNS stays at Namecheap, so Vercel's nameserver ☓ is expected). The old
+`ai-specialist-learning-hub.vercel.app` is a project-domain 308 redirect to it.
+`NEXT_PUBLIC_SITE_URL` is inlined at build time: after changing it, run
+`vercel redeploy <prod-url> --target production` — promoting an existing build
+keeps the old value. (From Git Bash, `vercel api` paths need `MSYS_NO_PATHCONV=1`.)
+
 ## Known state
 
 - `audits/os-audit-2026-08-07.md` — drift audit: what was fixed, what is open.
@@ -211,6 +218,12 @@ and the sitemap, falling back to `VERCEL_URL` then localhost.
   `npm audit fix --omit=dev` — it prunes devDependencies from `node_modules`.
   Do not downgrade Next.
 - `docs/superpowers/plans/2026-10-26-hub-2.0-roadmap.md` — the Hub 2.0 milestones (M0–M5).
+- **Design source (2026-11-04):** the "violet night" look follows the mockups in
+  `C:\Users\AMD\Desktop\AJ learning Hub\` (1.png home … 15.png resources). They are
+  layout and colour references only — their copy holds wrong model names and
+  invented counts, so content always comes from `data/` and the seed files.
+  Shipped on `hub-2.0` as PR #4. Lesson and project detail pages took the new
+  tokens but not a full redesign (no mockup exists for them).
 - **Still open:** ESLint is unconfigured. Dev-only advisories (vitest, vite,
   browserslist) remain because `npm audit fix` hits an npm arborist bug
   (`reading 'edgesOut'`) on vitest's optional jsdom peer; none ship to production.
